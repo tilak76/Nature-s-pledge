@@ -1,38 +1,75 @@
 import React, { useState, useEffect } from 'react';
 import { useCart } from '../context/CartContext';
+import { useToast } from '../context/ToastContext';
 import { products as staticProducts } from '../data/products';
+
+import { useNavigate } from 'react-router-dom';
 
 const Shop = () => {
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
+    const [category, setCategory] = useState('All');
+    const navigate = useNavigate();
+    const { showToast } = useToast();
+
+    const categories = ['All', 'Walnut', 'Kernels', 'Roasted']; // Enhance if more categories exist
 
     useEffect(() => {
-        setProducts(staticProducts);
+        filterProducts(searchTerm, category);
         setLoading(false);
-    }, []);
+    }, [searchTerm, category]);
 
-    const fetchProducts = (term = '') => {
-        const filtered = staticProducts.filter(p =>
-            p.name.toLowerCase().includes(term.toLowerCase())
-        );
+    const filterProducts = (term, cat) => {
+        let filtered = staticProducts;
+
+        if (cat !== 'All') {
+            filtered = filtered.filter(p => p.name.includes(cat) || p.category.includes(cat));
+        }
+
+        if (term) {
+            filtered = filtered.filter(p =>
+                p.name.toLowerCase().includes(term.toLowerCase())
+            );
+        }
         setProducts(filtered);
     };
 
+    const handleSearch = (e) => setSearchTerm(e.target.value);
+
     const { addToCart } = useCart();
 
-    const handleSearch = (e) => {
-        setSearchTerm(e.target.value);
-        fetchProducts(e.target.value);
-    };
-
-    const handleAddToCart = (product) => {
+    const handleAddToCart = (e, product) => {
+        e.stopPropagation(); // Prevent navigation when clicking Add to Cart
         addToCart(product);
-        // Optional: Toast notification here
+        alert('Added to cart!');
     };
 
     return (
         <div className="container shop-page">
+            <h2 style={{ textAlign: 'center', marginBottom: '2rem' }}>Our Premium Collection</h2>
+
+            {/* Filters */}
+            <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', marginBottom: '2rem', flexWrap: 'wrap' }}>
+                {categories.map(cat => (
+                    <button
+                        key={cat}
+                        onClick={() => setCategory(cat)}
+                        style={{
+                            padding: '8px 20px',
+                            borderRadius: '30px',
+                            border: `1px solid ${category === cat ? '#5D4037' : '#ddd'}`,
+                            background: category === cat ? '#5D4037' : 'white',
+                            color: category === cat ? 'white' : '#5D4037',
+                            cursor: 'pointer',
+                            transition: 'all 0.3s'
+                        }}
+                    >
+                        {cat}
+                    </button>
+                ))}
+            </div>
+
             <input
                 type="text"
                 className="search-bar"
@@ -46,7 +83,12 @@ const Shop = () => {
             ) : (
                 <div className="product-grid">
                     {products.map(product => (
-                        <div key={product.id || product._id} className="product-card">
+                        <div
+                            key={product.id || product._id}
+                            className="product-card"
+                            style={{ cursor: 'pointer' }}
+                            onClick={() => navigate(`/product/${product.id}`)}
+                        >
                             <img src={product.image} alt={product.name} className="product-image" />
                             <div className="product-info">
                                 <h3 className="product-title">{product.name}</h3>
@@ -56,7 +98,7 @@ const Shop = () => {
                                 </p>
                                 <button
                                     className="add-btn"
-                                    onClick={() => handleAddToCart(product)}
+                                    onClick={(e) => handleAddToCart(e, product)}
                                 >
                                     Add to Cart
                                 </button>

@@ -5,15 +5,11 @@ const CartContext = createContext();
 export const useCart = () => useContext(CartContext);
 
 export const CartProvider = ({ children }) => {
-    const [cart, setCart] = useState([]);
-
-    // Load cart from local storage on init
-    useEffect(() => {
+    // Load cart from local storage on init (Lazy Initialization)
+    const [cart, setCart] = useState(() => {
         const savedCart = localStorage.getItem('cart');
-        if (savedCart) {
-            setCart(JSON.parse(savedCart));
-        }
-    }, []);
+        return savedCart ? JSON.parse(savedCart) : [];
+    });
 
     // Save cart to local storage on change
     useEffect(() => {
