@@ -184,6 +184,13 @@ body {
   color: white;
 }
 
+/* Checkout Page */
+.checkout-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+}
+
 /* Payment Page Layout */
 .payment-grid {
   display: grid;

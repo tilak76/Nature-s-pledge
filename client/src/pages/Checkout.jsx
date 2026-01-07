@@ -44,7 +44,7 @@ const Checkout = () => {
     return (
         <div className="container" style={{ padding: '2rem 0' }}>
             <h2 style={{ marginBottom: '2rem' }}>Checkout</h2>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '3rem' }}>
+            <div className="checkout-grid">
 
                 {/* Shipping Form */}
                 <div style={{ background: 'white', padding: '2rem', borderRadius: '8px', boxShadow: '0 2px 10px rgba(0,0,0,0.05)' }}>

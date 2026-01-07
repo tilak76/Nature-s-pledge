@@ -4,7 +4,7 @@ export const products = [
         "name": "Premium Kashmiri Walnuts (inshell)",
         "description": "High-quality organic Kashmiri walnuts with thin shell.",
         "price": 500,
-        "image": "https://images.unsplash.com/photo-1557929036-74a0d8c2794c?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8d2FsbnV0fGVufDB8fDB8fHww",
+        "image": "/kashmiri_akhrot.png",
         "category": "Walnut",
         "stock": 50
     },
