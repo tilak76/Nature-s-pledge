@@ -39,7 +39,7 @@ const Payment = () => {
 
         // CLIENT-SIDE INTEGRATION
         const options = {
-            key: 'rzp_live_S0W61ZvJ61G4Ec', // LIVE KEY from User
+            key: import.meta.env.VITE_RAZORPAY_KEY_ID, // Use Environment Variable
             amount: cartTotal * 100,
             currency: 'INR',
             name: 'Nature Pledge',
