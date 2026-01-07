@@ -13,7 +13,7 @@ export const products = [
         "name": "California Walnuts (Kernels)",
         "description": "Fresh and crunchy walnut kernels from California.",
         "price": 1200,
-        "image": "https://images.unsplash.com/photo-1628148902506-691a5470877a?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8d2FsbnV0c3xlbnwwfHwwfHx8MA%3D%3D",
+        "image": "/walnut_kernels.png",
         "category": "Walnut",
         "stock": 100
     },
@@ -22,7 +22,7 @@ export const products = [
         "name": "Organic Akhroth Giri",
         "description": "100% Organic Walnut Kernels, rich in Omega-3.",
         "price": 1500,
-        "image": "https://plus.unsplash.com/premium_photo-1675237626068-bf404ecdc573?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTN8fHdhbG51dHN8ZW58MHx8MHx8fDA%3D",
+        "image": "/organic_akhrot.png",
         "category": "Walnut",
         "stock": 30
     },
@@ -31,7 +31,7 @@ export const products = [
         "name": "Roasted Salted Walnuts",
         "description": "Perfectly roasted and lightly salted for a healthy snack.",
         "price": 1350,
-        "image": "https://images.unsplash.com/photo-1596667104860-9118c7280142?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTZ8fHdhbG51dHN8ZW58MHx8MHx8fDA%3D",
+        "image": "/roasted_walnuts.png",
         "category": "Walnut",
         "stock": 80
     }

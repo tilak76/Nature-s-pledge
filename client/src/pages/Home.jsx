@@ -14,16 +14,16 @@ const Home = () => {
 
             <section className="container" style={{ padding: '4rem 0', textAlign: 'center' }}>
                 <h2>Why Choose Our Walnuts?</h2>
-                <div style={{ display: 'flex', justifyContent: 'center', gap: '2rem', marginTop: '2rem', flexWrap: 'wrap' }}>
-                    <div style={{ maxWidth: '300px' }}>
+                <div className="features-grid">
+                    <div className="feature-item">
                         <h3>100% Natural</h3>
                         <p>Grown organically in the valleys of Kashmir without harmful pesticides.</p>
                     </div>
-                    <div style={{ maxWidth: '300px' }}>
+                    <div className="feature-item">
                         <h3>Fresh Harvest</h3>
                         <p>Directly sourced from farmers to ensure maximum freshness and taste.</p>
                     </div>
-                    <div style={{ maxWidth: '300px' }}>
+                    <div className="feature-item">
                         <h3>Premium Quality</h3>
                         <p>Hand-picked walnuts ensuring only the best ones make it to you.</p>
                     </div>
