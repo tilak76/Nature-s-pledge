@@ -257,4 +257,10 @@ body {
     border-left: none !important;
     border-bottom: 4px solid transparent;
   }
+
+  /* Mobile Checkout */
+  .checkout-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
 }
