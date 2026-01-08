@@ -1,24 +1,39 @@
+import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '../context/ToastContext';
+import Modal from '../components/Modal';
+import './Dashboard.css';
 
 const Dashboard = () => {
     const { user, logout, updateUser } = useAuth();
     const navigate = useNavigate();
     const [activeTab, setActiveTab] = useState('dashboard');
     const { showToast } = useToast();
+    const [isAddMoneyModalOpen, setIsAddMoneyModalOpen] = useState(false);
+    const [amountToAdd, setAmountToAdd] = useState('');
 
     if (!user) {
         navigate('/login');
         return null;
     }
 
-    const handleAddMoney = () => {
-        // Mock Add Money
-        const amount = 500; // Fixed mock amount for demo
-        const newBalance = (user.walletBalance || 0) + amount;
-        updateUser({ walletBalance: newBalance });
-        showToast(`Added ₹${amount} to wallet! 💰`);
+    const handleOpenAddMoney = () => {
+        setAmountToAdd('');
+        setIsAddMoneyModalOpen(true);
+    };
+
+    const handleConfirmAddMoney = (e) => {
+        e.preventDefault();
+        const amount = parseFloat(amountToAdd);
+        if (amount > 0) {
+            const newBalance = (user.walletBalance || 0) + amount;
+            updateUser({ walletBalance: newBalance });
+            showToast(`Successfully added ₹${amount} to wallet! 💰`);
+            setIsAddMoneyModalOpen(false);
+        } else {
+            showToast('Please enter a valid amount', 'error');
+        }
     };
 
     const TabButton = ({ id, label, icon }) => (
@@ -155,7 +170,7 @@ const Dashboard = () => {
                 return (
                     <div>
                         <div style={{ marginBottom: '30px' }}>
-                            <h1 style={{ margin: 0, color: '#3E2723' }}>Hello, {user.name.split(' ')[0]}! 👋</h1>
+                            <h1 style={{ margin: 0, color: '#3E2723' }}>Hello, {user?.name ? user.name.split(' ')[0] : 'User'}! 👋</h1>
                             <p style={{ color: '#666', marginTop: '5px' }}>Welcome back to your Nature Pledge account.</p>
                         </div>
 
@@ -166,7 +181,7 @@ const Dashboard = () => {
                                 </div>
                                 <div>
                                     <div style={{ fontSize: '0.9rem', color: '#888' }}>Wallet Balance</div>
-                                    <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#333' }}>₹{user.walletBalance || 0}</div>
+                                    <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#333' }}>₹{user?.walletBalance || 0}</div>
                                 </div>
                             </div>
                             <div style={{ background: 'white', padding: '20px', borderRadius: '12px', boxShadow: '0 4px 20px rgba(0,0,0,0.04)', display: 'flex', alignItems: 'center', gap: '20px' }}>
@@ -196,10 +211,10 @@ const Dashboard = () => {
                 <div style={{ height: 'fit-content' }}>
                     <div style={{ background: 'white', borderRadius: '12px', padding: '25px', boxShadow: '0 4px 20px rgba(0,0,0,0.04)', textAlign: 'center', marginBottom: '20px' }}>
                         <div style={{ width: '80px', height: '80px', background: '#5D4037', color: 'white', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 15px', fontSize: '2rem', fontWeight: 'bold' }}>
-                            {user.name.charAt(0)}
+                            {user?.name ? user.name.charAt(0) : 'U'}
                         </div>
-                        <h3 style={{ margin: '0 0 5px 0', color: '#333' }}>{user.name}</h3>
-                        <p style={{ margin: 0, color: '#888', fontSize: '0.9rem' }}>{user.email}</p>
+                        <h3 style={{ margin: '0 0 5px 0', color: '#333' }}>{user?.name || 'Guest User'}</h3>
+                        <p style={{ margin: 0, color: '#888', fontSize: '0.9rem' }}>{user?.email || ''}</p>
                     </div>
 
                     <div style={{ background: 'white', borderRadius: '12px', padding: '15px', boxShadow: '0 4px 20px rgba(0,0,0,0.04)' }}>
@@ -218,10 +233,42 @@ const Dashboard = () => {
                 </div>
 
                 {/* Main Content */}
-                <div>
+                <div style={{ width: '100%' }}>
                     {renderContent()}
                 </div>
             </div>
+
+            {/* Add Money Modal */}
+            <Modal
+                isOpen={isAddMoneyModalOpen}
+                onClose={() => setIsAddMoneyModalOpen(false)}
+                title="Top Up Wallet"
+            >
+                <form onSubmit={handleConfirmAddMoney}>
+                    <div style={{ marginBottom: '1.5rem', textAlign: 'center' }}>
+                        <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>💳</div>
+                        <p style={{ color: '#666' }}>Enter amount to add to your Nature Pledge wallet.</p>
+                    </div>
+                    <div style={{ marginBottom: '1.5rem' }}>
+                        <label style={{ display: 'block', marginBottom: '0.5rem', color: '#555', fontWeight: '500' }}>Amount (₹)</label>
+                        <input
+                            type="number"
+                            min="1"
+                            placeholder="e.g. 500"
+                            value={amountToAdd}
+                            onChange={(e) => setAmountToAdd(e.target.value)}
+                            style={{ width: '100%', padding: '12px', fontSize: '1.2rem', borderRadius: '8px', border: '1px solid #ddd' }}
+                            autoFocus
+                        />
+                    </div>
+                    <button
+                        type="submit"
+                        style={{ width: '100%', padding: '15px', background: '#5D4037', color: 'white', border: 'none', borderRadius: '8px', fontSize: '1.1rem', fontWeight: 'bold', cursor: 'pointer' }}
+                    >
+                        Proceed to Pay
+                    </button>
+                </form>
+            </Modal>
 
             {/* Mobile Responsive Style */}
             <style>{`
@@ -230,6 +277,28 @@ const Dashboard = () => {
                         grid-template-columns: 1fr !important;
                         gap: 20px !important;
                     }
+                    /* Allow horizontal scroll for tabs on mobile if needed, or just stack them */
+                    div[style*="background: white; borderRadius: 12px; padding: 15px"] {
+                        display: flex;
+                        overflow-x: auto;
+                        padding: 10px !important;
+                        gap: 10px;
+                        background: transparent !important;
+                        box-shadow: none !important;
+                    }
+                    div[style*="background: white; borderRadius: 12px; padding: 15px"] button {
+                        white-space: nowrap;
+                        flex: 0 0 auto;
+                        width: auto !important;
+                        margin: 0 !important;
+                        padding: 10px 20px !important;
+                        background: white !important;
+                        border: 1px solid #eee !important;
+                    }
+                     div[style*="background: white; borderRadius: 12px; padding: 15px"] button[style*="#5D4037"] {
+                        background: #5D4037 !important;
+                        color: white !important;
+                     }
                 }
             `}</style>
         </div>

@@ -6,13 +6,17 @@ import { useToast } from '../context/ToastContext';
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
     const { login } = useAuth();
     const { showToast } = useToast();
     const navigate = useNavigate();
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        const result = login(email, password);
+        setIsLoading(true);
+        const result = await login(email, password);
+        setIsLoading(false);
+
         if (result.success) {
             showToast('Welcome back! 👋');
             navigate('/dashboard');
@@ -48,9 +52,13 @@ const Login = () => {
                     </div>
                     <button
                         type="submit"
-                        style={{ width: '100%', padding: '12px', background: '#5D4037', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold' }}
+                        disabled={isLoading}
+                        style={{
+                            width: '100%', padding: '12px', background: isLoading ? '#8D6E63' : '#5D4037',
+                            color: 'white', border: 'none', borderRadius: '6px', cursor: isLoading ? 'wait' : 'pointer', fontWeight: 'bold'
+                        }}
                     >
-                        Login
+                        {isLoading ? 'Logging in...' : 'Login'}
                     </button>
                 </form>
                 <div style={{ marginTop: '1.5rem', textAlign: 'center', color: '#666' }}>

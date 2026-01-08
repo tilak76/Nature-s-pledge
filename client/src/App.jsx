@@ -15,28 +15,34 @@ import { AuthProvider } from './context/AuthContext';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Dashboard from './pages/Dashboard';
+import OrderTracking from './pages/OrderTracking';
+
+import { CartProvider } from './context/CartContext';
 
 function App() {
   return (
     <div className="app-container">
       <AuthProvider>
-        <ToastProvider>
-          <Navbar />
-          <div style={{ minHeight: '80vh' }}>
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/shop" element={<Shop />} />
-              <Route path="/product/:id" element={<ProductDetails />} />
-              <Route path="/cart" element={<Checkout />} />
-              <Route path="/payment" element={<Payment />} />
-              <Route path="/admin" element={<Admin />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/signup" element={<Signup />} />
-              <Route path="/dashboard" element={<Dashboard />} />
-            </Routes>
-          </div>
-          <Footer />
-        </ToastProvider>
+        <CartProvider>
+          <ToastProvider>
+            <Navbar />
+            <div style={{ minHeight: '80vh' }}>
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/shop" element={<Shop />} />
+                <Route path="/product/:id" element={<ProductDetails />} />
+                <Route path="/cart" element={<Checkout />} />
+                <Route path="/payment" element={<Payment />} />
+                <Route path="/admin" element={<Admin />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/signup" element={<Signup />} />
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/track-order" element={<OrderTracking />} />
+              </Routes>
+            </div>
+            <Footer />
+          </ToastProvider>
+        </CartProvider>
       </AuthProvider>
     </div>
   );

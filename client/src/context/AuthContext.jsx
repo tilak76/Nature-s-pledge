@@ -10,54 +10,75 @@ export const AuthProvider = ({ children }) => {
 
     useEffect(() => {
         // Check local storage for existing session
-        const storedUser = localStorage.getItem('user');
-        if (storedUser) {
-            setUser(JSON.parse(storedUser));
+        try {
+            const storedUser = localStorage.getItem('user');
+            if (storedUser) {
+                setUser(JSON.parse(storedUser));
+            }
+        } catch (error) {
+            console.error("Failed to parse user session", error);
+            localStorage.removeItem('user');
         }
         setLoading(false);
     }, []);
 
-    const login = (email, password) => {
-        // Mock Login Logic
-        // In a real app, this would verify with backend
-        const storedUsers = JSON.parse(localStorage.getItem('registered_users') || '[]');
-        const foundUser = storedUsers.find(u => u.email === email && u.password === password);
+    const login = async (email, password) => {
+        // Mock Login Logic with simulated latency
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                try {
+                    const storedUsers = JSON.parse(localStorage.getItem('registered_users') || '[]');
+                    const safeUsers = Array.isArray(storedUsers) ? storedUsers : [];
+                    const foundUser = safeUsers.find(u => u.email === email && u.password === password);
 
-        if (foundUser) {
-            const userData = { ...foundUser };
-            delete userData.password; // Don't keep password in session
-            setUser(userData);
-            localStorage.setItem('user', JSON.stringify(userData));
-            return { success: true };
-        }
-        return { success: false, message: 'Invalid credentials' };
+                    if (foundUser) {
+                        const userData = { ...foundUser };
+                        delete userData.password; // Don't keep password in session
+                        setUser(userData);
+                        localStorage.setItem('user', JSON.stringify(userData));
+                        resolve({ success: true });
+                    } else {
+                        resolve({ success: false, message: 'Invalid credentials' });
+                    }
+                } catch (error) {
+                    console.error("Login verification failed", error);
+                    resolve({ success: false, message: 'System error. Please clear cache.' });
+                }
+            }, 1000); // 1 second delay
+        });
     };
 
     const signup = (userData) => {
-        // Mock Signup Logic
-        const storedUsers = JSON.parse(localStorage.getItem('registered_users') || '[]');
+        try {
+            const storedUsersRaw = localStorage.getItem('registered_users');
+            let storedUsers = storedUsersRaw ? JSON.parse(storedUsersRaw) : [];
+            if (!Array.isArray(storedUsers)) storedUsers = [];
 
-        if (storedUsers.some(u => u.email === userData.email)) {
-            return { success: false, message: 'User already exists' };
+            if (storedUsers.some(u => u.email === userData.email)) {
+                return { success: false, message: 'User already exists' };
+            }
+
+            const newUser = {
+                id: Date.now(),
+                ...userData,
+                walletBalance: 0, // Initial wallet balance
+                walletHistory: []
+            };
+
+            storedUsers.push(newUser);
+            localStorage.setItem('registered_users', JSON.stringify(storedUsers));
+
+            // Auto login
+            const sessionUser = { ...newUser };
+            delete sessionUser.password;
+            setUser(sessionUser);
+            localStorage.setItem('user', JSON.stringify(sessionUser));
+
+            return { success: true };
+        } catch (error) {
+            console.error("Signup failed", error);
+            return { success: false, message: 'Registration failed due to storage error.' };
         }
-
-        const newUser = {
-            id: Date.now(),
-            ...userData,
-            walletBalance: 0, // Initial wallet balance
-            walletHistory: []
-        };
-
-        storedUsers.push(newUser);
-        localStorage.setItem('registered_users', JSON.stringify(storedUsers));
-
-        // Auto login
-        const sessionUser = { ...newUser };
-        delete sessionUser.password;
-        setUser(sessionUser);
-        localStorage.setItem('user', JSON.stringify(sessionUser));
-
-        return { success: true };
     };
 
     const logout = () => {
@@ -78,7 +99,15 @@ export const AuthProvider = ({ children }) => {
 
     return (
         <AuthContext.Provider value={{ user, login, signup, logout, updateUser, loading }}>
-            {!loading && children}
+            {loading ? (
+                <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', background: '#fcf4ec' }}>
+                    <div style={{ fontSize: '3rem', marginBottom: '1rem', animation: 'spin 2s linear infinite' }}>🥥</div>
+                    <div style={{ color: '#5D4037', fontWeight: 'bold' }}>Loading Nature Pledge...</div>
+                    <style>{`@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }`}</style>
+                </div>
+            ) : (
+                children
+            )}
         </AuthContext.Provider>
     );
 };

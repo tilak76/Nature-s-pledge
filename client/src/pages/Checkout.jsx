@@ -1,99 +1,141 @@
 import React, { useState } from 'react';
 import { useCart } from '../context/CartContext';
 import { useNavigate } from 'react-router-dom';
-
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 
 const Checkout = () => {
-    const { cart, cartTotal, clearCart } = useCart();
+    const { cart, cartTotal, clearCart, updateQuantity, removeFromCart } = useCart();
     const { user, updateUser } = useAuth();
     const { showToast } = useToast();
     const navigate = useNavigate();
-    const [useWallet, setUseWallet] = useState(false);
-    const [formData, setFormData] = useState({
-        name: '',
-        info: '',
-        email: '',
-        phone: '',
-        street: '',
-        city: '',
-        district: '',
-        state: '',
-        pincode: ''
-    });
-    const [showQR, setShowQR] = useState(false);
 
-    const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
+    const [shipping, setShipping] = useState({
+        fullName: '',
+        address: '',
+        city: '',
+        pincode: '',
+        phone: ''
+    });
+    const [useWallet, setUseWallet] = useState(false);
+
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setShipping(prev => ({ ...prev, [name]: value }));
     };
 
     const handlePlaceOrder = () => {
-        if (!formData.name || !formData.street || !formData.district || !formData.phone || !formData.pincode) {
-            alert('Please fill in all shipping details including District and Pin Code.');
+        // Validation
+        if (!shipping.fullName || !shipping.address || !shipping.city || !shipping.pincode || !shipping.phone) {
+            showToast('Please fill in all shipping details', 'error');
             return;
         }
+
+        if (cart.length === 0) {
+            showToast('Your cart is empty', 'error');
+            return;
+        }
+
+        let finalAmount = cartTotal;
+        let walletDeduction = 0;
+
         if (useWallet) {
             if (user.walletBalance >= cartTotal) {
-                // Deduct from wallet
-                const newBalance = user.walletBalance - cartTotal;
-                updateUser({ walletBalance: newBalance });
-
-                showToast('Payment Successful via Wallet! 🎉');
-                clearCart();
-                navigate('/dashboard'); // Go to orders/dashboard
+                walletDeduction = cartTotal;
+                finalAmount = 0;
             } else {
-                showToast('Insufficient Wallet Balance', 'error');
+                showToast('Insufficient wallet balance for full payment', 'error');
+                return;
             }
-        } else {
-            // Save details to pass to Payment page (Razorpay)
-            localStorage.setItem('checkoutInfo', JSON.stringify(formData));
-            navigate('/payment');
         }
+
+        // Simulate Order Placement
+        setTimeout(() => {
+            if (useWallet && walletDeduction > 0) {
+                const newBalance = user.walletBalance - walletDeduction;
+                updateUser({ walletBalance: newBalance });
+            }
+
+            showToast('Order Placed Successfully! 🎉');
+            clearCart();
+            navigate('/dashboard'); // Go to orders/dashboard
+        }, 1500);
     };
 
-    // const confirmPayment = ... (can be removed or kept as backup)
-
-    if (cart.length === 0) return <div className="container" style={{ padding: '2rem' }}><h2>Your Cart is Empty</h2></div>;
+    if (cart.length === 0) {
+        return (
+            <div className="container" style={{ padding: '4rem 0', textAlign: 'center' }}>
+                <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>🛒</div>
+                <h2>Your Cart is Empty</h2>
+                <p style={{ color: '#666', marginBottom: '2rem' }}>Looks like you haven't added anything yet.</p>
+                <button
+                    onClick={() => navigate('/shop')}
+                    style={{ padding: '12px 30px', background: '#5D4037', color: 'white', border: 'none', borderRadius: '50px', fontSize: '1.1rem', cursor: 'pointer' }}
+                >
+                    Start Shopping
+                </button>
+            </div>
+        );
+    }
 
     return (
         <div className="container" style={{ padding: '2rem 0' }}>
             <h2 style={{ marginBottom: '2rem' }}>Checkout</h2>
-            <div className="checkout-grid">
+            <div className="checkout-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem' }}>
 
                 {/* Shipping Form */}
-                <div style={{ background: 'white', padding: '2rem', borderRadius: '8px', boxShadow: '0 2px 10px rgba(0,0,0,0.05)' }}>
-                    <h3 style={{ marginTop: 0 }}>Shipping Details</h3>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                        <input type="text" name="name" placeholder="Full Name" className="search-bar" style={{ margin: 0 }} onChange={handleChange} />
-                        <input type="email" name="email" placeholder="Email Address" className="search-bar" style={{ margin: 0 }} onChange={handleChange} />
-                        <input type="text" name="phone" placeholder="Phone Number" className="search-bar" style={{ margin: 0 }} onChange={handleChange} />
-
-                        <div style={{ display: 'flex', gap: '1rem' }}>
-                            <input type="text" name="pincode" placeholder="Pin Code" className="search-bar" style={{ margin: 0 }} onChange={handleChange} />
-                            <input type="text" name="district" placeholder="District" className="search-bar" style={{ margin: 0 }} onChange={handleChange} />
+                <div>
+                    <h3 style={{ marginBottom: '1.5rem' }}>Shipping Details</h3>
+                    <form style={{ display: 'flex', flexDirection: 'column', gap: '15px' }} onSubmit={(e) => e.preventDefault()}>
+                        <input name="fullName" placeholder="Full Name" value={shipping.fullName} onChange={handleInputChange} style={{ padding: '12px', borderRadius: '4px', border: '1px solid #ddd' }} />
+                        <input name="address" placeholder="Address" value={shipping.address} onChange={handleInputChange} style={{ padding: '12px', borderRadius: '4px', border: '1px solid #ddd' }} />
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
+                            <input name="city" placeholder="City" value={shipping.city} onChange={handleInputChange} style={{ padding: '12px', borderRadius: '4px', border: '1px solid #ddd' }} />
+                            <input name="pincode" placeholder="Pincode" value={shipping.pincode} onChange={handleInputChange} style={{ padding: '12px', borderRadius: '4px', border: '1px solid #ddd' }} />
                         </div>
-                        <div style={{ display: 'flex', gap: '1rem' }}>
-                            <input type="text" name="city" placeholder="City" className="search-bar" style={{ margin: 0 }} onChange={handleChange} />
-                            <input type="text" name="state" placeholder="State" className="search-bar" style={{ margin: 0 }} onChange={handleChange} />
-                        </div>
-                        <textarea name="street" placeholder="House No, Building, Street Area" className="search-bar" style={{ margin: 0, height: '80px' }} onChange={handleChange}></textarea>
-                    </div>
+                        <input name="phone" placeholder="Phone Number" value={shipping.phone} onChange={handleInputChange} style={{ padding: '12px', borderRadius: '4px', border: '1px solid #ddd' }} />
+                    </form>
                 </div>
 
                 {/* Order Summary & Payment */}
-                {/* Order Summary & Payment */}
                 <div style={{ background: '#fcf4ec', padding: '2rem', borderRadius: '8px', border: '1px solid #e0e0e0', height: 'fit-content' }}>
-                    <h3 style={{ marginTop: 0 }}>Order Summary</h3>
-                    {cart.map(item => (
-                        <div key={item.id} style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-                            <span>{item.name} x {item.quantity}</span>
-                            <span>₹{item.price * item.quantity}</span>
-                        </div>
-                    ))}
-                    <hr style={{ margin: '1rem 0', border: 'none', borderTop: '1px solid #ccc' }} />
-                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '1.2rem', fontWeight: 'bold' }}>
-                        <span>Total</span>
+                    <h3 style={{ marginTop: 0, marginBottom: '1.5rem' }}>Order Summary</h3>
+
+                    <div style={{ maxHeight: '300px', overflowY: 'auto', marginBottom: '1rem', paddingRight: '5px' }}>
+                        {cart.map(item => (
+                            <div key={item.id} style={{ display: 'flex', gap: '15px', marginBottom: '1.5rem', borderBottom: '1px solid #eee', paddingBottom: '1rem' }}>
+                                <div style={{ flex: 1 }}>
+                                    <div style={{ fontWeight: 'bold', color: '#3E2723', marginBottom: '5px' }}>{item.name}</div>
+                                    <div style={{ fontSize: '0.9rem', color: '#666', marginBottom: '8px' }}>₹{item.price} / unit</div>
+
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                        <div style={{ display: 'flex', alignItems: 'center', border: '1px solid #ccc', borderRadius: '4px', background: 'white' }}>
+                                            <button
+                                                onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                                                disabled={item.quantity <= 1}
+                                                style={{ padding: '5px 10px', background: 'transparent', border: 'none', cursor: 'pointer', color: '#555' }}
+                                            >-</button>
+                                            <span style={{ padding: '0 5px', minWidth: '20px', textAlign: 'center' }}>{item.quantity}</span>
+                                            <button
+                                                onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                                                style={{ padding: '5px 10px', background: 'transparent', border: 'none', cursor: 'pointer', color: '#555' }}
+                                            >+</button>
+                                        </div>
+                                        <button
+                                            onClick={() => removeFromCart(item.id)}
+                                            style={{ background: 'transparent', border: 'none', color: '#e53935', fontSize: '0.9rem', cursor: 'pointer', textDecoration: 'underline' }}
+                                        >
+                                            Remove
+                                        </button>
+                                    </div>
+                                </div>
+                                <div style={{ fontWeight: 'bold' }}>₹{item.price * item.quantity}</div>
+                            </div>
+                        ))}
+                    </div>
+
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '1.2rem', fontWeight: 'bold', borderTop: '2px solid #3E2723', paddingTop: '1rem' }}>
+                        <span>Total Amount</span>
                         <span>₹{cartTotal}</span>
                     </div>
 
