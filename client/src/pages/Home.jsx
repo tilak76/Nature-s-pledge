@@ -1,8 +1,9 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './Home.css'; // We will create this
 
 const Home = () => {
+    const navigate = useNavigate();
     return (
         <div className="home-page">
             {/* Hero Section */}
@@ -25,27 +26,27 @@ const Home = () => {
             <section className="container featured-section">
                 <h2 className="section-title">Our Premium Collection</h2>
                 <div className="features-grid">
-                    <div className="feature-card">
+                    <div className="feature-card" onClick={() => navigate('/product/1')} style={{ cursor: 'pointer' }}>
                         <img src="/kashmiri_almond_proper.jpg" alt="Kashmiri Almond" />
                         <h3>Kashmiri Almond</h3>
                         <p>Rich in oil, naturally sweet. <br /><span style={{ color: '#555', fontStyle: 'italic' }}>Asli Kashmiri Mamra, sehat ka khazana.</span></p>
                     </div>
-                    <div className="feature-card">
+                    <div className="feature-card" onClick={() => navigate('/product/6')} style={{ cursor: 'pointer' }}>
                         <img src="/kashmiri_walnut_real.png" alt="Kashmiri Premium Walnut" />
                         <h3>Kashmiri Premium Walnut</h3>
                         <p>Snow-white kernels, easy to break. <br /><span style={{ color: '#555', fontStyle: 'italic' }}>Haath se todiye, taazgi mehsoos kijiye.</span></p>
                     </div>
-                    <div className="feature-card">
+                    <div className="feature-card" onClick={() => navigate('/product/3')} style={{ cursor: 'pointer' }}>
                         <img src="/rajma_royal_real.jpg" alt="Rajma Royal" />
                         <h3>Rajma Royal</h3>
                         <p>Perfect texture, distinct flavor. <br /><span style={{ color: '#555', fontStyle: 'italic' }}>Wohi purana swaad, jo muh mein ghul jaye.</span></p>
                     </div>
-                    <div className="feature-card">
+                    <div className="feature-card" onClick={() => navigate('/product/4')} style={{ cursor: 'pointer' }}>
                         <img src="/rajma_bhaderwahi_real.jpg" alt="Bhaderwahi Rajma Premium" />
                         <h3>Bhaderwahi Rajma Premium</h3>
                         <p>World famous localized variety. <br /><span style={{ color: '#555', fontStyle: 'italic' }}>Chota daana, lekin swaad bemisaal.</span></p>
                     </div>
-                    <div className="feature-card">
+                    <div className="feature-card" onClick={() => navigate('/product/7')} style={{ cursor: 'pointer' }}>
                         <img src="/anardana_real.png" alt="Anardana Chutney Special" />
                         <h3>Anardana Chutney Special</h3>
                         <p>Tangy & spicy traditional delicacy. <br /><span style={{ color: '#555', fontStyle: 'italic' }}>Chatpata swaad, jo khane ka maza dugna kar de.</span></p>
