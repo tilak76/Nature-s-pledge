@@ -11,7 +11,7 @@ const Navbar = () => {
     const navigate = useNavigate();
     // Default to empty array if cart is undefined to prevent crash
     const currentCart = Array.isArray(cart) ? cart : [];
-    const cartCount = currentCart.reduce((acc, item) => acc + (parseInt(item.quantity) || 1), 0);
+    const cartCount = currentCart.reduce((acc, item) => acc + (parseInt(item.quantity) || 0), 0);
 
     const handleLogout = () => {
         logout();
@@ -50,7 +50,7 @@ const Navbar = () => {
                     {user ? (
                         <>
                             <Link to="/dashboard" onClick={() => setIsOpen(false)}>Dashboard</Link>
-                            <span onClick={handleLogout} style={{ cursor: 'pointer', marginLeft: '1rem', fontWeight: '500', color: '#5D4037', display: 'flex', alignItems: 'center', gap: '5px' }}>
+                            <span onClick={handleLogout} className="logout-btn">
                                 Logout
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
                             </span>
@@ -60,12 +60,17 @@ const Navbar = () => {
                     )}
 
                     <Link to="/cart" className="cart-icon-wrapper" onClick={() => setIsOpen(false)}>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ color: '#5D4037' }}>
-                            <circle cx="9" cy="21" r="1"></circle>
-                            <circle cx="20" cy="21" r="1"></circle>
-                            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
-                        </svg>
-                        {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <span className="mobile-only">Cart</span>
+                            <div style={{ position: 'relative' }}>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ color: '#5D4037' }}>
+                                    <circle cx="9" cy="21" r="1"></circle>
+                                    <circle cx="20" cy="21" r="1"></circle>
+                                    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                                </svg>
+                                {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
+                            </div>
+                        </div>
                     </Link>
                 </div>
             </div>

@@ -49,16 +49,49 @@ const Checkout = () => {
             }
         }
 
-        // Simulate Order Placement
+        // Generate Unique Order ID
+        const orderId = 'ORD-' + Math.floor(100000 + Math.random() * 900000);
+
+        // Generate Mock Speed Post Number (EU...IN)
+        const trackingNumber = 'EU' + Math.floor(100000000 + Math.random() * 900000000) + 'IN';
+
+        // Create Order Object
+        const newOrder = {
+            id: orderId,
+            trackingNumber: trackingNumber,
+            date: new Date().toISOString(),
+            status: 'Processing',
+            items: cart,
+            total: finalAmount,
+            walletUsed: useWallet ? walletDeduction : 0,
+            shipping: shipping,
+            updates: [
+                { status: 'Item Booked', location: 'Nature Pledge Facility', time: new Date().toLocaleTimeString(), completed: true },
+                { status: 'Item Received', location: 'New Delhi GPO', time: 'Pending', completed: false },
+                { status: 'Dispatched', location: 'New Delhi NSH', time: 'Pending', completed: false },
+                { status: 'Out for Delivery', location: shipping.city + ' SO', time: 'Pending', completed: false }
+            ]
+        };
+
+        // Save to Local Storage (Simulating Database)
+        const existingOrders = JSON.parse(localStorage.getItem('orders') || '[]');
+        existingOrders.unshift(newOrder); // Add to top
+        localStorage.setItem('orders', JSON.stringify(existingOrders));
+
+        // Simulate Network & Success
         setTimeout(() => {
             if (useWallet && walletDeduction > 0) {
                 const newBalance = user.walletBalance - walletDeduction;
                 updateUser({ walletBalance: newBalance });
             }
 
-            showToast('Order Placed Successfully! 🎉');
+            showToast(`Order Placed! ID: ${orderId}`);
+            // Copy ID to clipboard
+            navigator.clipboard.writeText(orderId);
+
             clearCart();
-            navigate('/dashboard'); // Go to orders/dashboard
+            // Redirect to Tracking page with ID
+            navigate(`/track-order?id=${orderId}`);
         }, 1500);
     };
 
