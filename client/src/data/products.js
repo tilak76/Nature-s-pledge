@@ -6,7 +6,10 @@ export const products = [
         "price": 510,
         "image": "/kashmiri_almond_proper.jpg",
         "category": "Almond",
-        "stock": 50
+        "stock": 50,
+        "origin_story": "Grown in the high-altitude orchards of Pulwama, these almonds drink the glacial waters of the Himalayas.",
+        "farm_story": "Our farmer, Bashir Chacha, gently harvests these by hand. No machines, only love. The oil content is 40% higher than California almonds.",
+        "health_benefits": ["Rich in Vitamin E for glowing skin", "High good fats for heart health", "Brain booster for kids"]
     },
     {
         "id": 2,
@@ -15,7 +18,10 @@ export const products = [
         "price": 260,
         "image": "/kashmiri_almond_proper.jpg",
         "category": "Almond",
-        "stock": 40
+        "stock": 40,
+        "origin_story": "Grown in the high-altitude orchards of Pulwama, these almonds drink the glacial waters of the Himalayas.",
+        "farm_story": "Our farmer, Bashir Chacha, gently harvests these by hand. No machines, only love. The oil content is 40% higher than California almonds.",
+        "health_benefits": ["Rich in Vitamin E for glowing skin", "High good fats for heart health", "Brain booster for kids"]
     },
     {
         "id": 9,
@@ -24,7 +30,10 @@ export const products = [
         "price": 110,
         "image": "/kashmiri_almond_proper.jpg",
         "category": "Almond",
-        "stock": 50
+        "stock": 50,
+        "origin_story": "Grown in the high-altitude orchards of Pulwama, these almonds drink the glacial waters of the Himalayas.",
+        "farm_story": "Our farmer, Bashir Chacha, gently harvests these by hand. No machines, only love. The oil content is 40% higher than California almonds.",
+        "health_benefits": ["Rich in Vitamin E for glowing skin", "High good fats for heart health", "Brain booster for kids"]
     },
     {
         "id": 3,
@@ -33,7 +42,10 @@ export const products = [
         "price": 300,
         "image": "/rajma_royal_real.jpg",
         "category": "Rajma",
-        "stock": 100
+        "stock": 100,
+        "origin_story": "Sourced from the distinct red soils of Bhaderwah/Jammu region, famous for kidney beans.",
+        "farm_story": "Sun-dried naturally on rooftops in the valley. We pack them fresh without any artificial polishing.",
+        "health_benefits": ["High protein content", "Melts in mouth texture", "Perfect for Sunday Rajma-Chawal"]
     },
     {
         "id": 10,
@@ -42,16 +54,22 @@ export const products = [
         "price": 150,
         "image": "/rajma_royal_real.jpg",
         "category": "Rajma",
-        "stock": 100
+        "stock": 100,
+        "origin_story": "Sourced from the distinct red soils of Bhaderwah/Jammu region, famous for kidney beans.",
+        "farm_story": "Sun-dried naturally on rooftops in the valley. We pack them fresh without any artificial polishing.",
+        "health_benefits": ["High protein content", "Melts in mouth texture", "Perfect for Sunday Rajma-Chawal"]
     },
     {
         "id": 4,
         "name": "Bhaderwahi Rajma Premium - 1kg",
-        "description": "World-famous Bhaderwahi Rajma, known for unique flavor and quick cooking.",
+        "description": "World-famous Bhaderwahi Rajma, known for unique flavor.",
         "price": 400,
         "image": "/rajma_bhaderwahi_real.jpg",
         "category": "Rajma",
-        "stock": 80
+        "stock": 80,
+        "origin_story": "The legendary Bhaderwahi Rajma (GI Tag candidate), grown in the pristine Bhaderwah valley.",
+        "farm_story": "Known as 'Meat of the Poor' for its rich texture. Hand-cleaned by local women collectives.",
+        "health_benefits": ["Unique sweet taste", "Cooks quickly", "Rich in Iron and Molybdenum"]
     },
     {
         "id": 11,
@@ -60,7 +78,10 @@ export const products = [
         "price": 210,
         "image": "/rajma_bhaderwahi_real.jpg",
         "category": "Rajma",
-        "stock": 60
+        "stock": 60,
+        "origin_story": "The legendary Bhaderwahi Rajma (GI Tag candidate), grown in the pristine Bhaderwah valley.",
+        "farm_story": "Known as 'Meat of the Poor' for its rich texture. Hand-cleaned by local women collectives.",
+        "health_benefits": ["Unique sweet taste", "Cooks quickly", "Rich in Iron and Molybdenum"]
     },
     {
         "id": 5,
@@ -69,7 +90,10 @@ export const products = [
         "price": 60,
         "image": "/maize_flour_real.jpg",
         "category": "Atta",
-        "stock": 150
+        "stock": 150,
+        "origin_story": "From the golden maize fields of rural Kashmir.",
+        "farm_story": "Ground in traditional water mills (Gharat). This cold-milling process keeps nutrients intact.",
+        "health_benefits": ["Gluten-free choice", "Sweet, earthy taste", "High in fiber"]
     },
     {
         "id": 6,
@@ -78,7 +102,10 @@ export const products = [
         "price": 370,
         "image": "/kashmiri_walnut_real.png",
         "category": "Walnut",
-        "stock": 200
+        "stock": 200,
+        "origin_story": "Harvested from ancient walnut trees in Kupwara and Bandipora.",
+        "farm_story": "Kagazi (Paper) variety - you can break two walnuts by pressing them in one hand. 100% Tree ripened.",
+        "health_benefits": ["Omega-3 brain food", "Paper thin shell", "Milky white kernel"]
     },
     {
         "id": 12,
@@ -87,7 +114,10 @@ export const products = [
         "price": 190,
         "image": "/kashmiri_walnut_real.png",
         "category": "Walnut",
-        "stock": 100
+        "stock": 100,
+        "origin_story": "Harvested from ancient walnut trees in Kupwara and Bandipora.",
+        "farm_story": "Kagazi (Paper) variety - you can break two walnuts by pressing them in one hand. 100% Tree ripened.",
+        "health_benefits": ["Omega-3 brain food", "Paper thin shell", "Milky white kernel"]
     },
     {
         "id": 7,
@@ -96,7 +126,10 @@ export const products = [
         "price": 600,
         "image": "/anardana_real.png",
         "category": "Chutney",
-        "stock": 60
+        "stock": 60,
+        "origin_story": "Made from wild pomegranates (Daru) found in the hills of Jammu.",
+        "farm_story": "Sun-dried seeds ground with mint, green chillies, and secret spices. A recipe passed down for generations.",
+        "health_benefits": ["Digestive aid", "Boosts appetite", "Vitamin C rich"]
     },
     {
         "id": 8,
@@ -105,6 +138,9 @@ export const products = [
         "price": 125,
         "image": "/anardana_real.png",
         "category": "Chutney",
-        "stock": 100
+        "stock": 100,
+        "origin_story": "Made from wild pomegranates (Daru) found in the hills of Jammu.",
+        "farm_story": "Sun-dried seeds ground with mint, green chillies, and secret spices. A recipe passed down for generations.",
+        "health_benefits": ["Digestive aid", "Boosts appetite", "Vitamin C rich"]
     }
 ];

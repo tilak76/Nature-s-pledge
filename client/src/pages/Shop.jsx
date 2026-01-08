@@ -119,7 +119,7 @@ const Shop = () => {
                         <div
                             key={index}
                             className="product-card"
-                            onClick={() => handleAddToCartClick({ stopPropagation: () => { } }, group)} // Open modal on card click too
+                            onClick={() => navigate(`/product/${group.variants[0].id}`)} // Navigate to details on card click
                         >
                             <img src={group.image} alt={group.baseName} className="product-image" />
                             <div className="product-info">
