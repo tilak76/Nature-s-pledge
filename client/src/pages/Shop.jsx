@@ -13,7 +13,7 @@ const Shop = () => {
     const navigate = useNavigate();
     const { showToast } = useToast();
 
-    const categories = ['All', 'Walnut', 'Kernels', 'Roasted']; // Enhance if more categories exist
+    const categories = ['All', 'Walnut', 'Almond', 'Rajma', 'Atta', 'Chutney']; // Enhanced categories
 
     useEffect(() => {
         filterProducts(searchTerm, category);

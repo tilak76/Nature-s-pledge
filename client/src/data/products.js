@@ -1,38 +1,110 @@
 export const products = [
     {
         "id": 1,
-        "name": "Premium Kashmiri Walnuts (inshell)",
-        "description": "High-quality organic Kashmiri walnuts with thin shell.",
-        "price": 500,
-        "image": "/kashmiri_akhrot.png",
-        "category": "Walnut",
+        "name": "Kashmiri Almond (Badam) - 500g",
+        "description": "Premium organic Kashmiri Almonds, rich in oil and nutrition.",
+        "price": 510,
+        "image": "/kashmiri_almond.png",
+        "category": "Almond",
         "stock": 50
     },
     {
         "id": 2,
-        "name": "California Walnuts (Kernels)",
-        "description": "Fresh and crunchy walnut kernels from California.",
-        "price": 1200,
-        "image": "/walnut_kernels.png",
+        "name": "Kashmiri Almond (Badam) - 250g",
+        "description": "Premium organic Kashmiri Almonds (Small Pack).",
+        "price": 260,
+        "image": "/kashmiri_almond.png",
+        "category": "Almond",
+        "stock": 40
+    },
+    {
+        "id": 9,
+        "name": "Kashmiri Almond (Badam) - 100g",
+        "description": "Trial pack of Premium organic Kashmiri Almonds.",
+        "price": 110,
+        "image": "/kashmiri_almond.png",
+        "category": "Almond",
+        "stock": 50
+    },
+    {
+        "id": 3,
+        "name": "Rajma Royal (Red Kidney Beans) - 1kg",
+        "description": "Authentic tasty Rajma Royal, perfect for curry.",
+        "price": 300,
+        "image": "/rajma_beans.png",
+        "category": "Rajma",
+        "stock": 100
+    },
+    {
+        "id": 10,
+        "name": "Rajma Royal (Red Kidney Beans) - 500g",
+        "description": "Authentic tasty Rajma Royal (Small Pack).",
+        "price": 150,
+        "image": "/rajma_beans.png",
+        "category": "Rajma",
+        "stock": 100
+    },
+    {
+        "id": 4,
+        "name": "Bhaderwahi Rajma Premium - 1kg",
+        "description": "World-famous Bhaderwahi Rajma, known for unique flavor and quick cooking.",
+        "price": 400,
+        "image": "/rajma_bhaderwahi.jpg",
+        "category": "Rajma",
+        "stock": 80
+    },
+    {
+        "id": 11,
+        "name": "Bhaderwahi Rajma Premium - 500g",
+        "description": "World-famous Bhaderwahi Rajma (Small Pack).",
+        "price": 210,
+        "image": "/rajma_bhaderwahi.jpg",
+        "category": "Rajma",
+        "stock": 60
+    },
+    {
+        "id": 5,
+        "name": "Organic Maize Flour (Makki Atta) - 1kg",
+        "description": "Freshly stone-ground organic Maize flour for sweet rotis.",
+        "price": 60,
+        "image": "/maize_flour.png",
+        "category": "Atta",
+        "stock": 150
+    },
+    {
+        "id": 6,
+        "name": "Kashmiri Premium Walnut - 1kg",
+        "description": "Fresh harvest Kashmiri Walnuts with thin paper shell.",
+        "price": 370,
+        "image": "/kashmiri_walnut_real.png",
+        "category": "Walnut",
+        "stock": 200
+    },
+    {
+        "id": 12,
+        "name": "Kashmiri Premium Walnut - 500g",
+        "description": "Fresh harvest Kashmiri Walnuts (Small Pack).",
+        "price": 190,
+        "image": "/kashmiri_walnut_real.png",
         "category": "Walnut",
         "stock": 100
     },
     {
-        "id": 3,
-        "name": "Organic Akhroth Giri",
-        "description": "100% Organic Walnut Kernels, rich in Omega-3.",
-        "price": 1500,
-        "image": "/organic_akhrot.png",
-        "category": "Walnut",
-        "stock": 30
+        "id": 7,
+        "name": "Anardana Chutney Special - 500g",
+        "description": "Tangy and spicy Anardana Chutney, a traditional delicacy.",
+        "price": 600,
+        "image": "/anardana_real.png",
+        "category": "Chutney",
+        "stock": 60
     },
     {
-        "id": 4,
-        "name": "Roasted Salted Walnuts",
-        "description": "Perfectly roasted and lightly salted for a healthy snack.",
-        "price": 1350,
-        "image": "/roasted_walnuts.png",
-        "category": "Walnut",
-        "stock": 80
+        "id": 8,
+        "name": "Anardana Chutney Special - 100g",
+        "description": "Tangy and spicy Anardana Chutney (Trial Pack).",
+        "price": 125,
+        "image": "/anardana_real.png",
+        "category": "Chutney",
+        "stock": 100
     }
 ];
