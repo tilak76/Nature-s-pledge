@@ -32,12 +32,14 @@ function App() {
                 <Route path="/shop" element={<Shop />} />
                 <Route path="/product/:id" element={<ProductDetails />} />
                 <Route path="/cart" element={<Checkout />} />
+                <Route path="/checkout" element={<Checkout />} />
                 <Route path="/payment" element={<Payment />} />
                 <Route path="/admin" element={<Admin />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/signup" element={<Signup />} />
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/track-order" element={<OrderTracking />} />
+                <Route path="*" element={<div style={{ padding: '4rem', textAlign: 'center' }}><h2>Page Not Found</h2><p>The page you are looking for does not exist.</p><a href="/" style={{ color: '#5D4037', textDecoration: 'underline' }}>Go Home</a></div>} />
               </Routes>
             </div>
             <Footer />

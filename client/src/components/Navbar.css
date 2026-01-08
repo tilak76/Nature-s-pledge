@@ -107,28 +107,34 @@
     font-weight: bold;
 }
 
-.cart-icon-wrapper {
-    margin-left: 0;
-    margin-top: 1rem;
-    width: 100%;
-    display: flex;
-    justify-content: flex-start;
-    padding: 10px 0;
-    /* Reduced padding to fit better */
-}
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .nav-links {
+        display: none;
+        /* Default hidden on mobile, toggled by JS */
+    }
 
-.mobile-only {
-    display: block;
-    color: #5D4037;
-    font-weight: 600;
-    margin-right: 15px;
-    font-family: 'Lato', sans-serif;
-}
+    .cart-icon-wrapper {
+        margin-left: 0;
+        margin-top: 1rem;
+        width: 100%;
+        display: flex;
+        justify-content: flex-start;
+        padding: 10px 0;
+    }
 
-.logout-btn {
-    margin-left: 0;
-    margin-top: 0.5rem;
-    width: 100%;
-    padding: 10px 0;
-}
+    .mobile-only {
+        display: block;
+        color: #5D4037;
+        font-weight: 600;
+        margin-right: 15px;
+        font-family: 'Lato', sans-serif;
+    }
+
+    .logout-btn {
+        margin-left: 0;
+        margin-top: 0.5rem;
+        width: 100%;
+        padding: 10px 0;
+    }
 }
