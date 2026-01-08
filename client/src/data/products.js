@@ -1,28 +1,28 @@
 export const products = [
     {
         "id": 1,
-        "name": "Kashmiri Almond (Badam) - 500g",
+        "name": "Kashmiri Almond - 500g",
         "description": "Premium organic Kashmiri Almonds, rich in oil and nutrition.",
         "price": 510,
-        "image": "/kashmiri_almond.png",
+        "image": "/kashmiri_almond_final.jpg",
         "category": "Almond",
         "stock": 50
     },
     {
         "id": 2,
-        "name": "Kashmiri Almond (Badam) - 250g",
+        "name": "Kashmiri Almond - 250g",
         "description": "Premium organic Kashmiri Almonds (Small Pack).",
         "price": 260,
-        "image": "/kashmiri_almond.png",
+        "image": "/kashmiri_almond_final.jpg",
         "category": "Almond",
         "stock": 40
     },
     {
         "id": 9,
-        "name": "Kashmiri Almond (Badam) - 100g",
+        "name": "Kashmiri Almond - 100g",
         "description": "Trial pack of Premium organic Kashmiri Almonds.",
         "price": 110,
-        "image": "/kashmiri_almond.png",
+        "image": "/kashmiri_almond_final.jpg",
         "category": "Almond",
         "stock": 50
     },
@@ -49,7 +49,7 @@ export const products = [
         "name": "Bhaderwahi Rajma Premium - 1kg",
         "description": "World-famous Bhaderwahi Rajma, known for unique flavor and quick cooking.",
         "price": 400,
-        "image": "/rajma_bhaderwahi.jpg",
+        "image": "/rajma_bhaderwahi_real.jpg",
         "category": "Rajma",
         "stock": 80
     },
@@ -58,7 +58,7 @@ export const products = [
         "name": "Bhaderwahi Rajma Premium - 500g",
         "description": "World-famous Bhaderwahi Rajma (Small Pack).",
         "price": 210,
-        "image": "/rajma_bhaderwahi.jpg",
+        "image": "/rajma_bhaderwahi_real.jpg",
         "category": "Rajma",
         "stock": 60
     },
