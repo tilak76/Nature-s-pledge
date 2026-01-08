@@ -2,47 +2,80 @@ import React, { useState, useEffect } from 'react';
 import { useCart } from '../context/CartContext';
 import { useToast } from '../context/ToastContext';
 import { products as staticProducts } from '../data/products';
-
 import { useNavigate } from 'react-router-dom';
+import './Shop.css';
 
 const Shop = () => {
-    const [products, setProducts] = useState([]);
+    const [groupedProducts, setGroupedProducts] = useState([]);
+    const [displayProducts, setDisplayProducts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
     const [category, setCategory] = useState('All');
+    const [selectedBaseProduct, setSelectedBaseProduct] = useState(null); // For Modal
+
     const navigate = useNavigate();
+    const { addToCart } = useCart();
     const { showToast } = useToast();
 
-    const categories = ['All', 'Walnut', 'Almond', 'Rajma', 'Atta', 'Chutney']; // Enhanced categories
+    const categories = ['All', 'Walnut', 'Almond', 'Rajma', 'Atta', 'Chutney'];
 
+    // Grouping Logic
     useEffect(() => {
-        filterProducts(searchTerm, category);
+        const groups = {};
+
+        staticProducts.forEach(product => {
+            // Extract base name (e.g., "Kashmiri Almond" from "Kashmiri Almond - 500g")
+            // Use the part before the last " - " as the base name, or the whole name if no separator
+            const nameParts = product.name.split(' - ');
+            const baseName = nameParts.length > 1 ? nameParts.slice(0, -1).join(' - ') : product.name;
+            const weight = nameParts.length > 1 ? nameParts[nameParts.length - 1] : 'Standard';
+
+            if (!groups[baseName]) {
+                groups[baseName] = {
+                    baseName: baseName,
+                    category: product.category,
+                    description: product.description,
+                    image: product.image, // Use image of the first variant
+                    variants: []
+                };
+            }
+            groups[baseName].variants.push({
+                ...product,
+                weightLabel: weight
+            });
+        });
+
+        const groupedArray = Object.values(groups);
+        setGroupedProducts(groupedArray);
+        setDisplayProducts(groupedArray);
         setLoading(false);
-    }, [searchTerm, category]);
+    }, []);
 
-    const filterProducts = (term, cat) => {
-        let filtered = staticProducts;
+    // Filtering Logic
+    useEffect(() => {
+        let filtered = groupedProducts;
 
-        if (cat !== 'All') {
-            filtered = filtered.filter(p => p.name.includes(cat) || p.category.includes(cat));
+        if (category !== 'All') {
+            filtered = filtered.filter(p => p.baseName.includes(category) || p.category.includes(category));
         }
 
-        if (term) {
+        if (searchTerm) {
             filtered = filtered.filter(p =>
-                p.name.toLowerCase().includes(term.toLowerCase())
+                p.baseName.toLowerCase().includes(searchTerm.toLowerCase())
             );
         }
-        setProducts(filtered);
+        setDisplayProducts(filtered);
+    }, [searchTerm, category, groupedProducts]);
+
+    const handleAddToCartClick = (e, productGroup) => {
+        e.stopPropagation();
+        setSelectedBaseProduct(productGroup);
     };
 
-    const handleSearch = (e) => setSearchTerm(e.target.value);
-
-    const { addToCart } = useCart();
-
-    const handleAddToCart = (e, product) => {
-        e.stopPropagation(); // Prevent navigation when clicking Add to Cart
-        addToCart(product);
-        alert('Added to cart!');
+    const handleVariantSelect = (variant) => {
+        addToCart(variant);
+        alert(`Added ${variant.name} to cart!`);
+        setSelectedBaseProduct(null); // Close modal
     };
 
     return (
@@ -73,38 +106,86 @@ const Shop = () => {
             <input
                 type="text"
                 className="search-bar"
-                placeholder="Search for walnuts..."
+                placeholder="Search products..."
                 value={searchTerm}
-                onChange={handleSearch}
+                onChange={(e) => setSearchTerm(e.target.value)}
             />
 
             {loading ? (
-                <p style={{ textAlign: 'center' }}>Loading fresh walnuts...</p>
+                <p style={{ textAlign: 'center' }}>Loading...</p>
             ) : (
                 <div className="product-grid">
-                    {products.map(product => (
+                    {displayProducts.map((group, index) => (
                         <div
-                            key={product.id || product._id}
+                            key={index}
                             className="product-card"
-                            style={{ cursor: 'pointer' }}
-                            onClick={() => navigate(`/product/${product.id}`)}
+                            onClick={() => handleAddToCartClick({ stopPropagation: () => { } }, group)} // Open modal on card click too
                         >
-                            <img src={product.image} alt={product.name} className="product-image" />
+                            <img src={group.image} alt={group.baseName} className="product-image" />
                             <div className="product-info">
-                                <h3 className="product-title">{product.name}</h3>
-                                <span className="product-price">₹{product.price}</span>
-                                <p style={{ fontSize: '0.9rem', color: '#666', marginBottom: '1rem' }}>
-                                    {product.description}
-                                </p>
+                                <span className="product-category">{group.category}</span>
+                                {/* Amazon-style Rating */}
+                                <div style={{ display: 'flex', alignItems: 'center', marginBottom: '4px' }}>
+                                    <span style={{ color: '#F4B400', fontSize: '1rem' }}>★★★★☆</span>
+                                    <span style={{ fontSize: '0.8rem', color: '#007185', marginLeft: '4px' }}>124</span>
+                                </div>
+
+                                {/* Amazon-style Price Layout */}
+                                <div className="amazon-price-container">
+                                    <div className="product-price">
+                                        {group.variants.length > 1
+                                            ? `₹${Math.min(...group.variants.map(v => v.price))} - ₹${Math.max(...group.variants.map(v => v.price))}`
+                                            : `₹${group.variants[0].price}`
+                                        }
+                                    </div>
+                                    <div style={{ fontSize: '0.8rem', color: '#565959', marginTop: '2px' }}>
+                                        M.R.P.: <span style={{ textDecoration: 'line-through' }}>₹{Math.floor(group.variants[0].price * 1.4)}</span>
+                                        <span style={{ color: '#CC0C39', marginLeft: '6px' }}>(28% off)</span>
+                                    </div>
+                                    <div style={{ fontSize: '0.8rem', color: '#007185', fontWeight: 'bold', marginTop: '4px' }}>
+                                        FREE Delivery by Nature's Pledge
+                                    </div>
+                                </div>
+
                                 <button
                                     className="add-btn"
-                                    onClick={(e) => handleAddToCart(e, product)}
+                                    onClick={(e) => handleAddToCartClick(e, group)}
+                                    style={{ marginTop: 'auto' }}
                                 >
-                                    Add to Cart
+                                    Select Options
                                 </button>
                             </div>
                         </div>
                     ))}
+                </div>
+            )}
+
+            {/* Variant Selection Modal */}
+            {selectedBaseProduct && (
+                <div className="modal-overlay" onClick={() => setSelectedBaseProduct(null)}>
+                    <div className="modal-content" onClick={e => e.stopPropagation()}>
+                        <button className="modal-close" onClick={() => setSelectedBaseProduct(null)}>×</button>
+
+                        <h3 style={{ marginBottom: '0.5rem' }}>Select Quantity</h3>
+                        <p style={{ color: '#666', marginBottom: '1.5rem' }}>
+                            for {selectedBaseProduct.baseName}
+                        </p>
+
+                        <div className="variant-list">
+                            {selectedBaseProduct.variants
+                                .sort((a, b) => a.price - b.price) // Sort by price usually correlates with common weight order
+                                .map(variant => (
+                                    <div
+                                        key={variant.id}
+                                        className="variant-option"
+                                        onClick={() => handleVariantSelect(variant)}
+                                    >
+                                        <span className="variant-weight">{variant.weightLabel}</span>
+                                        <span className="variant-price">₹{variant.price}</span>
+                                    </div>
+                                ))}
+                        </div>
+                    </div>
                 </div>
             )}
         </div>
