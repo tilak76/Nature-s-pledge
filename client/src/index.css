@@ -1,22 +1,35 @@
 :root {
   --primary-color: #5D4037;
-  --secondary-color: #fcf4ec;
+  --secondary-color: #fdfbf7;
+  /* Warmer background */
   --accent-color: #8D6E63;
   --text-color: #3E2723;
   --white: #ffffff;
 }
 
+html {
+  font-size: 16px;
+  /* Base size */
+  -webkit-text-size-adjust: 100%;
+  /* Prevent auto-zoom on mobile */
+}
+
 body {
   margin: 0;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: 'Lato', 'Segoe UI', sans-serif;
+  /* Cleaner font */
   background-color: var(--secondary-color);
   color: var(--text-color);
+  line-height: 1.6;
 }
 
 .container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 20px;
+  padding: 0 1.5rem;
+  /* Standard padding */
+  width: 100%;
+  box-sizing: border-box;
 }
 
 /* Navbar */

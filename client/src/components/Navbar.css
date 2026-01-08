@@ -1,19 +1,21 @@
-/* Navbar Styles Upgrade */
+/* Navbar Authenticity Upgrade */
 .navbar {
     background: #ffffff;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-    padding: 0.8rem 0;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
+    border-bottom: 4px solid #FDFBF7;
+    /* Soft border */
+    padding: 1.2rem 0;
+    position: relative;
+    /* Classic non-sticky (or sticky if preferred, but user said 'classic') */
     font-family: 'Playfair Display', serif;
-    /* Classic Serif Font */
+    box-shadow: none;
+    /* Removed heavy shadow for cleaner look */
 }
 
 .container {
-    max-width: 1200px;
+    max-width: 1280px;
+    /* Slightly wider */
     margin: 0 auto;
-    padding: 0 1.5rem;
+    padding: 0 2rem;
 }
 
 .nav-content {
@@ -22,29 +24,34 @@
     align-items: center;
 }
 
-/* Logo Styles handled in NavbarLogo.css, but ensuring alignment here */
+/* Classic Center Brand Identity */
 .navbar-logo {
     display: flex;
     align-items: center;
     text-decoration: none;
+    gap: 15px;
 }
 
 .nav-links {
     display: flex;
-    gap: 2.5rem;
+    gap: 3rem;
+    /* More breathing room */
     align-items: center;
 }
 
 .nav-links a {
     text-decoration: none;
-    color: #333;
-    font-weight: 500;
+    color: #4a4a4a;
+    /* Softer black */
+    font-weight: 600;
     font-family: 'Lato', sans-serif;
-    /* Clean Sans-serif for links */
-    font-size: 1rem;
-    transition: color 0.3s ease;
+    font-size: 0.95rem;
     text-transform: uppercase;
-    letter-spacing: 1px;
+    letter-spacing: 1.5px;
+    transition: all 0.3s ease;
+    border-bottom: 2px solid transparent;
+    /* Prepare for hover */
+    padding-bottom: 5px;
 }
 
 .nav-links a:hover {
@@ -106,22 +113,22 @@
     width: 100%;
     display: flex;
     justify-content: flex-start;
-    padding: 15px 20px;
-    border-radius: 0;
+    padding: 10px 0;
+    /* Reduced padding to fit better */
 }
 
 .mobile-only {
     display: block;
     color: #5D4037;
-    font-weight: 500;
-    margin-right: 10px;
+    font-weight: 600;
+    margin-right: 15px;
+    font-family: 'Lato', sans-serif;
 }
 
 .logout-btn {
     margin-left: 0;
     margin-top: 0.5rem;
     width: 100%;
-    padding: 15px 20px;
-    border-radius: 0;
+    padding: 10px 0;
 }
 }
