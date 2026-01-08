@@ -11,12 +11,19 @@ const ProductDetails = () => {
     const { showToast } = useToast();
     const [product, setProduct] = useState(null);
     const [related, setRelated] = useState([]);
+    const [relatedVariants, setRelatedVariants] = useState([]);
 
     useEffect(() => {
         const found = products.find(p => p.id === parseInt(id));
         if (found) {
             setProduct(found);
-            const others = products.filter(p => p.category === found.category && p.id !== found.id);
+
+            // Logic to find variants (same base name)
+            const baseName = found.name.split(' - ')[0];
+            const variants = products.filter(p => p.name.startsWith(baseName) && p.id !== found.id);
+            setRelatedVariants(variants);
+
+            const others = products.filter(p => p.category === found.category && p.id !== found.id && !p.name.startsWith(baseName));
             setRelated(others.slice(0, 3));
             window.scrollTo(0, 0);
         } else {
@@ -48,45 +55,111 @@ const ProductDetails = () => {
                         {product.name}
                     </h1>
 
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '1.5rem' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '1rem' }}>
                         <span style={{ color: '#F4B400', fontSize: '1.2rem' }}>★★★★★</span>
-                        <span style={{ color: '#666', fontSize: '0.9rem' }}>(Verified Purchase Reviews)</span>
+                        <span style={{ color: '#007185', fontSize: '0.9rem', cursor: 'pointer' }}>1,204 ratings</span>
+                        <span style={{ color: '#ccc' }}>|</span>
+                        <span style={{ color: '#007185', fontSize: '0.9rem', cursor: 'pointer' }}>42 answered questions</span>
                     </div>
 
-                    <div style={{ fontSize: '2rem', color: '#2E7D32', fontWeight: 'bold', marginBottom: '1.5rem' }}>
-                        ₹{product.price}
-                        <span style={{ fontSize: '1rem', color: '#999', fontWeight: 'normal', marginLeft: '10px', textDecoration: 'line-through' }}>
-                            ₹{Math.floor(product.price * 1.3)}
-                        </span>
+                    <div style={{ borderTop: '1px solid #e7e7e7', borderBottom: '1px solid #e7e7e7', padding: '1rem 0', marginBottom: '1.5rem' }}>
+                        <div style={{ fontSize: '2rem', color: '#B12704', fontWeight: '500', lineHeight: '1' }}>
+                            <span style={{ fontSize: '1rem', verticalAlign: 'top', color: '#565959' }}>₹</span>
+                            {product.price}
+                        </div>
+                        <div style={{ color: '#565959', fontSize: '0.9rem', marginTop: '0.5rem' }}>
+                            M.R.P.: <span style={{ textDecoration: 'line-through' }}>₹{Math.floor(product.price * 1.3)}</span>
+                            <span style={{ color: '#B12704', marginLeft: '5px' }}>(23% off)</span>
+                        </div>
+                        <div style={{ fontSize: '0.9rem', color: '#007185', fontWeight: 'bold', marginTop: '0.5rem' }}>
+                            Inclusive of all taxes
+                        </div>
                     </div>
 
-                    <div style={{ display: 'flex', gap: '1rem', marginBottom: '2rem' }}>
+                    {/* Delivery Info */}
+                    <div style={{ marginBottom: '1.5rem' }}>
+                        <div style={{ color: '#565959', fontSize: '0.95rem', marginBottom: '5px' }}>
+                            <span style={{ color: '#007185', fontWeight: 'bold' }}>FREE Delivery</span> <span style={{ fontWeight: 'bold' }}>{new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long' })}.</span>
+                        </div>
+                        <div style={{ fontSize: '1.2rem', color: '#007600', fontWeight: '500', marginBottom: '1rem' }}>
+                            In Stock.
+                        </div>
+                        <div style={{ fontSize: '0.9rem', color: '#565959' }}>
+                            Sold by <span style={{ color: '#007185' }}>Nature's Pledge Farmers Collective</span> and <span style={{ color: '#007185' }}>Fulfilled by Nature's Pledge</span>.
+                        </div>
+                    </div>
+
+                    {/* Variant Selector */}
+                    {relatedVariants.length > 0 && (
+                        <div style={{ marginBottom: '2rem' }}>
+                            <div style={{ fontSize: '0.9rem', fontWeight: 'bold', color: '#555', marginBottom: '0.5rem' }}>Size:</div>
+                            <div style={{ display: 'flex', gap: '10px' }}>
+                                {/* Current Item */}
+                                <button style={{
+                                    padding: '8px 15px',
+                                    background: '#fef8f3',
+                                    border: '2px solid #e77600',
+                                    borderRadius: '3px',
+                                    cursor: 'default',
+                                    fontWeight: 'bold',
+                                    color: '#333'
+                                }}>
+                                    {product.name.split(' - ')[1] || 'Standard'}
+                                </button>
+                                {/* Other Variants */}
+                                {relatedVariants.map(v => (
+                                    <button
+                                        key={v.id}
+                                        onClick={() => navigate(`/product/${v.id}`)}
+                                        style={{
+                                            padding: '8px 15px',
+                                            background: 'white',
+                                            border: '1px solid #ccc',
+                                            borderRadius: '3px',
+                                            cursor: 'pointer',
+                                            color: '#333'
+                                        }}
+                                    >
+                                        {v.name.split(' - ')[1] || 'Standard'}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Action Buttons */}
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', maxWidth: '300px' }}>
                         <button
                             onClick={() => {
                                 addToCart(product);
                                 showToast('Added to Cart!');
                             }}
                             style={{
-                                flex: 1, padding: '18px', background: 'white', color: '#3E2723',
-                                border: '2px solid #3E2723', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', fontSize: '1.1rem',
-                                transition: 'all 0.2s'
+                                padding: '12px', background: '#FFD814', color: '#0F1111',
+                                border: 'none', borderRadius: '20px', fontWeight: '500', cursor: 'pointer', fontSize: '1rem',
+                                boxShadow: '0 2px 5px rgba(213,217,217,0.5)'
                             }}
                         >
                             Add to Cart
                         </button>
                         <button
-                            onClick={() => { addToCart(product); navigate('/checkout'); }} // Direct to Checkout for Buy Now
+                            onClick={() => { addToCart(product); navigate('/checkout'); }}
                             style={{
-                                flex: 1.5, padding: '18px', background: '#2E7D32', color: 'white',
-                                border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', fontSize: '1.1rem',
-                                boxShadow: '0 4px 15px rgba(46, 125, 50, 0.3)'
+                                padding: '12px', background: '#FFA41C', color: '#0F1111',
+                                border: 'none', borderRadius: '20px', fontWeight: '500', cursor: 'pointer', fontSize: '1rem',
+                                boxShadow: '0 2px 5px rgba(213,217,217,0.5)'
                             }}
                         >
                             Buy Now
                         </button>
                     </div>
 
-                    <p style={{ lineHeight: '1.8', fontSize: '1.1rem', color: '#444', fontStyle: 'italic', borderLeft: '4px solid #2E7D32', paddingLeft: '15px' }}>
+                    <div style={{ marginTop: '1.5rem', display: 'flex', alignItems: 'center', gap: '10px', fontSize: '0.9rem', color: '#007185' }}>
+                        <span>🔒 Secure transaction</span>
+                    </div>
+
+                    <p style={{ marginTop: '2rem', lineHeight: '1.6', fontSize: '1rem', color: '#333' }}>
+                        <span style={{ fontWeight: 'bold' }}>About this item:</span><br />
                         "{product.description}"
                     </p>
                 </div>
