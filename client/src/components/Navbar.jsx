@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import './Navbar.css';
+import './NavbarLogo.css';
 
 const Navbar = () => {
     const { cart } = useCart();
@@ -22,7 +23,10 @@ const Navbar = () => {
     return (
         <nav className="navbar">
             <div className="container nav-content">
-                <Link to="/" className="logo">Nature Pledge</Link>
+                <Link to="/" className="navbar-logo">
+                    <img src="/logo_main.jpg" alt="Nature's Pledge" className="brand-logo" />
+                    <span className="brand-name">Nature's Pledge</span>
+                </Link>
 
                 {/* Mobile Menu Icon (SVG) */}
                 <div className="mobile-menu-icon" onClick={() => setIsOpen(!isOpen)}>

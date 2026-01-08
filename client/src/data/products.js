@@ -4,7 +4,7 @@ export const products = [
         "name": "Kashmiri Almond - 500g",
         "description": "Premium organic Kashmiri Almonds, rich in oil and nutrition.",
         "price": 510,
-        "image": "/kashmiri_almond_final.jpg",
+        "image": "/kashmiri_almond_proper.jpg",
         "category": "Almond",
         "stock": 50
     },
@@ -13,7 +13,7 @@ export const products = [
         "name": "Kashmiri Almond - 250g",
         "description": "Premium organic Kashmiri Almonds (Small Pack).",
         "price": 260,
-        "image": "/kashmiri_almond_final.jpg",
+        "image": "/kashmiri_almond_proper.jpg",
         "category": "Almond",
         "stock": 40
     },
@@ -22,7 +22,7 @@ export const products = [
         "name": "Kashmiri Almond - 100g",
         "description": "Trial pack of Premium organic Kashmiri Almonds.",
         "price": 110,
-        "image": "/kashmiri_almond_final.jpg",
+        "image": "/kashmiri_almond_proper.jpg",
         "category": "Almond",
         "stock": 50
     },
