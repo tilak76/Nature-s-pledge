@@ -28,19 +28,19 @@ export const products = [
     },
     {
         "id": 3,
-        "name": "Rajma Royal (Red Kidney Beans) - 1kg",
+        "name": "Rajma Royal - 1kg",
         "description": "Authentic tasty Rajma Royal, perfect for curry.",
         "price": 300,
-        "image": "/rajma_beans.png",
+        "image": "/rajma_royal_real.jpg",
         "category": "Rajma",
         "stock": 100
     },
     {
         "id": 10,
-        "name": "Rajma Royal (Red Kidney Beans) - 500g",
+        "name": "Rajma Royal - 500g",
         "description": "Authentic tasty Rajma Royal (Small Pack).",
         "price": 150,
-        "image": "/rajma_beans.png",
+        "image": "/rajma_royal_real.jpg",
         "category": "Rajma",
         "stock": 100
     },
@@ -64,10 +64,10 @@ export const products = [
     },
     {
         "id": 5,
-        "name": "Organic Maize Flour (Makki Atta) - 1kg",
+        "name": "Organic Maize Flour - 1kg",
         "description": "Freshly stone-ground organic Maize flour for sweet rotis.",
         "price": 60,
-        "image": "/maize_flour.png",
+        "image": "/maize_flour_real.jpg",
         "category": "Atta",
         "stock": 150
     },
