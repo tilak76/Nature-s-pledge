@@ -10,8 +10,8 @@ const Checkout = () => {
     const { showToast } = useToast();
     const navigate = useNavigate();
 
-    const [step, setStep] = useState(1); // 1: Address, 2: Payment
-    const [paymentMethod, setPaymentMethod] = useState('cod');
+    const [step, setStep] = useState(1);
+    const [paymentMethod, setPaymentMethod] = useState('razorpay'); // Default to Razorpay
     const [shipping, setShipping] = useState({
         fullName: user?.name || '',
         address: '',
@@ -24,10 +24,9 @@ const Checkout = () => {
     // Safety: ensure cart exists
     const safeCart = Array.isArray(cart) ? cart : [];
 
-    // Redirect if empty
     useEffect(() => {
         if (safeCart.length === 0) {
-            // Optional: Redirect logic can go here
+            // Optional: Redirect
         }
     }, [safeCart]);
 
@@ -36,18 +35,52 @@ const Checkout = () => {
         setShipping(prev => ({ ...prev, [name]: value }));
     };
 
-    const handlePlaceOrder = () => {
-        if (processing) return;
+    const handleRazorpayPayment = () => {
+        const options = {
+            key: "rzp_live_S0W61ZvJ61G4Ec", // LIVE KEY
+            amount: cartTotal * 100, // Amount in paise
+            currency: "INR",
+            name: "Nature's Pledge",
+            description: "Premium Organic Products",
+            image: "https://via.placeholder.com/150",
+            handler: function (response) {
+                // Payment Success!
+                // console.log(response.razorpay_payment_id);
+                // console.log(response.razorpay_order_id);
+                // console.log(response.razorpay_signature);
+                finalizeOrder(response.razorpay_payment_id);
+            },
+            prefill: {
+                name: shipping.fullName,
+                email: user?.email || "customer@example.com",
+                contact: shipping.phone
+            },
+            theme: {
+                color: "#5D4037"
+            },
+            modal: {
+                ondismiss: function () {
+                    setProcessing(false);
+                    showToast('Payment Cancelled', 'error');
+                }
+            }
+        };
 
-        // Validation for Address (Step 1)
-        if (!shipping.fullName || !shipping.address || !shipping.city || !shipping.pincode || !shipping.phone) {
-            showToast('Please fill in all shipping details', 'error');
-            setStep(1);
-            return;
+        try {
+            const rzp1 = new window.Razorpay(options);
+            rzp1.on('payment.failed', function (response) {
+                setProcessing(false);
+                showToast(response.error.description || 'Payment Failed', 'error');
+            });
+            rzp1.open();
+        } catch (err) {
+            console.error(err);
+            showToast('Razorpay SDK failed to load. Check internet connection.', 'error');
+            setProcessing(false);
         }
+    };
 
-        setProcessing(true);
-
+    const finalizeOrder = (paymentId) => {
         const orderId = 'ORD-' + Math.floor(100000 + Math.random() * 900000);
         const trackingNumber = 'EU' + Math.floor(100000000 + Math.random() * 900000000) + 'IN';
 
@@ -59,6 +92,7 @@ const Checkout = () => {
             items: safeCart,
             total: cartTotal,
             paymentMethod: paymentMethod,
+            transactionId: paymentId || 'COD', // Save transaction ID
             shipping: shipping,
             updates: [
                 { status: 'Order Placed', location: 'Online', time: new Date().toLocaleTimeString(), completed: true },
@@ -70,16 +104,10 @@ const Checkout = () => {
 
         try {
             const existingOrders = JSON.parse(localStorage.getItem('orders') || '[]');
-            existingOrders.unshift(newOrder); // Add to top
+            existingOrders.unshift(newOrder);
             localStorage.setItem('orders', JSON.stringify(existingOrders));
 
-            // Deduct Wallet Balance if that was the method
             if (paymentMethod === 'wallet' && user) {
-                if ((user.walletBalance || 0) < cartTotal) {
-                    showToast('Insufficient wallet balance!', 'error');
-                    setProcessing(false);
-                    return;
-                }
                 updateUser({ walletBalance: user.walletBalance - cartTotal });
             }
 
@@ -89,13 +117,45 @@ const Checkout = () => {
             return;
         }
 
-        // Simulate Delay
         setTimeout(() => {
             showToast(`Order Placed Successfully!`);
             clearCart();
             setProcessing(false);
             navigate(`/track-order?id=${orderId}`);
         }, 1500);
+    };
+
+    const handlePlaceOrder = () => {
+        if (processing) return;
+
+        // Validation for Address
+        if (!shipping.fullName || !shipping.address || !shipping.city || !shipping.pincode || !shipping.phone) {
+            showToast('Please fill in all shipping details', 'error');
+            setStep(1);
+            return;
+        }
+
+        setProcessing(true);
+
+        if (paymentMethod === 'razorpay') {
+            // Trigger Razorpay
+            if (window.Razorpay) {
+                handleRazorpayPayment();
+            } else {
+                showToast('Razorpay SDK failed to load. Please reload page.', 'error');
+                setProcessing(false);
+            }
+        } else if (paymentMethod === 'wallet') {
+            if (user && (user.walletBalance || 0) < cartTotal) {
+                showToast('Insufficient wallet balance!', 'error');
+                setProcessing(false);
+                return;
+            }
+            finalizeOrder('WALLET-' + Date.now());
+        } else {
+            // COD
+            finalizeOrder(null);
+        }
     };
 
     if (safeCart.length === 0) {
@@ -167,22 +227,14 @@ const Checkout = () => {
 
                         {step === 2 && (
                             <div style={{ padding: '20px' }}>
-                                <div style={{ border: '1px solid #ccc', borderRadius: '4px', padding: '15px', marginBottom: '10px', background: paymentMethod === 'upi' ? '#fcf5ee' : 'white' }}>
+
+                                {/* Razorpay Option */}
+                                <div style={{ border: '1px solid #ccc', borderRadius: '4px', padding: '15px', marginBottom: '10px', background: paymentMethod === 'razorpay' ? '#fcf5ee' : 'white' }}>
                                     <label style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer' }}>
-                                        <input type="radio" name="payment" value="upi" checked={paymentMethod === 'upi'} onChange={(e) => setPaymentMethod(e.target.value)} />
-                                        <span style={{ fontWeight: 'bold' }}>UPI / Net Banking</span>
+                                        <input type="radio" name="payment" value="razorpay" checked={paymentMethod === 'razorpay'} onChange={(e) => setPaymentMethod(e.target.value)} />
+                                        <span style={{ fontWeight: 'bold', color: '#002f34' }}>Razorpay Secure (Cards, UPI, NetBanking)</span>
                                     </label>
-                                    {paymentMethod === 'upi' && (
-                                        <div style={{ marginLeft: '25px', marginTop: '10px' }}>
-                                            <select style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ddd', width: '100%', maxWidth: '300px' }}>
-                                                <option>Choose an option...</option>
-                                                <option>PhonePe</option>
-                                                <option>Google Pay</option>
-                                                <option>Paytm</option>
-                                                <option>BHIM UPI</option>
-                                            </select>
-                                        </div>
-                                    )}
+                                    {paymentMethod === 'razorpay' && <div style={{ marginLeft: '25px', fontSize: '0.85rem', color: '#666', marginTop: '5px' }}>Pay securely with Credit/Debit Cards, UPI, or NetBanking handled by Razorpay.</div>}
                                 </div>
 
                                 <div style={{ border: '1px solid #ccc', borderRadius: '4px', padding: '15px', marginBottom: '10px', background: paymentMethod === 'cod' ? '#fcf5ee' : 'white' }}>
@@ -225,7 +277,7 @@ const Checkout = () => {
                                 fontSize: '1rem'
                             }}
                         >
-                            {processing ? 'Processing...' : 'Place Your Order'}
+                            {processing ? 'Processing...' : (paymentMethod === 'razorpay' ? 'Proceed to Pay' : 'Place Your Order')}
                         </button>
 
                         <h3 style={{ borderBottom: '1px solid #ddd', paddingBottom: '10px', fontSize: '1.1rem', marginTop: 0 }}>Order Summary</h3>
