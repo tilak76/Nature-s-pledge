@@ -1,21 +1,24 @@
 /* Navbar Authenticity Upgrade */
 .navbar {
     background: #ffffff;
-    border-bottom: 4px solid #FDFBF7;
-    /* Soft border */
-    padding: 1.2rem 0;
+    border-bottom: 2px solid #EAEAEA;
+    /* Subtle, professional border */
+    padding: 0.8rem 0;
+    /* Tighter vertical padding */
     position: relative;
-    /* Classic non-sticky (or sticky if preferred, but user said 'classic') */
     font-family: 'Playfair Display', serif;
-    box-shadow: none;
-    /* Removed heavy shadow for cleaner look */
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    /* Very subtle shadow for depth */
 }
 
+/* Global Container Standardization */
 .container {
     max-width: 1280px;
-    /* Slightly wider */
     margin: 0 auto;
     padding: 0 2rem;
+    /* Standard side padding */
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .nav-content {
@@ -29,53 +32,56 @@
     display: flex;
     align-items: center;
     text-decoration: none;
-    gap: 15px;
+    gap: 12px;
 }
 
 .nav-links {
     display: flex;
-    gap: 3rem;
-    /* More breathing room */
+    gap: 2.5rem;
+    /* Balanced spacing */
     align-items: center;
 }
 
 .nav-links a {
     text-decoration: none;
-    color: #4a4a4a;
-    /* Softer black */
-    font-weight: 600;
+    color: #2D2D2D;
+    /* Deep Charcoal for readability */
+    font-weight: 500;
     font-family: 'Lato', sans-serif;
     font-size: 0.95rem;
     text-transform: uppercase;
-    letter-spacing: 1.5px;
-    transition: all 0.3s ease;
-    border-bottom: 2px solid transparent;
-    /* Prepare for hover */
-    padding-bottom: 5px;
+    letter-spacing: 1px;
+    transition: color 0.2s ease;
+    padding-bottom: 2px;
 }
 
 .nav-links a:hover {
-    color: #2E7D32;
+    color: #4CAF50;
+    /* Nature Green */
 }
 
 .logout-btn {
     cursor: pointer;
     font-weight: 500;
-    color: #333;
+    color: #555;
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
     font-family: 'Lato', sans-serif;
     text-transform: uppercase;
-    letter-spacing: 1px;
-    font-size: 1rem;
+    letter-spacing: 0.5px;
+    font-size: 0.9rem;
     background: none;
-    border: none;
-    padding: 0;
+    border: 1px solid #ddd;
+    padding: 6px 12px;
+    border-radius: 4px;
+    transition: all 0.2s;
 }
 
 .logout-btn:hover {
     color: #c62828;
+    border-color: #c62828;
+    background: #fff5f5;
 }
 
 .mobile-only {
@@ -95,7 +101,8 @@
     position: absolute;
     top: -8px;
     right: -8px;
-    background: #2E7D32;
+    background: #d32f2f;
+    /* Red for high visibility */
     color: white;
     border-radius: 50%;
     width: 18px;
@@ -103,15 +110,19 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 0.7rem;
+    font-size: 0.75rem;
     font-weight: bold;
 }
 
 /* Mobile Responsiveness */
 @media (max-width: 768px) {
+    .container {
+        padding: 0 1.25rem;
+        /* Slightly less padding on mobile */
+    }
+
     .nav-links {
         display: none;
-        /* Default hidden on mobile, toggled by JS */
     }
 
     .cart-icon-wrapper {
@@ -136,5 +147,9 @@
         margin-top: 0.5rem;
         width: 100%;
         padding: 10px 0;
+        border: none;
+        /* No border in mobile menu list */
+        background: transparent;
+        justify-content: flex-start;
     }
 }
