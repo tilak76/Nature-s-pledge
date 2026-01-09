@@ -63,25 +63,31 @@
 .logout-btn {
     cursor: pointer;
     font-weight: 500;
-    color: #555;
+    /* Match links */
+    color: #2D2D2D;
+    /* Match link color */
     display: flex;
     align-items: center;
     gap: 6px;
     font-family: 'Lato', sans-serif;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
-    font-size: 0.9rem;
+    letter-spacing: 1px;
+    font-size: 0.95rem;
+    /* Match link size */
     background: none;
-    border: 1px solid #ddd;
-    padding: 6px 12px;
-    border-radius: 4px;
-    transition: all 0.2s;
+    border: none;
+    /* Remove border to align perfectly with text */
+    padding: 0;
+    margin: 0;
+    transition: color 0.2s ease;
+    height: auto;
+    /* Prevent height enforcement */
 }
 
 .logout-btn:hover {
     color: #c62828;
-    border-color: #c62828;
-    background: #fff5f5;
+    background: none;
+    border: none;
 }
 
 .mobile-only {
@@ -95,6 +101,9 @@
     display: flex;
     align-items: center;
     color: #333 !important;
+    height: auto;
+    padding-bottom: 2px;
+    /* Match link border offset if any */
 }
 
 .cart-badge {
@@ -115,41 +124,67 @@
 }
 
 /* Mobile Responsiveness */
+/* Mobile Responsiveness */
 @media (max-width: 768px) {
     .container {
         padding: 0 1.25rem;
-        /* Slightly less padding on mobile */
     }
 
     .nav-links {
         display: none;
-    }
-
-    .cart-icon-wrapper {
-        margin-left: 0;
-        margin-top: 1rem;
+        position: absolute;
+        top: 100%;
+        left: 0;
         width: 100%;
-        display: flex;
-        justify-content: flex-start;
-        padding: 10px 0;
+        background: #ffffff;
+        flex-direction: column;
+        padding: 0;
+        border-top: 1px solid #f0f0f0;
+        box-shadow: 0 10px 15px rgba(0, 0, 0, 0.05);
+        z-index: 999;
     }
 
-    .mobile-only {
-        display: block;
-        color: #5D4037;
-        font-weight: 600;
-        margin-right: 15px;
-        font-family: 'Lato', sans-serif;
+    .nav-links.active {
+        display: flex;
+    }
+
+    /* Standardize ALL items in mobile menu */
+    .nav-links a,
+    .logout-btn,
+    .cart-icon-wrapper {
+        width: 100%;
+        margin: 0;
+        padding: 1rem 1.5rem;
+        /* Consistent padding */
+        border-bottom: 1px solid #f5f5f5;
+        display: flex;
+        /* Ensure flex behavior for icons */
+        align-items: center;
+        /* Vertically center */
+        justify-content: flex-start;
+        /* Left align */
+        font-size: 1rem;
+        color: #333;
+        background: transparent;
+    }
+
+    /* Remove specific desktop overrides */
+    .cart-icon-wrapper {
+        margin-top: 0;
     }
 
     .logout-btn {
-        margin-left: 0;
-        margin-top: 0.5rem;
-        width: 100%;
-        padding: 10px 0;
+        margin-top: 0;
         border: none;
-        /* No border in mobile menu list */
-        background: transparent;
-        justify-content: flex-start;
+        border-bottom: 1px solid #f5f5f5;
+    }
+
+    .mobile-only {
+        display: inline-block;
+        /* Show label for Cart */
+        margin-right: 10px;
+        color: #333;
+        font-weight: 500;
+        font-family: 'Lato', sans-serif;
     }
 }
