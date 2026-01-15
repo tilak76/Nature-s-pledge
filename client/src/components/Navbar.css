@@ -111,76 +111,121 @@
 /* Mobile Responsiveness */
 @media (max-width: 768px) {
     .container {
-        padding: 0 1.25rem;
+        padding: 0 1rem;
     }
 
-    /* Show Mobile Menu Icon */
-    .mobile-menu-icon {
-        display: block;
-        cursor: pointer;
-        padding: 0.5rem;
-        /* Increase touch target */
-    }
-
-    .nav-links {
-        display: none;
-        position: absolute;
-        top: 100%;
-        left: 0;
-        width: 100%;
-        background: #ffffff;
+    .nav-content {
         flex-direction: column;
-        padding: 1rem 0;
-        /* Add vertical padding */
-        border-top: 1px solid #f0f0f0;
-        box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
-        /* Stronger shadow */
-        z-index: 1000;
-        /* Increase z-index */
+        align-items: center;
+        gap: 0.5rem;
     }
 
-    .nav-links.active {
+    /* Center and prominent logo */
+    .navbar-logo {
+        width: 100%;
+        justify-content: center;
+        padding: 0.5rem 0;
+        border-bottom: 1px solid #f5f5f5;
+    }
+
+    /* Hide the hamburger menu completely */
+    .mobile-menu-icon {
+        display: none !important;
+    }
+
+    /* Horizontal Scroll Container */
+    .nav-links {
         display: flex !important;
-        /* Force display */
+        /* Always visible */
+        position: static;
+        /* Natural flow */
+        width: 100%;
+        flex-direction: row;
+        /* Horizontal alignment */
+        overflow-x: auto;
+        /* Scrollable */
+        overflow-y: hidden;
+        gap: 10px;
+        padding: 10px 0;
+        background: transparent;
+        box-shadow: none;
+        border: none;
+
+        /* Hide Scrollbar but keep functionality */
+        -ms-overflow-style: none;
+        /* IE and Edge */
+        scrollbar-width: none;
+        /* Firefox */
     }
 
-    /* Standardize ALL items in mobile menu */
+    /* Hide scrollbar for Chrome/Safari/Opera */
+    .nav-links::-webkit-scrollbar {
+        display: none;
+    }
+
+    /* "Pill" Style Links */
     .nav-links a,
     .logout-btn,
     .cart-icon-wrapper {
-        width: 100%;
+        width: auto;
+        white-space: nowrap;
+        /* Don't wrap text */
+        padding: 8px 16px;
         margin: 0;
-        padding: 1rem 1.5rem;
-        /* Consistent padding */
-        border-bottom: 1px solid #f5f5f5;
+        background: #f4f6f8;
+        border-radius: 50px;
+        /* Pillow shape */
+        border: 1px solid transparent;
+        color: #4a4a4a;
+        font-size: 0.85rem;
+        font-weight: 600;
         display: flex;
-        /* Ensure flex behavior for icons */
         align-items: center;
-        /* Vertically center */
-        justify-content: flex-start;
-        /* Left align */
-        font-size: 1rem;
-        color: #333;
-        background: transparent;
+        justify-content: center;
+        transition: all 0.2s ease;
+        flex-shrink: 0;
+        /* Prevent shrinking */
     }
 
-    /* Remove specific desktop overrides */
+    /* Active/Hover State for Mobile */
+    .nav-links a:active,
+    .nav-links a:hover {
+        background: #2D2D2D;
+        color: white;
+        border-color: #2D2D2D;
+        transform: translateY(-1px);
+    }
+
+    .logout-btn:active {
+        background: #ffebee;
+        color: #d32f2f;
+    }
+
+    /* Adjust Cart for Mobile Pill */
     .cart-icon-wrapper {
-        margin-top: 0;
+        background: #fff3e0;
+        /* Different subtle color for cart */
+        color: #e65100 !important;
     }
 
-    .logout-btn {
-        margin-top: 0;
-        border: none;
-        border-bottom: 1px solid #f5f5f5;
+    .cart-badge {
+        position: static;
+        /* Inline for the pill look */
+        margin-left: 8px;
+        background: #e65100;
+        width: 20px;
+        height: 20px;
     }
 
     .mobile-only {
         display: inline-block;
-        /* Show label for Cart */
-        margin-right: 10px;
-        color: #333;
-        font-weight: 500;
-        font-family: 'Lato', sans-serif;
+        margin-right: 5px;
+    }
+
+    /* Ensure icons in pills are styled correctly */
+    .cart-icon-wrapper svg {
+        width: 18px;
+        height: 18px;
+        color: inherit !important;
     }
 }
