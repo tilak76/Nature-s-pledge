@@ -9,6 +9,7 @@
     font-family: 'Playfair Display', serif;
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
     /* Very subtle shadow for depth */
+    z-index: 1000;
 }
 
 /* Global Container Standardization */
@@ -25,6 +26,10 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+
+.mobile-menu-icon {
+    display: none;
 }
 
 /* Classic Center Brand Identity */
@@ -109,6 +114,14 @@
         padding: 0 1.25rem;
     }
 
+    /* Show Mobile Menu Icon */
+    .mobile-menu-icon {
+        display: block;
+        cursor: pointer;
+        padding: 0.5rem;
+        /* Increase touch target */
+    }
+
     .nav-links {
         display: none;
         position: absolute;
@@ -117,14 +130,18 @@
         width: 100%;
         background: #ffffff;
         flex-direction: column;
-        padding: 0;
+        padding: 1rem 0;
+        /* Add vertical padding */
         border-top: 1px solid #f0f0f0;
-        box-shadow: 0 10px 15px rgba(0, 0, 0, 0.05);
-        z-index: 999;
+        box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+        /* Stronger shadow */
+        z-index: 1000;
+        /* Increase z-index */
     }
 
     .nav-links.active {
-        display: flex;
+        display: flex !important;
+        /* Force display */
     }
 
     /* Standardize ALL items in mobile menu */

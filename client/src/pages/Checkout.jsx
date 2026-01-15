@@ -45,10 +45,13 @@ const Checkout = () => {
             image: "https://via.placeholder.com/150",
             handler: function (response) {
                 // Payment Success!
-                // console.log(response.razorpay_payment_id);
-                // console.log(response.razorpay_order_id);
-                // console.log(response.razorpay_signature);
-                finalizeOrder(response.razorpay_payment_id);
+                // The payment ID is returned here.
+                if (response.razorpay_payment_id) {
+                    finalizeOrder(response.razorpay_payment_id);
+                } else {
+                    showToast('Payment processing failed. No ID returned.', 'error');
+                    setProcessing(false);
+                }
             },
             prefill: {
                 name: shipping.fullName,
@@ -58,10 +61,13 @@ const Checkout = () => {
             theme: {
                 color: "#5D4037"
             },
+            retry: {
+                enabled: true
+            },
             modal: {
                 ondismiss: function () {
                     setProcessing(false);
-                    showToast('Payment Cancelled', 'error');
+                    showToast('Payment Cancelled by user', 'info');
                 }
             }
         };

@@ -26,13 +26,48 @@ const Dashboard = () => {
     const handleConfirmAddMoney = (e) => {
         e.preventDefault();
         const amount = parseFloat(amountToAdd);
-        if (amount > 0) {
-            const newBalance = (user.walletBalance || 0) + amount;
-            updateUser({ walletBalance: newBalance });
-            showToast(`Successfully added ₹${amount} to wallet! 💰`);
-            setIsAddMoneyModalOpen(false);
-        } else {
+        if (!amount || amount <= 0) {
             showToast('Please enter a valid amount', 'error');
+            return;
+        }
+
+        const options = {
+            key: "rzp_live_S0W61ZvJ61G4Ec", // LIVE KEY
+            amount: amount * 100, // paise
+            currency: "INR",
+            name: "Nature's Pledge Wallet",
+            description: "Wallet Top-up",
+            image: "https://via.placeholder.com/150",
+            handler: function (response) {
+                if (response.razorpay_payment_id) {
+                    const newBalance = (user.walletBalance || 0) + amount;
+                    updateUser({ walletBalance: newBalance });
+                    showToast(`Success! ₹${amount} added to wallet.`, 'success');
+                    setIsAddMoneyModalOpen(false);
+                }
+            },
+            prefill: {
+                name: user?.name,
+                email: user?.email,
+                contact: user?.phone || ''
+            },
+            theme: { color: "#5D4037" },
+            modal: {
+                ondismiss: function () {
+                    showToast('Transaction Cancelled', 'info');
+                }
+            }
+        };
+
+        try {
+            const rzp = new window.Razorpay(options);
+            rzp.on('payment.failed', function (response) {
+                showToast(response.error.description || 'Top-up Failed', 'error');
+            });
+            rzp.open();
+        } catch (err) {
+            console.error(err);
+            showToast('Payment Gateway Error. Check connection.', 'error');
         }
     };
 
