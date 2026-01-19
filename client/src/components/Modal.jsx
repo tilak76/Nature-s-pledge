@@ -1,66 +1,56 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
+import './Modal.css';
 
 const Modal = ({ isOpen, onClose, title, children }) => {
-    if (!isOpen) return null;
+    // Handle mounting for portal
+    const [mounted, setMounted] = useState(false);
 
+    useEffect(() => {
+        setMounted(true);
+        return () => setMounted(false);
+    }, []);
+
+    // Close on ESC
     useEffect(() => {
         const handleEsc = (e) => {
             if (e.key === 'Escape') onClose();
         };
-        window.addEventListener('keydown', handleEsc);
-        return () => window.removeEventListener('keydown', handleEsc);
-    }, [onClose]);
+        if (isOpen) {
+            window.addEventListener('keydown', handleEsc);
+            // Prevent body scroll when modal is open
+            document.body.style.overflow = 'hidden';
+        }
+        return () => {
+            window.removeEventListener('keydown', handleEsc);
+            document.body.style.overflow = 'unset';
+        };
+    }, [isOpen, onClose]);
+
+    if (!isOpen || !mounted) return null;
 
     return ReactDOM.createPortal(
-        <div style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            background: 'rgba(0, 0, 0, 0.6)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: 1000,
-            backdropFilter: 'blur(4px)',
-            animation: 'fadeIn 0.2s ease-out'
-        }} onClick={onClose}>
+        <div className="modal-overlay" onClick={onClose}>
             <div
-                style={{
-                    background: 'white',
-                    padding: '2rem',
-                    borderRadius: '16px',
-                    width: '90%',
-                    maxWidth: '400px',
-                    position: 'relative',
-                    boxShadow: '0 10px 40px rgba(0,0,0,0.2)',
-                    animation: 'slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1)'
-                }}
+                className="modal-content"
                 onClick={e => e.stopPropagation()}
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="modal-title"
             >
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-                    <h3 style={{ margin: 0, color: '#3E2723' }}>{title}</h3>
-                    <button
-                        onClick={onClose}
-                        style={{ background: 'transparent', border: 'none', fontSize: '1.5rem', cursor: 'pointer', color: '#888' }}
-                    >
-                        ×
+                <div className="modal-header">
+                    <h3 id="modal-title" className="modal-title">{title}</h3>
+                    <button className="modal-close-btn" onClick={onClose} aria-label="Close modal">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
                     </button>
                 </div>
-                {children}
+                <div className="modal-body">
+                    {children}
+                </div>
             </div>
-            <style>{`
-                @keyframes fadeIn {
-                    from { opacity: 0; }
-                    to { opacity: 1; }
-                }
-                @keyframes slideUp {
-                    from { transform: translateY(20px); opacity: 0; }
-                    to { transform: translateY(0); opacity: 1; }
-                }
-            `}</style>
         </div>,
         document.body
     );

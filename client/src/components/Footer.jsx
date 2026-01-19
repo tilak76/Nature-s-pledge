@@ -54,11 +54,11 @@ const Footer = () => {
                     <div style={{ flex: 1, paddingRight: '20px', borderRight: '1px solid #454d5e' }}>
                         <h4 style={{ color: '#878787', fontSize: '12px', marginBottom: '10px', textTransform: 'uppercase', fontWeight: '400' }}>Mail Us:</h4>
                         <p style={{ lineHeight: '1.5', color: 'white' }}>
-                            Nature Pledge Private Limited,<br />
-                            123, Organic Valley,<br />
-                            Kashmir Orchards, Srinagar,<br />
-                            Jammu & Kashmir, 190001,<br />
-                            India
+                            Jagdamby Gen. Store,<br />
+                            District Udhampur,<br />
+                            Tehsil Panchari,<br />
+                            Jammu & Kashmir,<br />
+                            Pin - 182125
                         </p>
                     </div>
 
@@ -66,12 +66,13 @@ const Footer = () => {
                     <div style={{ flex: 1 }}>
                         <h4 style={{ color: '#878787', fontSize: '12px', marginBottom: '10px', textTransform: 'uppercase', fontWeight: '400' }}>Registered Office Address:</h4>
                         <p style={{ lineHeight: '1.5', color: 'white', marginBottom: '1rem' }}>
-                            Nature Pledge Private Limited,<br />
-                            Orchard Heights, Main Road,<br />
-                            Srinagar, Jammu & Kashmir,<br />
-                            India - 190001
+                            Jagdamby Gen. Store,<br />
+                            District Udhampur,<br />
+                            Tehsil Panchari,<br />
+                            Jammu & Kashmir,<br />
+                            Pin - 182125
                         </p>
-                        <p style={{ color: 'white' }}>CIN : U51109JK2024PTC123456</p>
+                        <p style={{ color: 'white' }}>Reg No : 0282010100000104</p>
                         <p style={{ color: 'white' }}>Telephone: <span style={{ color: '#2874f0' }}>044-45614700</span></p>
                     </div>
                 </div>
@@ -96,7 +97,7 @@ const Footer = () => {
                 </div>
 
                 <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                    <span style={{ color: 'white' }}>© {new Date().getFullYear()} Nature Pledge</span>
+                    <span style={{ color: 'white' }}>© {new Date().getFullYear()} Nature's Pledge</span>
                     <img src="https://static-assets-web.flixcart.com/batman-returns/batman-returns/p/images/payment-method-c454fb.svg" alt="Payment Methods" style={{ height: '15px' }} />
                 </div>
             </div>
