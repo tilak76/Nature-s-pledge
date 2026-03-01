@@ -69,7 +69,12 @@ const Login = () => {
             window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
                 'size': 'invisible',
                 'callback': (response) => {
-                    handleSendOtp();
+                    // reCAPTCHA solved. signInWithPhoneNumber will proceed automatically.
+                },
+                'expired-callback': () => {
+                    showToast('Security check expired. Please try again.', 'error');
+                    window.recaptchaVerifier.clear();
+                    window.recaptchaVerifier = null;
                 }
             });
         }
