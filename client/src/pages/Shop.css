@@ -303,3 +303,42 @@
         opacity: 1;
     }
 }
+
+/* Mobile Responsiveness for Shop */
+@media (max-width: 768px) {
+    .search-bar {
+        width: 90%;
+        padding: 12px 20px;
+    }
+
+    .search-bar:focus {
+        width: 95%;
+    }
+
+    .product-grid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 1rem;
+    }
+
+    .product-image-container {
+        height: 180px;
+    }
+
+    .product-title {
+        font-size: 1rem;
+    }
+
+    .product-price {
+        font-size: 1.2rem;
+    }
+
+    .add-btn {
+        padding: 8px;
+        font-size: 0.8rem;
+    }
+
+    .filter-btn {
+        padding: 8px 15px;
+        font-size: 0.85rem;
+    }
+}
