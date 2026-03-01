@@ -3,6 +3,7 @@ import { useAuth } from '../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
 import { useToast } from '../context/ToastContext';
 import Modal from '../components/Modal';
+import axios from 'axios';
 import './Dashboard.css';
 
 const Dashboard = () => {
@@ -23,7 +24,7 @@ const Dashboard = () => {
         setIsAddMoneyModalOpen(true);
     };
 
-    const handleConfirmAddMoney = (e) => {
+    const handleConfirmAddMoney = async (e) => {
         e.preventDefault();
         const amount = parseFloat(amountToAdd);
         if (!amount || amount <= 0) {
@@ -31,43 +32,51 @@ const Dashboard = () => {
             return;
         }
 
-        const options = {
-            key: "rzp_live_S0W61ZvJ61G4Ec", // LIVE KEY
-            amount: amount * 100, // paise
-            currency: "INR",
-            name: "Nature's Pledge Wallet",
-            description: "Wallet Top-up",
-            image: "https://via.placeholder.com/150",
-            handler: function (response) {
-                if (response.razorpay_payment_id) {
-                    const newBalance = (user.walletBalance || 0) + amount;
-                    updateUser({ walletBalance: newBalance });
-                    showToast(`Success! ₹${amount} added to wallet.`, 'success');
-                    setIsAddMoneyModalOpen(false);
-                }
-            },
-            prefill: {
-                name: user?.name,
-                email: user?.email,
-                contact: user?.phone || ''
-            },
-            theme: { color: "#5D4037" },
-            modal: {
-                ondismiss: function () {
-                    showToast('Transaction Cancelled', 'info');
-                }
-            }
-        };
-
         try {
+            // STEP 1: Create Order on Server
+            const { data: orderData } = await axios.post('/api/payment/orders', {
+                amount: amount,
+                currency: 'INR'
+            });
+
+            // STEP 2: Initialize Razorpay with order_id
+            const options = {
+                key: "rzp_live_S0W61ZvJ61G4Ec", // LIVE KEY
+                amount: orderData.amount, // Paise from server
+                currency: orderData.currency,
+                name: "Nature's Pledge Wallet",
+                description: "Wallet Top-up",
+                image: "https://via.placeholder.com/150",
+                order_id: orderData.id, // CRITICAL FOR LIVE MODE
+                handler: function (response) {
+                    if (response.razorpay_payment_id) {
+                        const newBalance = (user.walletBalance || 0) + amount;
+                        updateUser({ walletBalance: newBalance });
+                        showToast(`Success! ₹${amount} added to wallet.`, 'success');
+                        setIsAddMoneyModalOpen(false);
+                    }
+                },
+                prefill: {
+                    name: user?.name || '',
+                    email: user?.email || '',
+                    contact: user?.phone || ''
+                },
+                theme: { color: "#5D4037" },
+                modal: {
+                    ondismiss: function () {
+                        showToast('Transaction Cancelled', 'info');
+                    }
+                }
+            };
+
             const rzp = new window.Razorpay(options);
             rzp.on('payment.failed', function (response) {
                 showToast(response.error.description || 'Top-up Failed', 'error');
             });
             rzp.open();
         } catch (err) {
-            console.error(err);
-            showToast('Payment Gateway Error. Check connection.', 'error');
+            console.error("Wallet Topup Razorpay Initialization Error:", err);
+            showToast('Payment Gateway Error. Please try again.', 'error');
         }
     };
 
