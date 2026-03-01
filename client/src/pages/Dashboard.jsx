@@ -41,7 +41,7 @@ const Dashboard = () => {
 
             // STEP 2: Initialize Razorpay with order_id
             const options = {
-                key: "rzp_live_S0W61ZvJ61G4Ec", // LIVE KEY
+                key: import.meta.env.VITE_RAZORPAY_KEY_ID || "rzp_live_SLrKQbMoIy3lUS", // Match Backend Key
                 amount: orderData.amount, // Paise from server
                 currency: orderData.currency,
                 name: "Nature's Pledge Wallet",
