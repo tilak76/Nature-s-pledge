@@ -213,41 +213,7 @@ const Login = () => {
                         </div>
                     </div>
 
-                    {/* WhatsApp Login Section */}
-                    <div className="phone-login-section">
-                        <h3 style={{ fontSize: '0.9rem', color: '#888', textAlign: 'center', marginBottom: '1rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Login via WhatsApp</h3>
 
-                        <div style={{ display: 'flex', justifyContent: 'center' }}>
-                            <button
-                                type="button"
-                                onClick={() => {
-                                    const message = encodeURIComponent("Namaste Nature's Pledge 🌿,\n\nI want to login/signup to my account. My details are:\nName: [Your Name]\n\nPlease register my number.");
-                                    window.open(`https://wa.me/919958776101?text=${message}`, '_blank');
-                                }}
-                                style={{
-                                    width: '100%',
-                                    padding: '12px',
-                                    borderRadius: '50px',
-                                    border: 'none',
-                                    background: '#25D366',
-                                    color: 'white',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    gap: '10px',
-                                    cursor: 'pointer',
-                                    fontWeight: 'bold',
-                                    boxShadow: '0 4px 10px rgba(37, 211, 102, 0.3)',
-                                    transition: 'transform 0.2s'
-                                }}
-                                onMouseOver={(e) => e.currentTarget.style.transform = 'scale(1.02)'}
-                                onMouseOut={(e) => e.currentTarget.style.transform = 'scale(1)'}
-                            >
-                                <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" width="22" style={{ filter: 'brightness(0) invert(1)' }} />
-                                Order & Login via WhatsApp
-                            </button>
-                        </div>
-                    </div>
 
 
                 </div>
