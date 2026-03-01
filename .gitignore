@@ -1,0 +1,12 @@
+node_modules
+.env
+.DS_Store
+dist
+build
+.vercel
+server/data/*.log
+server/data/orders.json
+server/data/users.json
+server/data/messages.json
+server/data/products.json/*.bak
+*.log
