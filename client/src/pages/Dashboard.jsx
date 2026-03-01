@@ -57,9 +57,9 @@ const Dashboard = () => {
                     }
                 },
                 prefill: {
-                    name: user?.name || '',
-                    email: user?.email || '',
-                    contact: user?.phone || ''
+                    name: user?.name || 'Customer',
+                    email: user?.email || 'customer@example.com',
+                    contact: user?.phone || '9999999999'
                 },
                 theme: { color: "#5D4037" },
                 modal: {
