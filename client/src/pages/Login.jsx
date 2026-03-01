@@ -213,69 +213,40 @@ const Login = () => {
                         </div>
                     </div>
 
-                    {/* Phone OTP Section */}
+                    {/* WhatsApp Login Section */}
                     <div className="phone-login-section">
-                        <h3 style={{ fontSize: '0.9rem', color: '#888', textAlign: 'center', marginBottom: '1rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Login with Phone OTP</h3>
+                        <h3 style={{ fontSize: '0.9rem', color: '#888', textAlign: 'center', marginBottom: '1rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Login via WhatsApp</h3>
 
-                        {!isOtpSent ? (
-                            <div style={{ display: 'flex', gap: '8px' }}>
-                                <div style={{ position: 'relative', flex: 1 }}>
-                                    <span style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#888', fontSize: '0.9rem' }}>🇮🇳 +91</span>
-                                    <input
-                                        type="tel"
-                                        className="form-input"
-                                        placeholder="Enter Number"
-                                        value={phoneNumber}
-                                        onChange={(e) => setPhoneNumber(e.target.value.replace(/\D/g, ''))}
-                                        style={{ paddingLeft: '50px' }}
-                                    />
-                                </div>
-                                <button
-                                    onClick={handleSendOtp}
-                                    disabled={isLoading || phoneNumber.length < 10}
-                                    className="otp-send-btn"
-                                    style={{
-                                        padding: '0 20px',
-                                        borderRadius: '12px',
-                                        background: '#5D4037',
-                                        color: 'white',
-                                        border: 'none',
-                                        fontWeight: 'bold',
-                                        cursor: 'pointer',
-                                        transition: 'all 0.3s'
-                                    }}
-                                >
-                                    {isLoading ? '...' : 'Send'}
-                                </button>
-                            </div>
-                        ) : (
-                            <form onSubmit={handleVerifyOtp} style={{ display: 'flex', gap: '8px' }}>
-                                <input
-                                    required
-                                    type="text"
-                                    className="form-input"
-                                    placeholder="Enter 6-digit OTP"
-                                    value={otp}
-                                    onChange={(e) => setOtp(e.target.value)}
-                                    style={{ flex: 1 }}
-                                />
-                                <button
-                                    type="submit"
-                                    disabled={isLoading || otp.length < 6}
-                                    style={{
-                                        padding: '0 20px',
-                                        borderRadius: '12px',
-                                        background: '#2E7D32',
-                                        color: 'white',
-                                        border: 'none',
-                                        fontWeight: 'bold',
-                                        cursor: 'pointer'
-                                    }}
-                                >
-                                    {isLoading ? '...' : 'Verify'}
-                                </button>
-                            </form>
-                        )}
+                        <div style={{ display: 'flex', justifyContent: 'center' }}>
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    const message = encodeURIComponent("Namaste Nature's Pledge 🌿,\n\nI want to login/signup to my account. My details are:\nName: [Your Name]\n\nPlease register my number.");
+                                    window.open(`https://wa.me/919958776101?text=${message}`, '_blank');
+                                }}
+                                style={{
+                                    width: '100%',
+                                    padding: '12px',
+                                    borderRadius: '50px',
+                                    border: 'none',
+                                    background: '#25D366',
+                                    color: 'white',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    gap: '10px',
+                                    cursor: 'pointer',
+                                    fontWeight: 'bold',
+                                    boxShadow: '0 4px 10px rgba(37, 211, 102, 0.3)',
+                                    transition: 'transform 0.2s'
+                                }}
+                                onMouseOver={(e) => e.currentTarget.style.transform = 'scale(1.02)'}
+                                onMouseOut={(e) => e.currentTarget.style.transform = 'scale(1)'}
+                            >
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" width="22" style={{ filter: 'brightness(0) invert(1)' }} />
+                                Order & Login via WhatsApp
+                            </button>
+                        </div>
                     </div>
 
 
