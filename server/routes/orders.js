@@ -7,6 +7,7 @@ const jsonPath = path.join(__dirname, '../data/orders.json');
 const nodemailer = require('nodemailer');
 
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'tilakmishra.76@gmail.com';
+const BASE_URL = process.env.NODE_ENV === 'production' ? 'https://naturespledge.in' : 'http://localhost:5173';
 
 let transporterInstance = null;
 const getTransporter = () => {
@@ -88,7 +89,7 @@ const sendOrderNotification = async (order) => {
                     </div>
 
                     <div style="text-align: center; margin-top: 28px;">
-                        <a href="http://10.240.184.95:5173/admin" style="background: #5D4037; color: white; padding: 14px 32px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 1rem; display: inline-block;">🖥️ Open Admin Dashboard &rarr;</a>
+                        <a href="${BASE_URL}/admin" style="background: #5D4037; color: white; padding: 14px 32px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 1rem; display: inline-block;">🖥️ Open Admin Dashboard &rarr;</a>
                         <p style="margin: 8px 0 0 0; font-size: 0.78rem; color: #bbb;">Update order status & process shipping here</p>
                     </div>
                 </div>
@@ -217,7 +218,7 @@ const sendCustomerOrderNotification = async (order) => {
 
                     <!-- Track Order Button -->
                     <div style="text-align: center; margin-top: 28px;">
-                        <a href="http://10.240.184.95:5173/track-order?id=${order.id}" style="background: #5D4037; color: white; padding: 14px 32px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 1rem; display: inline-block; letter-spacing: 0.2px;">📦 Track Your Order →</a>
+                        <a href="${BASE_URL}/track-order?id=${order.id}" style="background: #5D4037; color: white; padding: 14px 32px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 1rem; display: inline-block; letter-spacing: 0.2px;">📦 Track Your Order →</a>
                         <p style="margin: 8px 0 0 0; font-size: 0.78rem; color: #bbb;">Click to see live order status</p>
                     </div>
 
