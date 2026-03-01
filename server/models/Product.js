@@ -1,6 +1,10 @@
 const mongoose = require('mongoose');
 
 const productSchema = new mongoose.Schema({
+    id: {
+        type: Number,
+        unique: true
+    },
     name: {
         type: String,
         required: true
@@ -24,7 +28,12 @@ const productSchema = new mongoose.Schema({
     stock: {
         type: Number,
         default: 100
+    },
+    notes: {
+        type: String,
+        default: ''
     }
 });
+
 
 module.exports = mongoose.model('Product', productSchema);

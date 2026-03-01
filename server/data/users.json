@@ -1,0 +1,43 @@
+[
+  {
+    "_id": "admin_1",
+    "email": "tilakmishra.76@gmail.com",
+    "name": "Admin Tilak",
+    "role": "admin",
+    "walletBalance": 100000,
+    "lastLogin": 1772340681000,
+    "createdAt": 1772340681000,
+    "cart": [],
+    "lastCartUpdate": "2026-03-01T04:57:28.042Z"
+  },
+  {
+    "_id": "user_1",
+    "email": "customer@example.com",
+    "name": "Arjun Kumar",
+    "role": "user",
+    "phoneNumber": "9876543210",
+    "lastLogin": 1772340695000,
+    "createdAt": 1772338000000,
+    "cart": [
+      {
+        "id": 1,
+        "name": "Kashmiri Almond - 500g",
+        "price": 510,
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "Odzq7035eOSLMRZZAv9MVKKXfwv1",
+    "name": "Mishra",
+    "email": "dantil0902@gmail.com",
+    "image": "https://lh3.googleusercontent.com/a/ACg8ocKtT9jvXAqGfDP51kQJyDcakFADa26Mhl9g6aV2FJX7dxX3Yg=s96-c",
+    "role": "user",
+    "walletBalance": 0,
+    "walletHistory": [],
+    "_id": "local_1772341074374",
+    "lastLogin": 1772349261225,
+    "cart": [],
+    "lastCartUpdate": "2026-03-01T08:52:43.580Z"
+  }
+]

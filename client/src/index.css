@@ -20,11 +20,35 @@ html {
 
 body {
   margin: 0;
-  font-family: 'Lato', 'Segoe UI', sans-serif;
-  /* Cleaner font */
+  font-family: 'Outfit', 'Inter', sans-serif;
   background-color: var(--secondary-color);
   color: var(--text-color);
   line-height: 1.6;
+  scroll-behavior: smooth;
+}
+
+/* Premium Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--primary-color);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #4E342E;
+}
+
+/* Smooth Focus */
+:focus {
+  outline: 2px solid rgba(93, 64, 55, 0.3);
+  outline-offset: 4px;
 }
 
 .container {

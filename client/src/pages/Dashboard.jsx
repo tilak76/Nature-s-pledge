@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useToast } from '../context/ToastContext';
 import Modal from '../components/Modal';
 import './Dashboard.css';
@@ -159,24 +159,75 @@ const Dashboard = () => {
         </div>
     );
 
-    const renderOrders = () => (
-        <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
-            <Breadcrumb title="Your Orders" />
-            <h2 style={{ borderBottom: '1px solid #ddd', paddingBottom: '10px', fontWeight: '400', marginBottom: '20px' }}>Your Orders</h2>
+    const renderOrders = () => {
+        const storedOrders = JSON.parse(localStorage.getItem('orders') || '[]');
+        // In a real app, we'd filter by user email, but here we'll show what's in localStorage
+        const userOrders = storedOrders;
 
-            <div style={{ background: '#fcf8f6', border: '1px solid #eee', borderRadius: '8px', padding: '40px', textAlign: 'center' }}>
-                <div style={{ fontSize: '3rem', marginBottom: '15px' }}>📦</div>
-                <h3 style={{ margin: '0 0 10px 0', color: '#333' }}>No orders yet</h3>
-                <p style={{ color: '#666', marginBottom: '20px' }}>You haven't placed any orders yet.</p>
-                <button
-                    onClick={() => navigate('/shop')}
-                    style={{ background: '#F7CA00', border: '1px solid #FCD200', padding: '8px 20px', borderRadius: '20px', cursor: 'pointer', boxShadow: '0 2px 5px rgba(213, 217, 217, 0.5)' }}
-                >
-                    Start Shopping
-                </button>
+        return (
+            <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
+                <Breadcrumb title="Your Orders" />
+                <h2 style={{ borderBottom: '1px solid #ddd', paddingBottom: '10px', fontWeight: '400', marginBottom: '20px' }}>Your Orders</h2>
+
+                {userOrders.length === 0 ? (
+                    <div style={{ background: '#fcf8f6', border: '1px solid #eee', borderRadius: '8px', padding: '40px', textAlign: 'center' }}>
+                        <div style={{ fontSize: '3rem', marginBottom: '15px' }}>📦</div>
+                        <h3 style={{ margin: '0 0 10px 0', color: '#333' }}>No orders yet</h3>
+                        <p style={{ color: '#666', marginBottom: '20px' }}>You haven't placed any orders yet.</p>
+                        <button
+                            onClick={() => navigate('/shop')}
+                            style={{ background: '#F7CA00', border: '1px solid #FCD200', padding: '8px 20px', borderRadius: '20px', cursor: 'pointer', boxShadow: '0 2px 5px rgba(213, 217, 217, 0.5)' }}
+                        >
+                            Start Shopping
+                        </button>
+                    </div>
+                ) : (
+                    <div style={{ display: 'grid', gap: '20px' }}>
+                        {userOrders.map(order => (
+                            <div key={order.id} style={{ border: '1px solid #ddd', borderRadius: '8px', overflow: 'hidden', background: 'white' }}>
+                                <div style={{ background: '#f6f6f6', padding: '15px 20px', display: 'flex', flexWrap: 'wrap', gap: '20px', fontSize: '0.8rem', color: '#565959', borderBottom: '1px solid #ddd' }}>
+                                    <div>
+                                        ORDER PLACED<br />
+                                        <span style={{ color: '#333', fontWeight: '500' }}>{new Date(order.date).toLocaleDateString()}</span>
+                                    </div>
+                                    <div>
+                                        TOTAL<br />
+                                        <span style={{ color: '#333', fontWeight: '500' }}>₹{order.total}</span>
+                                    </div>
+                                    <div>
+                                        SHIP TO<br />
+                                        <span style={{ color: '#007185', fontWeight: '500' }}>{order.shipping?.fullName}</span>
+                                    </div>
+                                    <div style={{ marginLeft: 'auto', textAlign: 'right' }}>
+                                        ORDER # {order.id}<br />
+                                        <Link to={`/track-order?id=${order.id}`} style={{ color: '#007185' }}>Track package</Link>
+                                    </div>
+                                </div>
+                                <div style={{ padding: '20px', display: 'flex', gap: '20px' }}>
+                                    <div style={{ flex: 1 }}>
+                                        <h4 style={{ margin: '0 0 10px 0', color: '#333' }}>Status: {order.status}</h4>
+                                        {order.items.map((item, idx) => (
+                                            <div key={idx} style={{ display: 'flex', gap: '15px', marginBottom: '10px' }}>
+                                                <img src={item.image} alt="" style={{ width: '60px', height: '60px', objectFit: 'contain' }} />
+                                                <div>
+                                                    <div style={{ color: '#007185', fontWeight: '500' }}>{item.name}</div>
+                                                    <div style={{ fontSize: '0.9rem' }}>Qty: {item.quantity}</div>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                    <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', width: '200px' }}>
+                                        <button onClick={() => navigate('/shop')} style={{ background: '#FFD814', border: '1px solid #FCD200', padding: '10px', borderRadius: '8px', cursor: 'pointer', fontSize: '0.9rem' }}>Buy it again</button>
+                                        <button onClick={() => navigate(`/track-order?id=${order.id}`)} style={{ background: 'white', border: '1px solid #ddd', padding: '10px', borderRadius: '8px', cursor: 'pointer', fontSize: '0.9rem' }}>Track package</button>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                )}
             </div>
-        </div>
-    );
+        );
+    };
 
     const renderProfile = () => (
         <div style={{ maxWidth: '800px', margin: '0 auto' }}>

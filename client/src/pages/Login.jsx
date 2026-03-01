@@ -2,15 +2,44 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
+import axios from 'axios';
+import { auth, googleProvider, RecaptchaVerifier, signInWithPhoneNumber, signInWithPopup } from '../firebase';
 import './Login.css';
 
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [isLoading, setIsLoading] = useState(false);
-    const { login } = useAuth();
+    const { login, loginWithGoogle } = useAuth();
     const { showToast } = useToast();
     const navigate = useNavigate();
+
+    const handleGoogleLogin = async () => {
+        setIsLoading(true);
+        try {
+            const result = await signInWithPopup(auth, googleProvider);
+            const userObj = result.user;
+            const res = await loginWithGoogle(userObj);
+
+            if (res.success) {
+                showToast('Welcome to Nature\'s Pledge! 🌿');
+                if (userObj.email === 'tilakmishra.76@gmail.com') {
+                    navigate('/admin');
+                } else {
+                    navigate('/dashboard');
+                }
+            }
+        } catch (error) {
+            console.error("Google Login Error:", error);
+            if (error.code === 'auth/unauthorized-domain') {
+                showToast('Google Login blocked by Firebase on this IP address. Please test on localhost or add this IP to Firebase.', 'error');
+            } else {
+                showToast('Google login failed: ' + error.message, 'error');
+            }
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -20,15 +49,91 @@ const Login = () => {
 
         if (result.success) {
             showToast('Welcome back! 👋');
-            navigate('/dashboard');
+            if (result.user?.role === 'admin' || email === 'tilakmishra.76@gmail.com') {
+                navigate('/admin');
+            } else {
+                navigate('/dashboard');
+            }
         } else {
             showToast(result.message, 'error');
         }
     };
 
-    const handleSocialLogin = (provider) => {
-        // Placeholder for social login logic
-        showToast(`${provider} login coming soon!`, 'info');
+    const [phoneNumber, setPhoneNumber] = useState('');
+    const [otp, setOtp] = useState('');
+    const [isOtpSent, setIsOtpSent] = useState(false);
+    const [confirmationResult, setConfirmationResult] = useState(null);
+
+    const onCaptchaVerify = () => {
+        if (!window.recaptchaVerifier) {
+            window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
+                'size': 'invisible',
+                'callback': (response) => {
+                    handleSendOtp();
+                }
+            });
+        }
+    };
+
+    const handleSendOtp = async () => {
+        setIsLoading(true);
+        onCaptchaVerify();
+        const appVerifier = window.recaptchaVerifier;
+        const formatPh = phoneNumber.startsWith('+') ? phoneNumber : '+91' + phoneNumber;
+
+        try {
+            const result = await signInWithPhoneNumber(auth, formatPh, appVerifier);
+            setConfirmationResult(result);
+            setIsOtpSent(true);
+            showToast('Code sent to ' + phoneNumber, 'success');
+        } catch (error) {
+            console.error("OTP Send Error:", error);
+            if (error.code === 'auth/unauthorized-domain') {
+                showToast('Phone Login blocked by Firebase on this IP address. Please test on localhost.', 'error');
+            } else {
+                showToast('Failed to send code: ' + error.message, 'error');
+            }
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const handleVerifyOtp = async (e) => {
+        e.preventDefault();
+        setIsLoading(true);
+        try {
+            const userCredential = await confirmationResult.confirm(otp);
+            const userObj = userCredential.user;
+
+            const userData = {
+                id: userObj.uid,
+                name: 'Phone User',
+                phoneNumber: phoneNumber,
+                role: 'user'
+            };
+
+            // Sync with backend
+            try {
+                const res = await axios.post('/api/users/sync', userData);
+                const finalUser = { ...userData, ...res.data };
+                localStorage.setItem('user', JSON.stringify(finalUser));
+                await axios.post('/api/users/log-activity', {
+                    userId: finalUser.id,
+                    userName: finalUser.name,
+                    action: 'Logged in (Phone OTP)'
+                });
+            } catch (err) {
+                localStorage.setItem('user', JSON.stringify(userData));
+            }
+
+            showToast('Welcome to Nature\'s Pledge! 🌿');
+            navigate('/shop');
+        } catch (error) {
+            console.error("OTP Verify Error:", error);
+            showToast('Incorrect OTP. Try again!', 'error');
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     return (
@@ -68,37 +173,105 @@ const Login = () => {
                     </button>
                 </form>
 
-                <div className="divider">
-                    <span>Or continue with</span>
-                </div>
+                <div id="recaptcha-container"></div>
 
-                <div className="social-login-buttons">
-                    <button
-                        className="social-btn"
-                        onClick={() => handleSocialLogin('Google')}
-                        type="button"
-                    >
-                        <svg className="google-icon" viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg">
-                            <g transform="matrix(1, 0, 0, 1, 27.009001, -39.238998)">
-                                <path fill="#4285F4" d="M -3.264 51.509 C -3.264 50.719 -3.334 49.969 -3.454 49.239 L -14.754 49.239 L -14.754 53.749 L -8.284 53.749 C -8.574 55.229 -9.424 56.479 -10.684 57.329 L -10.684 60.329 L -6.824 60.329 C -4.564 58.239 -3.264 55.159 -3.264 51.509 Z" />
-                                <path fill="#34A853" d="M -14.754 63.239 C -11.514 63.239 -8.804 62.159 -6.824 60.329 L -10.684 57.329 C -11.764 58.049 -13.134 58.489 -14.754 58.489 C -17.884 58.489 -20.534 56.379 -21.484 53.529 L -25.464 53.529 L -25.464 56.619 C -23.494 60.539 -19.444 63.239 -14.754 63.239 Z" />
-                                <path fill="#FBBC05" d="M -21.484 53.529 C -21.734 52.809 -21.864 52.039 -21.864 51.239 C -21.864 50.439 -21.734 49.669 -21.484 48.949 L -21.484 45.859 L -25.464 45.859 C -26.284 47.479 -26.754 49.299 -26.754 51.239 C -26.754 53.179 -26.284 54.999 -25.464 56.619 L -21.484 53.529 Z" />
-                                <path fill="#EA4335" d="M -14.754 43.989 C -12.984 43.989 -11.404 44.599 -10.154 45.789 L -6.734 42.369 C -8.804 40.429 -11.514 39.239 -14.754 39.239 C -19.444 39.239 -23.494 41.939 -25.464 45.859 L -21.484 48.949 C -20.534 46.099 -17.884 43.989 -14.754 43.989 Z" />
-                            </g>
-                        </svg>
-                        Continue with Google
-                    </button>
+                <div className="alternative-login" style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '1.5rem' }}>
 
-                    <button
-                        className="social-btn"
-                        onClick={() => handleSocialLogin('Facebook')}
-                        type="button"
-                    >
-                        <svg className="facebook-icon" viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg" fill="#1877F2">
-                            <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
-                        </svg>
-                        Continue with Facebook
-                    </button>
+                    {/* Google Login Section */}
+                    <div className="google-login-section" style={{ borderBottom: '1px solid #eee', paddingBottom: '1.5rem', marginBottom: '0.5rem' }}>
+                        <h3 style={{ fontSize: '0.9rem', color: '#888', textAlign: 'center', marginBottom: '1rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Quick Social Login</h3>
+                        <div style={{ display: 'flex', justifyContent: 'center' }}>
+                            <button
+                                onClick={handleGoogleLogin}
+                                disabled={isLoading}
+                                style={{
+                                    width: '100%',
+                                    padding: '12px',
+                                    borderRadius: '50px',
+                                    border: '1px solid #ddd',
+                                    background: 'white',
+                                    color: '#444',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    gap: '10px',
+                                    cursor: 'pointer',
+                                    fontWeight: '500',
+                                    boxShadow: '0 2px 5px rgba(0,0,0,0.05)'
+                                }}
+                            >
+                                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="" width="18" />
+                                {isLoading ? 'Please wait...' : 'Continue with Google'}
+                            </button>
+                        </div>
+                    </div>
+
+                    {/* Phone OTP Section */}
+                    <div className="phone-login-section">
+                        <h3 style={{ fontSize: '0.9rem', color: '#888', textAlign: 'center', marginBottom: '1rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Login with Phone OTP</h3>
+
+                        {!isOtpSent ? (
+                            <div style={{ display: 'flex', gap: '8px' }}>
+                                <div style={{ position: 'relative', flex: 1 }}>
+                                    <span style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#888', fontSize: '0.9rem' }}>🇮🇳 +91</span>
+                                    <input
+                                        type="tel"
+                                        className="form-input"
+                                        placeholder="Enter Number"
+                                        value={phoneNumber}
+                                        onChange={(e) => setPhoneNumber(e.target.value.replace(/\D/g, ''))}
+                                        style={{ paddingLeft: '50px' }}
+                                    />
+                                </div>
+                                <button
+                                    onClick={handleSendOtp}
+                                    disabled={isLoading || phoneNumber.length < 10}
+                                    className="otp-send-btn"
+                                    style={{
+                                        padding: '0 20px',
+                                        borderRadius: '12px',
+                                        background: '#5D4037',
+                                        color: 'white',
+                                        border: 'none',
+                                        fontWeight: 'bold',
+                                        cursor: 'pointer',
+                                        transition: 'all 0.3s'
+                                    }}
+                                >
+                                    {isLoading ? '...' : 'Send'}
+                                </button>
+                            </div>
+                        ) : (
+                            <form onSubmit={handleVerifyOtp} style={{ display: 'flex', gap: '8px' }}>
+                                <input
+                                    required
+                                    type="text"
+                                    className="form-input"
+                                    placeholder="Enter 6-digit OTP"
+                                    value={otp}
+                                    onChange={(e) => setOtp(e.target.value)}
+                                    style={{ flex: 1 }}
+                                />
+                                <button
+                                    type="submit"
+                                    disabled={isLoading || otp.length < 6}
+                                    style={{
+                                        padding: '0 20px',
+                                        borderRadius: '12px',
+                                        background: '#2E7D32',
+                                        color: 'white',
+                                        border: 'none',
+                                        fontWeight: 'bold',
+                                        cursor: 'pointer'
+                                    }}
+                                >
+                                    {isLoading ? '...' : 'Verify'}
+                                </button>
+                            </form>
+                        )}
+                    </div>
+
+
                 </div>
 
                 <div className="auth-footer">

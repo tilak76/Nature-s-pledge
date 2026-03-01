@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { products } from '../data/products';
+import axios from 'axios';
+import { products as staticProducts } from '../data/products';
 import { useCart } from '../context/CartContext';
 import { useToast } from '../context/ToastContext';
+
 
 const ProductDetails = () => {
     const { id } = useParams();
@@ -14,22 +16,40 @@ const ProductDetails = () => {
     const [relatedVariants, setRelatedVariants] = useState([]);
 
     useEffect(() => {
-        const found = products.find(p => p.id === parseInt(id));
-        if (found) {
-            setProduct(found);
+        const fetchProductData = async () => {
+            let products = [];
+            try {
+                // Set a timeout for the axios call to avoid hanging forever
+                const res = await axios.get('/api/products', { timeout: 3000 });
+                if (res.data && res.data.length > 0) {
+                    products = res.data;
+                } else {
+                    products = staticProducts;
+                }
+            } catch (err) {
+                console.error("Error fetching product, using fallback:", err);
+                products = staticProducts;
+            }
 
-            // Logic to find variants (same base name)
-            const baseName = found.name.split(' - ')[0];
-            const variants = products.filter(p => p.name.startsWith(baseName) && p.id !== found.id);
-            setRelatedVariants(variants);
+            const found = products.find(p => String(p.id) === String(id));
 
-            const others = products.filter(p => p.category === found.category && p.id !== found.id && !p.name.startsWith(baseName));
-            setRelated(others.slice(0, 3));
-            window.scrollTo(0, 0);
-        } else {
-            navigate('/shop');
-        }
+            if (found) {
+                setProduct(found);
+                const baseName = found.name.split(' - ')[0];
+                const variants = products.filter(p => p.name.startsWith(baseName) && String(p.id) !== String(found.id));
+                setRelatedVariants(variants);
+
+                const others = products.filter(p => p.category === found.category && String(p.id) !== String(found.id) && !p.name.startsWith(baseName));
+                setRelated(others.slice(0, 3));
+                window.scrollTo(0, 0);
+            } else {
+                navigate('/shop');
+            }
+        };
+        fetchProductData();
     }, [id, navigate]);
+
+
 
     if (!product) return <div className="container" style={{ padding: '4rem' }}>Loading...</div>;
 

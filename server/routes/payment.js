@@ -4,10 +4,22 @@ const Razorpay = require('razorpay');
 const shortid = require('shortid');
 const crypto = require('crypto');
 
-const razorpay = new Razorpay({
-    key_id: 'rzp_test_YourKeyHere', // Replace with valid Test Key ID for the user to try
-    key_secret: 'YourKeySecretHere' // Replace with valid Test Key Secret
-});
+// Razorpay initialization wrapped to prevent crash if keys are missing
+let razorpay;
+try {
+    if (process.env.RAZORPAY_KEY_ID && process.env.RAZORPAY_KEY_SECRET) {
+        razorpay = new Razorpay({
+            key_id: process.env.RAZORPAY_KEY_ID,
+            key_secret: process.env.RAZORPAY_KEY_SECRET
+        });
+    } else {
+        console.warn('RAZORPAY_KEY_ID or RAZORPAY_KEY_SECRET is missing in .env');
+        razorpay = { orders: { create: () => { throw new Error('Razorpay keys missing'); } } };
+    }
+} catch (e) {
+    console.error('Razorpay Init Error:', e.message);
+    razorpay = { orders: { create: () => { throw new Error('Razorpay init failed'); } } };
+}
 
 // Create an order
 router.post('/orders', async (req, res) => {
@@ -20,13 +32,9 @@ router.post('/orders', async (req, res) => {
 
     try {
         // MOCK MODE: If keys are default/missing, return a dummy order
-        if (razorpay.key_id === 'rzp_test_YourKeyHere') {
-            console.log('Simulating Razorpay Order (Mock Mode)');
-            return res.json({
-                id: 'order_mock_' + shortid.generate(),
-                currency: currency,
-                amount: options.amount
-            });
+        if (!process.env.RAZORPAY_KEY_ID) {
+            console.error('RAZORPAY_KEY_ID is missing!');
+            return res.status(500).json({ status: 'error', message: 'Razorpay key missing' });
         }
 
         const response = await razorpay.orders.create(options);
@@ -36,27 +44,23 @@ router.post('/orders', async (req, res) => {
             amount: response.amount
         });
     } catch (error) {
-        console.log("Razorpay Error:", error);
-        // Fallback for demo if API fails
-        res.json({
-            id: 'order_mock_fallback_' + shortid.generate(),
-            currency: currency,
-            amount: options.amount
-        });
+        console.error("Razorpay Order Creation Error:", error);
+        res.status(500).json({ status: 'error', message: error.message || 'Razorpay order failed' });
     }
 });
 
 // Verify payment signature
 router.post('/verify', (req, res) => {
-    const secret = 'YourKeySecretHere'; // Must match key_secret above
+    const secret = process.env.RAZORPAY_KEY_SECRET; // Must match key_secret above
 
     // Ideally, you would use webhook signature verification, 
     // but for simple checkout success flow:
     const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
 
     // MOCK VERIFICATION
-    if (secret === 'YourKeySecretHere') {
-        return res.json({ status: 'success' });
+    if (!secret) {
+        console.error("RAZORPAY_KEY_SECRET is missing!");
+        return res.status(500).json({ status: 'error', message: 'Secret key missing' });
     }
 
     const shasum = crypto.createHmac('sha256', secret);

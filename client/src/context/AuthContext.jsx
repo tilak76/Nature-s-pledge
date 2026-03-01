@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import axios from 'axios';
 
 const AuthContext = createContext();
 
@@ -8,24 +9,98 @@ export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
 
+    const logActivity = async (action, details = {}) => {
+        const storedUser = JSON.parse(localStorage.getItem('user'));
+        if (!storedUser) return;
+        try {
+            await axios.post('/api/users/log-activity', {
+                userId: storedUser.id || storedUser.email || 'guest',
+                userName: storedUser.name || 'Anonymous',
+                userEmail: storedUser.email || 'N/A',
+                action,
+                details
+            });
+        } catch (err) {
+            console.error("Failed to log activity:", err);
+        }
+    };
+
+    const syncUserWithBackend = async (userData) => {
+        try {
+            const res = await axios.post('/api/users/sync', userData);
+            return res.data;
+        } catch (err) {
+            console.error("Failed to sync user:", err);
+            return userData;
+        }
+    };
+
     useEffect(() => {
         // Check local storage for existing session
-        try {
-            const storedUser = localStorage.getItem('user');
-            if (storedUser) {
-                setUser(JSON.parse(storedUser));
+        const initAuth = async () => {
+            try {
+                const storedUser = localStorage.getItem('user');
+                if (storedUser) {
+                    const parsedUser = JSON.parse(storedUser);
+                    setUser(parsedUser);
+                    // Log session resume
+                    logActivity('Session Resumed', { device: navigator.userAgent });
+                }
+
+                // SEED ADMIN USER (Client-side fallback)
+                const storedUsersRaw = localStorage.getItem('registered_users');
+                let storedUsers = storedUsersRaw ? JSON.parse(storedUsersRaw) : [];
+                if (!Array.isArray(storedUsers)) storedUsers = [];
+
+                const adminEmail = 'tilakmishra.76@gmail.com';
+                const adminPassword = 'TILA123@';
+
+                if (!storedUsers.some(u => u.email === adminEmail)) {
+                    storedUsers.push({
+                        id: 'admin_1',
+                        email: adminEmail,
+                        password: adminPassword,
+                        name: 'Admin Tilak',
+                        role: 'admin',
+                        walletBalance: 100000,
+                        walletHistory: []
+                    });
+                    localStorage.setItem('registered_users', JSON.stringify(storedUsers));
+                }
+            } catch (error) {
+                console.error("Failed to initialize auth state", error);
             }
-        } catch (error) {
-            console.error("Failed to parse user session", error);
-            localStorage.removeItem('user');
-        }
-        setLoading(false);
+            setLoading(false);
+        };
+        initAuth();
     }, []);
+
+    const loginWithGoogle = async (fbUser) => {
+        const userData = {
+            id: fbUser.uid || fbUser.sub,
+            name: fbUser.displayName || fbUser.name,
+            email: fbUser.email,
+            image: fbUser.photoURL || fbUser.picture,
+            role: fbUser.email === 'tilakmishra.76@gmail.com' ? 'admin' : 'user',
+            walletBalance: 0,
+            walletHistory: []
+        };
+
+        // Sync with backend
+        const syncedUser = await syncUserWithBackend(userData);
+        const finalUser = { ...userData, ...syncedUser };
+
+        setUser(finalUser);
+        localStorage.setItem('user', JSON.stringify(finalUser));
+        logActivity('Logged in with Google (Firebase)');
+
+        return { success: true, user: finalUser };
+    };
 
     const login = async (email, password) => {
         // Mock Login Logic with simulated latency
         return new Promise((resolve) => {
-            setTimeout(() => {
+            setTimeout(async () => {
                 try {
                     const storedUsers = JSON.parse(localStorage.getItem('registered_users') || '[]');
                     const safeUsers = Array.isArray(storedUsers) ? storedUsers : [];
@@ -34,9 +109,15 @@ export const AuthProvider = ({ children }) => {
                     if (foundUser) {
                         const userData = { ...foundUser };
                         delete userData.password; // Don't keep password in session
-                        setUser(userData);
-                        localStorage.setItem('user', JSON.stringify(userData));
-                        resolve({ success: true });
+
+                        // Sync with backend
+                        const syncedUser = await syncUserWithBackend(userData);
+                        const finalUser = { ...userData, ...syncedUser };
+
+                        setUser(finalUser);
+                        localStorage.setItem('user', JSON.stringify(finalUser));
+                        logActivity('Logged in (Email/Pass)');
+                        resolve({ success: true, user: finalUser });
                     } else {
                         resolve({ success: false, message: 'Invalid credentials' });
                     }
@@ -48,7 +129,7 @@ export const AuthProvider = ({ children }) => {
         });
     };
 
-    const signup = (userData) => {
+    const signup = async (userData) => {
         try {
             const storedUsersRaw = localStorage.getItem('registered_users');
             let storedUsers = storedUsersRaw ? JSON.parse(storedUsersRaw) : [];
@@ -61,6 +142,7 @@ export const AuthProvider = ({ children }) => {
             const newUser = {
                 id: Date.now(),
                 ...userData,
+                role: userData.email === 'tilakmishra.76@gmail.com' ? 'admin' : 'user', // Set admin role
                 walletBalance: 0, // Initial wallet balance
                 walletHistory: []
             };
@@ -68,11 +150,14 @@ export const AuthProvider = ({ children }) => {
             storedUsers.push(newUser);
             localStorage.setItem('registered_users', JSON.stringify(storedUsers));
 
-            // Auto login
-            const sessionUser = { ...newUser };
-            delete sessionUser.password;
-            setUser(sessionUser);
-            localStorage.setItem('user', JSON.stringify(sessionUser));
+            // Sync with backend
+            const syncedUser = await syncUserWithBackend(newUser);
+            const finalUser = { ...newUser, ...syncedUser };
+            delete finalUser.password;
+
+            setUser(finalUser);
+            localStorage.setItem('user', JSON.stringify(finalUser));
+            logActivity('Signed Up New Account');
 
             return { success: true };
         } catch (error) {
@@ -82,6 +167,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     const logout = () => {
+        logActivity('Logged Out');
         setUser(null);
         localStorage.removeItem('user');
     };
@@ -98,7 +184,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     return (
-        <AuthContext.Provider value={{ user, login, signup, logout, updateUser, loading }}>
+        <AuthContext.Provider value={{ user, login, loginWithGoogle, signup, logout, updateUser, logActivity, loading }}>
             {loading ? (
                 <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', background: '#fcf4ec' }}>
                     <div style={{ fontSize: '3rem', marginBottom: '1rem', animation: 'spin 2s linear infinite' }}>🥥</div>

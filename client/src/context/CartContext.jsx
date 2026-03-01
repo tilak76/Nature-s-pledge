@@ -1,4 +1,6 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
+import axios from 'axios';
+import { useAuth } from './AuthContext';
 
 const CartContext = createContext();
 
@@ -20,10 +22,26 @@ export const CartProvider = ({ children }) => {
         }
     });
 
+    const { user } = useAuth();
+
     // Save cart to local storage on change
     useEffect(() => {
         localStorage.setItem('cart', JSON.stringify(cart));
-    }, [cart]);
+
+        // SYNC TO SERVER for Abandoned Cart Tracking
+        if (user && user.email) {
+            const timer = setTimeout(async () => {
+                try {
+                    await axios.post('/api/users/sync-cart', {
+                        email: user.email,
+                        phoneNumber: user.phoneNumber,
+                        cart: cart
+                    });
+                } catch (e) { console.error("Cart Sync Error:", e); }
+            }, 2000); // 2 second debounce to prevent spamming server
+            return () => clearTimeout(timer);
+        }
+    }, [cart, user]);
 
     const addToCart = (product) => {
         if (!product || !product.id) return;

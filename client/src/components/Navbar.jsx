@@ -50,17 +50,36 @@ const Navbar = () => {
 
                     {/* Add Tracking Link */}
                     <Link to="/track-order" onClick={() => setIsOpen(false)}>Track Order</Link>
+                    <a href="#chat" onClick={(e) => { e.preventDefault(); document.querySelector('.chat-toggle')?.click(); }} className="whatsapp-float" title="Live Inquiry Chat" style={{ background: '#5D4037', color: 'white', padding: '6px 15px', borderRadius: '50px', display: 'flex', alignItems: 'center', gap: '5px', fontSize: '0.85rem' }}>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="white">
+                            <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z" />
+                        </svg>
+                        Live Help
+                    </a>
+                    {user && (user.email === 'tilakmishra.76@gmail.com' || user.role === 'admin') && (
+                        <Link to="/admin" onClick={() => setIsOpen(false)}>Admin</Link>
+                    )}
+
+
 
                     {user ? (
-                        <>
-                            <Link to="/dashboard" onClick={() => setIsOpen(false)}>Dashboard</Link>
-                            <span onClick={handleLogout} className="logout-btn">
-                                Logout
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+                        <div className="user-nav-action" style={{ display: 'flex', alignItems: 'center', gap: '1.2rem' }}>
+                            <Link to="/dashboard" onClick={() => setIsOpen(false)} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                {user.image ? (
+                                    <img src={user.image} alt="" style={{ width: '32px', height: '32px', borderRadius: '50%', border: '2px solid #5D4037' }} />
+                                ) : (
+                                    <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: '#5D4037', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.8rem' }}>
+                                        {user.name?.charAt(0) || 'U'}
+                                    </div>
+                                )}
+                                <span className="user-name-label">{user.name?.split(' ')[0]}</span>
+                            </Link>
+                            <span onClick={handleLogout} className="logout-btn" style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '5px', color: '#B12704' }}>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
                             </span>
-                        </>
+                        </div>
                     ) : (
-                        <Link to="/login" onClick={() => setIsOpen(false)}>Login</Link>
+                        <Link to="/login" className="login-nav-btn" onClick={() => setIsOpen(false)} style={{ background: '#5D4037', color: 'white', padding: '8px 20px', borderRadius: '50px' }}>Login</Link>
                     )}
 
                     <Link to="/cart" className="cart-icon-wrapper" onClick={() => setIsOpen(false)}>

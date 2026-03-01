@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useCart } from '../context/CartContext';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 
 const Checkout = () => {
     const { cart, cartTotal, clearCart } = useCart();
-    const { user, updateUser } = useAuth();
+    const { user, updateUser, logActivity } = useAuth();
     const { showToast } = useToast();
     const navigate = useNavigate();
 
@@ -14,15 +16,20 @@ const Checkout = () => {
     const [paymentMethod, setPaymentMethod] = useState('razorpay'); // Default to Razorpay
     const [shipping, setShipping] = useState({
         fullName: user?.name || '',
+        email: user?.email || '',
         address: '',
         city: '',
         pincode: '',
-        phone: ''
+        phone: '',
+        notes: ''
     });
+
     const [processing, setProcessing] = useState(false);
 
     // Safety: ensure cart exists
     const safeCart = Array.isArray(cart) ? cart : [];
+    const deliveryFee = 50;
+    const actualTotal = cartTotal + deliveryFee;
 
     useEffect(() => {
         if (safeCart.length === 0) {
@@ -35,58 +42,64 @@ const Checkout = () => {
         setShipping(prev => ({ ...prev, [name]: value }));
     };
 
-    const handleRazorpayPayment = () => {
-        const options = {
-            key: "rzp_live_S0W61ZvJ61G4Ec", // LIVE KEY
-            amount: cartTotal * 100, // Amount in paise
-            currency: "INR",
-            name: "Nature's Pledge",
-            description: "Premium Organic Products",
-            image: "https://via.placeholder.com/150",
-            handler: function (response) {
-                // Payment Success!
-                // The payment ID is returned here.
-                if (response.razorpay_payment_id) {
-                    finalizeOrder(response.razorpay_payment_id);
-                } else {
-                    showToast('Payment processing failed. No ID returned.', 'error');
-                    setProcessing(false);
-                }
-            },
-            prefill: {
-                name: shipping.fullName,
-                email: user?.email || "customer@example.com",
-                contact: shipping.phone
-            },
-            theme: {
-                color: "#5D4037"
-            },
-            retry: {
-                enabled: true
-            },
-            modal: {
-                ondismiss: function () {
-                    setProcessing(false);
-                    showToast('Payment Cancelled by user', 'info');
-                }
-            }
-        };
-
+    const handleRazorpayPayment = async () => {
+        setProcessing(true);
         try {
+            // STEP 1: Create Order on the Server
+            const { data: orderData } = await axios.post('/api/payment/orders', {
+                amount: actualTotal,
+                currency: 'INR'
+            });
+
+            const options = {
+                key: import.meta.env.VITE_RAZORPAY_KEY_ID || "rzp_live_SLrKQbMoIy3lUS",
+                amount: orderData.amount, // Already in paise from server if you wish, or use cartTotal*100
+                currency: orderData.currency,
+                name: "Nature's Pledge",
+                description: "Premium Organic Products",
+                image: "https://via.placeholder.com/150",
+                order_id: orderData.id, // CRITICAL: This links to server-side order
+                handler: function (response) {
+                    if (response.razorpay_payment_id) {
+                        finalizeOrder(response.razorpay_payment_id);
+                    } else {
+                        showToast('Payment processing failed. No ID returned.', 'error');
+                        setProcessing(false);
+                    }
+                },
+                prefill: {
+                    name: shipping.fullName,
+                    email: user?.email || "customer@example.com",
+                    contact: shipping.phone
+                },
+                theme: {
+                    color: "#5D4037"
+                },
+                modal: {
+                    ondismiss: function () {
+                        setProcessing(false);
+                        showToast('Payment Cancelled by user', 'info');
+                    }
+                }
+            };
+
             const rzp1 = new window.Razorpay(options);
             rzp1.on('payment.failed', function (response) {
                 setProcessing(false);
                 showToast(response.error.description || 'Payment Failed', 'error');
             });
             rzp1.open();
+
         } catch (err) {
-            console.error(err);
-            showToast('Razorpay SDK failed to load. Check internet connection.', 'error');
+            console.error("Razorpay Setup Error:", err);
+            showToast('Razorpay failed to initiate. Please check your internet or keys.', 'error');
             setProcessing(false);
         }
     };
 
-    const finalizeOrder = (paymentId) => {
+
+
+    const finalizeOrder = async (paymentId) => {
         const orderId = 'ORD-' + Math.floor(100000 + Math.random() * 900000);
         const trackingNumber = 'EU' + Math.floor(100000000 + Math.random() * 900000000) + 'IN';
 
@@ -96,10 +109,11 @@ const Checkout = () => {
             date: new Date().toISOString(),
             status: 'Processing',
             items: safeCart,
-            total: cartTotal,
+            total: actualTotal,
             paymentMethod: paymentMethod,
             transactionId: paymentId || 'COD', // Save transaction ID
             shipping: shipping,
+            notes: shipping.notes,
             updates: [
                 { status: 'Order Placed', location: 'Online', time: new Date().toLocaleTimeString(), completed: true },
                 { status: 'Packed', location: 'Nature Pledge Facility', time: 'Pending', completed: false },
@@ -113,12 +127,32 @@ const Checkout = () => {
             existingOrders.unshift(newOrder);
             localStorage.setItem('orders', JSON.stringify(existingOrders));
 
+            // ALSO SEND TO SERVER
+            const serverOrder = {
+                ...newOrder,
+                customer: {
+                    name: shipping.fullName,
+                    phone: shipping.phone,
+                    city: shipping.city,
+                    address: shipping.address,
+                    pincode: shipping.pincode,
+                    email: user?.email || shipping.email || 'Guest'
+                }
+            };
+
+            const serverResponse = await axios.post('/api/orders', serverOrder);
+            if (!serverResponse.data) throw new Error("Server rejected order");
+
             if (paymentMethod === 'wallet' && user) {
-                updateUser({ walletBalance: user.walletBalance - cartTotal });
+                // If user object has walletBalance, subtract the total
+                updateUser({ walletBalance: user.walletBalance - actualTotal });
             }
 
+            logActivity('Placed Order', { amount: actualTotal, orderId: orderId });
+
         } catch (e) {
-            showToast('Storage full. Clear cache.', 'error');
+            console.error("Order completion failed:", e);
+            showToast('Failed to connect to server. Check your network.', 'error');
             setProcessing(false);
             return;
         }
@@ -128,7 +162,7 @@ const Checkout = () => {
             clearCart();
             setProcessing(false);
             navigate(`/track-order?id=${orderId}`);
-        }, 1500);
+        }, 800);
     };
 
     const handlePlaceOrder = () => {
@@ -152,7 +186,7 @@ const Checkout = () => {
                 setProcessing(false);
             }
         } else if (paymentMethod === 'wallet') {
-            if (user && (user.walletBalance || 0) < cartTotal) {
+            if (user && (user.walletBalance || 0) < actualTotal) {
                 showToast('Insufficient wallet balance!', 'error');
                 setProcessing(false);
                 return;
@@ -192,9 +226,15 @@ const Checkout = () => {
                         {step === 1 && (
                             <div style={{ padding: '20px' }}>
                                 <form style={{ display: 'grid', gap: '15px' }} onSubmit={(e) => { e.preventDefault(); setStep(2); }}>
-                                    <div>
-                                        <label style={{ fontWeight: 'bold', display: 'block', marginBottom: '5px' }}>Full Name</label>
-                                        <input required name="fullName" value={shipping.fullName} onChange={handleInputChange} style={{ width: '100%', padding: '10px', borderRadius: '4px', border: '1px solid #888' }} />
+                                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
+                                        <div>
+                                            <label style={{ fontWeight: 'bold', display: 'block', marginBottom: '5px' }}>Full Name</label>
+                                            <input required name="fullName" value={shipping.fullName} onChange={handleInputChange} style={{ width: '100%', padding: '10px', borderRadius: '4px', border: '1px solid #888' }} />
+                                        </div>
+                                        <div>
+                                            <label style={{ fontWeight: 'bold', display: 'block', marginBottom: '5px' }}>Email Address</label>
+                                            <input required type="email" name="email" value={shipping.email} onChange={handleInputChange} style={{ width: '100%', padding: '10px', borderRadius: '4px', border: '1px solid #888' }} />
+                                        </div>
                                     </div>
                                     <div>
                                         <label style={{ fontWeight: 'bold', display: 'block', marginBottom: '5px' }}>Address</label>
@@ -207,13 +247,32 @@ const Checkout = () => {
                                         </div>
                                         <div>
                                             <label style={{ fontWeight: 'bold', display: 'block', marginBottom: '5px' }}>Pincode</label>
-                                            <input required name="pincode" value={shipping.pincode} onChange={handleInputChange} style={{ width: '100%', padding: '10px', borderRadius: '4px', border: '1px solid #888' }} />
+                                            <input
+                                                required
+                                                type="text"
+                                                inputMode="numeric"
+                                                pattern="[0-9]*"
+                                                name="pincode"
+                                                value={shipping.pincode}
+                                                onChange={(e) => {
+                                                    const value = e.target.value.replace(/\D/g, '');
+                                                    if (value.length <= 6) {
+                                                        setShipping(prev => ({ ...prev, pincode: value }));
+                                                    }
+                                                }}
+                                                style={{ width: '100%', padding: '10px', borderRadius: '4px', border: '1px solid #888' }}
+                                            />
                                         </div>
                                     </div>
                                     <div>
                                         <label style={{ fontWeight: 'bold', display: 'block', marginBottom: '5px' }}>Phone Number</label>
                                         <input required name="phone" value={shipping.phone} onChange={handleInputChange} style={{ width: '100%', padding: '10px', borderRadius: '4px', border: '1px solid #888' }} />
                                     </div>
+                                    <div>
+                                        <label style={{ fontWeight: 'bold', display: 'block', marginBottom: '5px' }}>Special Instructions / Delivery Notes (Optional)</label>
+                                        <textarea name="notes" value={shipping.notes} onChange={handleInputChange} placeholder="E.g. Call before delivery, leave at door, etc." style={{ width: '100%', padding: '10px', borderRadius: '4px', border: '1px solid #888', minHeight: '60px' }} />
+                                    </div>
+
                                     <button type="submit" style={{ background: '#FFD814', border: '1px solid #FCD200', padding: '10px 20px', borderRadius: '8px', cursor: 'pointer', marginTop: '10px', justifySelf: 'start', boxShadow: '0 2px 5px rgba(213,217,217,0.5)' }}>Use this address</button>
                                 </form>
                             </div>
@@ -253,10 +312,10 @@ const Checkout = () => {
                                 {user && (
                                     <div style={{ border: '1px solid #ccc', borderRadius: '4px', padding: '15px', marginBottom: '10px', background: paymentMethod === 'wallet' ? '#fcf5ee' : 'white' }}>
                                         <label style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer' }}>
-                                            <input type="radio" name="payment" value="wallet" checked={paymentMethod === 'wallet'} onChange={(e) => setPaymentMethod(e.target.value)} disabled={(user.walletBalance || 0) < cartTotal} />
+                                            <input type="radio" name="payment" value="wallet" checked={paymentMethod === 'wallet'} onChange={(e) => setPaymentMethod(e.target.value)} disabled={(user.walletBalance || 0) < actualTotal} />
                                             <span style={{ fontWeight: 'bold' }}>Nature Pledge Wallet (Bal: ₹{user.walletBalance || 0})</span>
                                         </label>
-                                        {(user.walletBalance || 0) < cartTotal && <div style={{ color: 'red', marginLeft: '25px', fontSize: '0.8rem' }}>Insufficient balance</div>}
+                                        {(user.walletBalance || 0) < actualTotal && <div style={{ color: 'red', marginLeft: '25px', fontSize: '0.8rem' }}>Insufficient balance</div>}
                                     </div>
                                 )}
                             </div>
@@ -293,11 +352,11 @@ const Checkout = () => {
                         </div>
                         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '5px', fontSize: '0.9rem' }}>
                             <span>Delivery:</span>
-                            <span style={{ color: '#007600' }}>FREE</span>
+                            <span style={{ color: '#333' }}>₹50</span>
                         </div>
                         <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '10px', borderTop: '1px solid #ddd', paddingTop: '10px', fontWeight: 'bold', fontSize: '1.2rem', color: '#B12704' }}>
                             <span>Order Total:</span>
-                            <span>₹{cartTotal}</span>
+                            <span>₹{cartTotal + 50}</span>
                         </div>
                         <div style={{ fontSize: '0.8rem', color: '#555', marginTop: '15px' }}>
                             By placing your order, you agree to Nature Pledge's <span style={{ color: '#007185', cursor: 'pointer' }}>privacy notice</span> and <span style={{ color: '#007185', cursor: 'pointer' }}>conditions of use</span>.

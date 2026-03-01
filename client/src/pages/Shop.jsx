@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useCart } from '../context/CartContext';
 import { useToast } from '../context/ToastContext';
-import { products as staticProducts } from '../data/products';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import axios from 'axios';
+import { products as staticProducts } from '../data/products';
 import './Shop.css';
 
+
 const Shop = () => {
+    const { logActivity } = useAuth();
     const [groupedProducts, setGroupedProducts] = useState([]);
     const [displayProducts, setDisplayProducts] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -17,39 +21,58 @@ const Shop = () => {
     const { addToCart } = useCart();
     const { showToast } = useToast();
 
+    useEffect(() => {
+        logActivity('Browsing Shop');
+    }, []);
+
     const categories = ['All', 'Walnut', 'Almond', 'Rajma', 'Atta', 'Chutney'];
 
     // Grouping Logic
     useEffect(() => {
-        const groups = {};
-
-        staticProducts.forEach(product => {
-            // Extract base name (e.g., "Kashmiri Almond" from "Kashmiri Almond - 500g")
-            // Use the part before the last " - " as the base name, or the whole name if no separator
-            const nameParts = product.name.split(' - ');
-            const baseName = nameParts.length > 1 ? nameParts.slice(0, -1).join(' - ') : product.name;
-            const weight = nameParts.length > 1 ? nameParts[nameParts.length - 1] : 'Standard';
-
-            if (!groups[baseName]) {
-                groups[baseName] = {
-                    baseName: baseName,
-                    category: product.category,
-                    description: product.description,
-                    image: product.image, // Use image of the first variant
-                    variants: []
-                };
+        const fetchAndGroupProducts = async () => {
+            let dataToProcess = [];
+            try {
+                const response = await axios.get('/api/products');
+                if (response.data && response.data.length > 0) {
+                    dataToProcess = response.data;
+                } else {
+                    dataToProcess = staticProducts;
+                }
+            } catch (err) {
+                console.error("Failed to fetch products, using fallback:", err);
+                dataToProcess = staticProducts;
             }
-            groups[baseName].variants.push({
-                ...product,
-                weightLabel: weight
-            });
-        });
 
-        const groupedArray = Object.values(groups);
-        setGroupedProducts(groupedArray);
-        setDisplayProducts(groupedArray);
-        setLoading(false);
+            const groups = {};
+            dataToProcess.forEach(product => {
+                const nameParts = product.name.split(' - ');
+                const baseName = nameParts.length > 1 ? nameParts.slice(0, -1).join(' - ') : product.name;
+                const weight = nameParts.length > 1 ? nameParts[nameParts.length - 1] : 'Standard';
+
+                if (!groups[baseName]) {
+                    groups[baseName] = {
+                        baseName: baseName,
+                        category: product.category,
+                        description: product.description,
+                        image: product.image,
+                        variants: []
+                    };
+                }
+                groups[baseName].variants.push({
+                    ...product,
+                    weightLabel: weight
+                });
+            });
+
+            const groupedArray = Object.values(groups);
+            setGroupedProducts(groupedArray);
+            setDisplayProducts(groupedArray);
+            setLoading(false);
+        };
+
+        fetchAndGroupProducts();
     }, []);
+
 
     // Filtering Logic
     useEffect(() => {
@@ -88,15 +111,7 @@ const Shop = () => {
                     <button
                         key={cat}
                         onClick={() => setCategory(cat)}
-                        style={{
-                            padding: '8px 20px',
-                            borderRadius: '30px',
-                            border: `1px solid ${category === cat ? '#5D4037' : '#ddd'}`,
-                            background: category === cat ? '#5D4037' : 'white',
-                            color: category === cat ? 'white' : '#5D4037',
-                            cursor: 'pointer',
-                            transition: 'all 0.3s'
-                        }}
+                        className={`filter-btn ${category === cat ? 'active' : ''}`}
                     >
                         {cat}
                     </button>
@@ -106,22 +121,28 @@ const Shop = () => {
             <input
                 type="text"
                 className="search-bar"
-                placeholder="Search products..."
+                placeholder="Search for authentic Kashmiri products..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
             />
 
             {loading ? (
-                <p style={{ textAlign: 'center' }}>Loading...</p>
+                <div style={{ textAlign: 'center', padding: '3rem' }}>
+                    <div className="spinner" style={{ fontSize: '2rem', animation: 'spin 1s linear infinite' }}>🥥</div>
+                    <p>Fetching Nature's Best...</p>
+                </div>
             ) : (
                 <div className="product-grid">
                     {displayProducts.map((group, index) => (
                         <div
                             key={index}
                             className="product-card"
-                            onClick={() => navigate(`/product/${group.variants[0].id}`)} // Navigate to details on card click
+                            onClick={() => navigate(`/product/${group.variants[0].id}`)}
                         >
-                            <img src={group.image} alt={group.baseName} className="product-image" />
+                            <div className="product-image-container">
+                                <div className="premium-badge">100% Organic</div>
+                                <img src={group.image} alt={group.baseName} className="product-image" />
+                            </div>
                             <div className="product-info">
                                 <span className="product-category">{group.category}</span>
                                 {/* Amazon-style Rating */}
@@ -143,7 +164,7 @@ const Shop = () => {
                                         <span style={{ color: '#CC0C39', marginLeft: '6px' }}>(28% off)</span>
                                     </div>
                                     <div style={{ fontSize: '0.8rem', color: '#007185', fontWeight: 'bold', marginTop: '4px' }}>
-                                        FREE Delivery by Nature's Pledge
+                                        Fast Shipping from Kashmir
                                     </div>
                                 </div>
 

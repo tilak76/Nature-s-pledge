@@ -11,8 +11,8 @@ exports.handler = async (event, context) => {
     // Initialize Razorpay with Environment Variables (User must set these in Netlify)
     // Fallback to Test Keys for demo if not set
     const razorpay = new Razorpay({
-        key_id: process.env.RAZORPAY_KEY_ID || 'rzp_test_YourTestKeyHere',
-        key_secret: process.env.RAZORPAY_KEY_SECRET || 'YourTestSecretHere',
+        key_id: process.env.RAZORPAY_KEY_ID,
+        key_secret: process.env.RAZORPAY_KEY_SECRET,
     });
 
     const options = {

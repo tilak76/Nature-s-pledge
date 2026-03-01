@@ -1,0 +1,611 @@
+[
+  {
+    "userId": 1767796378886,
+    "userName": "tilak",
+    "userEmail": "tilakmishra.76@gmail.com",
+    "action": "Session Resumed",
+    "details": {
+      "device": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Edg/146.0.0.0"
+    },
+    "timestamp": "2026-03-01T04:57:26.011Z"
+  },
+  {
+    "userId": 1767796378886,
+    "userName": "tilak",
+    "userEmail": "tilakmishra.76@gmail.com",
+    "action": "Session Resumed",
+    "details": {
+      "device": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Edg/146.0.0.0"
+    },
+    "timestamp": "2026-03-01T04:57:26.019Z"
+  },
+  {
+    "userId": 1767796378886,
+    "userName": "tilak",
+    "userEmail": "tilakmishra.76@gmail.com",
+    "action": "Logged Out",
+    "details": {},
+    "timestamp": "2026-03-01T04:57:41.435Z"
+  },
+  {
+    "userId": "Odzq7035eOSLMRZZAv9MVKKXfwv1",
+    "userName": "Mishra",
+    "userEmail": "dantil0902@gmail.com",
+    "action": "Logged in with Google (Firebase)",
+    "details": {},
+    "timestamp": "2026-03-01T04:57:54.415Z"
+  },
+  {
+    "userId": "Odzq7035eOSLMRZZAv9MVKKXfwv1",
+    "userName": "Mishra",
+    "userEmail": "dantil0902@gmail.com",
+    "action": "Browsing Shop",
+    "details": {},
+    "timestamp": "2026-03-01T04:58:11.161Z"
+  },
+  {
+    "userId": "Odzq7035eOSLMRZZAv9MVKKXfwv1",
+    "userName": "Mishra",
+    "userEmail": "dantil0902@gmail.com",
+    "action": "Browsing Shop",
+    "details": {},
+    "timestamp": "2026-03-01T04:58:11.176Z"
+  },
+  {
+    "userId": "Odzq7035eOSLMRZZAv9MVKKXfwv1",
+    "userName": "Mishra",
+    "userEmail": "dantil0902@gmail.com",
+    "action": "Browsing Shop",
+    "details": {},
+    "timestamp": "2026-03-01T04:58:26.356Z"
+  },
+  {
+    "userId": "Odzq7035eOSLMRZZAv9MVKKXfwv1",
+    "userName": "Mishra",
+    "userEmail": "dantil0902@gmail.com",
+    "action": "Browsing Shop",
+    "details": {},
+    "timestamp": "2026-03-01T04:58:26.382Z"
+  },
+  {
+    "userId": "Odzq7035eOSLMRZZAv9MVKKXfwv1",
+    "userName": "Mishra",
+    "userEmail": "dantil0902@gmail.com",
+    "action": "Placed Order",
+    "details": {
+      "amount": 570,
+      "orderId": "ORD-217291"
+    },
+    "timestamp": "2026-03-01T04:58:50.346Z"
+  },
+  {
+    "userId": "Odzq7035eOSLMRZZAv9MVKKXfwv1",
+    "userName": "Mishra",
+    "userEmail": "dantil0902@gmail.com",
+    "action": "Browsing Shop",
+    "details": {},
+    "timestamp": "2026-03-01T05:16:43.909Z"
+  },
+  {
+    "userId": "Odzq7035eOSLMRZZAv9MVKKXfwv1",
+    "userName": "Mishra",
+    "userEmail": "dantil0902@gmail.com",
+    "action": "Browsing Shop",
+    "details": {},
+    "timestamp": "2026-03-01T05:16:43.954Z"
+  },
+  {
+    "userId": "Odzq7035eOSLMRZZAv9MVKKXfwv1",
+    "userName": "Mishra",
+    "userEmail": "dantil0902@gmail.com",
+    "action": "Placed Order",
+    "details": {
+      "amount": 60,
+      "orderId": "ORD-509634"
+    },
+    "timestamp": "2026-03-01T05:17:28.614Z"
+  },
+  {
+    "userId": "Odzq7035eOSLMRZZAv9MVKKXfwv1",
+    "userName": "Mishra",
+    "userEmail": "dantil0902@gmail.com",
+    "action": "Browsing Shop",
+    "details": {},
+    "timestamp": "2026-03-01T05:19:15.940Z"
+  },
+  {
+    "userId": "Odzq7035eOSLMRZZAv9MVKKXfwv1",
+    "userName": "Mishra",
+    "userEmail": "dantil0902@gmail.com",
+    "action": "Browsing Shop",
+    "details": {},
+    "timestamp": "2026-03-01T05:19:15.958Z"
+  },
+  {
+    "userId": "Odzq7035eOSLMRZZAv9MVKKXfwv1",
+    "userName": "Mishra",
+    "userEmail": "dantil0902@gmail.com",
+    "action": "Session Resumed",
+    "details": {
+      "device": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Edg/146.0.0.0"
+    },
+    "timestamp": "2026-03-01T05:36:56.040Z"
+  },
+  {
+    "userId": "Odzq7035eOSLMRZZAv9MVKKXfwv1",
+    "userName": "Mishra",
+    "userEmail": "dantil0902@gmail.com",
+    "action": "Session Resumed",
+    "details": {
+      "device": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Edg/146.0.0.0"
+    },
+    "timestamp": "2026-03-01T05:36:56.069Z"
+  },
+  {
+    "userId": "Odzq7035eOSLMRZZAv9MVKKXfwv1",
+    "userName": "Mishra",
+    "userEmail": "dantil0902@gmail.com",
+    "action": "Browsing Shop",
+    "details": {},
+    "timestamp": "2026-03-01T05:36:56.082Z"
+  },
+  {
+    "userId": "Odzq7035eOSLMRZZAv9MVKKXfwv1",
+    "userName": "Mishra",
+    "userEmail": "dantil0902@gmail.com",
+    "action": "Browsing Shop",
+    "details": {},
+    "timestamp": "2026-03-01T05:36:56.120Z"
+  },
+  {
+    "userId": "Odzq7035eOSLMRZZAv9MVKKXfwv1",
+    "userName": "Mishra",
+    "userEmail": "dantil0902@gmail.com",
+    "action": "Placed Order",
+    "details": {
+      "amount": 370,
+      "orderId": "ORD-517489"
+    },
+    "timestamp": "2026-03-01T05:38:02.311Z"
+  },
+  {
+    "userId": "Odzq7035eOSLMRZZAv9MVKKXfwv1",
+    "userName": "Mishra",
+    "userEmail": "dantil0902@gmail.com",
+    "action": "Browsing Shop",
+    "details": {},
+    "timestamp": "2026-03-01T05:38:43.230Z"
+  },
+  {
+    "userId": "Odzq7035eOSLMRZZAv9MVKKXfwv1",
+    "userName": "Mishra",
+    "userEmail": "dantil0902@gmail.com",
+    "action": "Browsing Shop",
+    "details": {},
+    "timestamp": "2026-03-01T05:38:43.245Z"
+  },
+  {
+    "userId": "Odzq7035eOSLMRZZAv9MVKKXfwv1",
+    "userName": "Mishra",
+    "userEmail": "dantil0902@gmail.com",
+    "action": "Session Resumed",
+    "details": {
+      "device": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Edg/146.0.0.0"
+    },
+    "timestamp": "2026-03-01T05:49:56.406Z"
+  },
+  {
+    "userId": "Odzq7035eOSLMRZZAv9MVKKXfwv1",
+    "userName": "Mishra",
+    "userEmail": "dantil0902@gmail.com",
+    "action": "Session Resumed",
+    "details": {
+      "device": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Edg/146.0.0.0"
+    },
+    "timestamp": "2026-03-01T05:49:56.417Z"
+  },
+  {
+    "userId": "Odzq7035eOSLMRZZAv9MVKKXfwv1",
+    "userName": "Mishra",
+    "userEmail": "dantil0902@gmail.com",
+    "action": "Browsing Shop",
+    "details": {},
+    "timestamp": "2026-03-01T05:49:56.427Z"
+  },
+  {
+    "userId": "Odzq7035eOSLMRZZAv9MVKKXfwv1",
+    "userName": "Mishra",
+    "userEmail": "dantil0902@gmail.com",
+    "action": "Browsing Shop",
+    "details": {},
+    "timestamp": "2026-03-01T05:49:56.453Z"
+  },
+  {
+    "userId": "Odzq7035eOSLMRZZAv9MVKKXfwv1",
+    "userName": "Mishra",
+    "userEmail": "dantil0902@gmail.com",
+    "action": "Session Resumed",
+    "details": {
+      "device": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Edg/146.0.0.0"
+    },
+    "timestamp": "2026-03-01T05:50:27.541Z"
+  },
+  {
+    "userId": "Odzq7035eOSLMRZZAv9MVKKXfwv1",
+    "userName": "Mishra",
+    "userEmail": "dantil0902@gmail.com",
+    "action": "Session Resumed",
+    "details": {
+      "device": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Edg/146.0.0.0"
+    },
+    "timestamp": "2026-03-01T05:50:27.551Z"
+  },
+  {
+    "userId": "Odzq7035eOSLMRZZAv9MVKKXfwv1",
+    "userName": "Mishra",
+    "userEmail": "dantil0902@gmail.com",
+    "action": "Session Resumed",
+    "details": {
+      "device": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Edg/146.0.0.0"
+    },
+    "timestamp": "2026-03-01T06:23:04.707Z"
+  },
+  {
+    "userId": "Odzq7035eOSLMRZZAv9MVKKXfwv1",
+    "userName": "Mishra",
+    "userEmail": "dantil0902@gmail.com",
+    "action": "Session Resumed",
+    "details": {
+      "device": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Edg/146.0.0.0"
+    },
+    "timestamp": "2026-03-01T06:23:04.714Z"
+  },
+  {
+    "userId": "Odzq7035eOSLMRZZAv9MVKKXfwv1",
+    "userName": "Mishra",
+    "userEmail": "dantil0902@gmail.com",
+    "action": "Logged in with Google (Firebase)",
+    "details": {},
+    "timestamp": "2026-03-01T06:27:35.187Z"
+  },
+  {
+    "userId": "Odzq7035eOSLMRZZAv9MVKKXfwv1",
+    "userName": "Mishra",
+    "userEmail": "dantil0902@gmail.com",
+    "action": "Browsing Shop",
+    "details": {},
+    "timestamp": "2026-03-01T06:27:49.124Z"
+  },
+  {
+    "userId": "Odzq7035eOSLMRZZAv9MVKKXfwv1",
+    "userName": "Mishra",
+    "userEmail": "dantil0902@gmail.com",
+    "action": "Browsing Shop",
+    "details": {},
+    "timestamp": "2026-03-01T06:27:49.150Z"
+  },
+  {
+    "userId": "Odzq7035eOSLMRZZAv9MVKKXfwv1",
+    "userName": "Mishra",
+    "userEmail": "dantil0902@gmail.com",
+    "action": "Session Resumed",
+    "details": {
+      "device": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Edg/146.0.0.0"
+    },
+    "timestamp": "2026-03-01T06:53:26.217Z"
+  },
+  {
+    "userId": "Odzq7035eOSLMRZZAv9MVKKXfwv1",
+    "userName": "Mishra",
+    "userEmail": "dantil0902@gmail.com",
+    "action": "Session Resumed",
+    "details": {
+      "device": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Edg/146.0.0.0"
+    },
+    "timestamp": "2026-03-01T06:53:26.232Z"
+  },
+  {
+    "userId": "Odzq7035eOSLMRZZAv9MVKKXfwv1",
+    "userName": "Mishra",
+    "userEmail": "dantil0902@gmail.com",
+    "action": "Browsing Shop",
+    "details": {},
+    "timestamp": "2026-03-01T06:53:29.085Z"
+  },
+  {
+    "userId": "Odzq7035eOSLMRZZAv9MVKKXfwv1",
+    "userName": "Mishra",
+    "userEmail": "dantil0902@gmail.com",
+    "action": "Browsing Shop",
+    "details": {},
+    "timestamp": "2026-03-01T06:53:29.091Z"
+  },
+  {
+    "userId": "Odzq7035eOSLMRZZAv9MVKKXfwv1",
+    "userName": "Mishra",
+    "userEmail": "dantil0902@gmail.com",
+    "action": "Placed Order",
+    "details": {
+      "amount": 60,
+      "orderId": "ORD-621935"
+    },
+    "timestamp": "2026-03-01T06:53:57.444Z"
+  },
+  {
+    "userId": "Odzq7035eOSLMRZZAv9MVKKXfwv1",
+    "userName": "Mishra",
+    "userEmail": "dantil0902@gmail.com",
+    "action": "Session Resumed",
+    "details": {
+      "device": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Edg/146.0.0.0"
+    },
+    "timestamp": "2026-03-01T06:57:35.968Z"
+  },
+  {
+    "userId": "Odzq7035eOSLMRZZAv9MVKKXfwv1",
+    "userName": "Mishra",
+    "userEmail": "dantil0902@gmail.com",
+    "action": "Session Resumed",
+    "details": {
+      "device": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Edg/146.0.0.0"
+    },
+    "timestamp": "2026-03-01T06:57:35.992Z"
+  },
+  {
+    "userId": "Odzq7035eOSLMRZZAv9MVKKXfwv1",
+    "userName": "Mishra",
+    "userEmail": "dantil0902@gmail.com",
+    "action": "Browsing Shop",
+    "details": {},
+    "timestamp": "2026-03-01T06:57:38.967Z"
+  },
+  {
+    "userId": "Odzq7035eOSLMRZZAv9MVKKXfwv1",
+    "userName": "Mishra",
+    "userEmail": "dantil0902@gmail.com",
+    "action": "Browsing Shop",
+    "details": {},
+    "timestamp": "2026-03-01T06:57:39.003Z"
+  },
+  {
+    "userId": "Odzq7035eOSLMRZZAv9MVKKXfwv1",
+    "userName": "Mishra",
+    "userEmail": "dantil0902@gmail.com",
+    "action": "Placed Order",
+    "details": {
+      "amount": 300,
+      "orderId": "ORD-785933"
+    },
+    "timestamp": "2026-03-01T06:58:05.781Z"
+  },
+  {
+    "userId": "Odzq7035eOSLMRZZAv9MVKKXfwv1",
+    "userName": "Mishra",
+    "userEmail": "dantil0902@gmail.com",
+    "action": "Logged in with Google (Firebase)",
+    "details": {},
+    "timestamp": "2026-03-01T07:14:21.250Z"
+  },
+  {
+    "userId": "Odzq7035eOSLMRZZAv9MVKKXfwv1",
+    "userName": "Mishra",
+    "userEmail": "dantil0902@gmail.com",
+    "action": "Browsing Shop",
+    "details": {},
+    "timestamp": "2026-03-01T07:14:27.176Z"
+  },
+  {
+    "userId": "Odzq7035eOSLMRZZAv9MVKKXfwv1",
+    "userName": "Mishra",
+    "userEmail": "dantil0902@gmail.com",
+    "action": "Browsing Shop",
+    "details": {},
+    "timestamp": "2026-03-01T07:14:27.233Z"
+  },
+  {
+    "userId": "Odzq7035eOSLMRZZAv9MVKKXfwv1",
+    "userName": "Mishra",
+    "userEmail": "dantil0902@gmail.com",
+    "action": "Placed Order",
+    "details": {
+      "amount": 700,
+      "orderId": "ORD-420846"
+    },
+    "timestamp": "2026-03-01T07:14:46.411Z"
+  },
+  {
+    "userId": "Odzq7035eOSLMRZZAv9MVKKXfwv1",
+    "userName": "Mishra",
+    "userEmail": "dantil0902@gmail.com",
+    "action": "Session Resumed",
+    "details": {
+      "device": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Edg/146.0.0.0"
+    },
+    "timestamp": "2026-03-01T07:24:52.311Z"
+  },
+  {
+    "userId": "Odzq7035eOSLMRZZAv9MVKKXfwv1",
+    "userName": "Mishra",
+    "userEmail": "dantil0902@gmail.com",
+    "action": "Session Resumed",
+    "details": {
+      "device": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Edg/146.0.0.0"
+    },
+    "timestamp": "2026-03-01T07:24:52.328Z"
+  },
+  {
+    "userId": "Odzq7035eOSLMRZZAv9MVKKXfwv1",
+    "userName": "Mishra",
+    "userEmail": "dantil0902@gmail.com",
+    "action": "Browsing Shop",
+    "details": {},
+    "timestamp": "2026-03-01T07:25:08.493Z"
+  },
+  {
+    "userId": "Odzq7035eOSLMRZZAv9MVKKXfwv1",
+    "userName": "Mishra",
+    "userEmail": "dantil0902@gmail.com",
+    "action": "Browsing Shop",
+    "details": {},
+    "timestamp": "2026-03-01T07:25:08.555Z"
+  },
+  {
+    "userId": "Odzq7035eOSLMRZZAv9MVKKXfwv1",
+    "userName": "Mishra",
+    "userEmail": "dantil0902@gmail.com",
+    "action": "Placed Order",
+    "details": {
+      "amount": 400,
+      "orderId": "ORD-227230"
+    },
+    "timestamp": "2026-03-01T07:25:23.826Z"
+  },
+  {
+    "userId": "Odzq7035eOSLMRZZAv9MVKKXfwv1",
+    "userName": "Mishra",
+    "userEmail": "dantil0902@gmail.com",
+    "action": "Session Resumed",
+    "details": {
+      "device": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Edg/146.0.0.0"
+    },
+    "timestamp": "2026-03-01T07:47:32.018Z"
+  },
+  {
+    "userId": "Odzq7035eOSLMRZZAv9MVKKXfwv1",
+    "userName": "Mishra",
+    "userEmail": "dantil0902@gmail.com",
+    "action": "Session Resumed",
+    "details": {
+      "device": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Edg/146.0.0.0"
+    },
+    "timestamp": "2026-03-01T07:47:32.088Z"
+  },
+  {
+    "userId": "Odzq7035eOSLMRZZAv9MVKKXfwv1",
+    "userName": "Mishra",
+    "userEmail": "dantil0902@gmail.com",
+    "action": "Browsing Shop",
+    "details": {},
+    "timestamp": "2026-03-01T08:22:04.595Z"
+  },
+  {
+    "userId": "Odzq7035eOSLMRZZAv9MVKKXfwv1",
+    "userName": "Mishra",
+    "userEmail": "dantil0902@gmail.com",
+    "action": "Browsing Shop",
+    "details": {},
+    "timestamp": "2026-03-01T08:22:04.837Z"
+  },
+  {
+    "userId": "Odzq7035eOSLMRZZAv9MVKKXfwv1",
+    "userName": "Mishra",
+    "userEmail": "dantil0902@gmail.com",
+    "action": "Browsing Shop",
+    "details": {},
+    "timestamp": "2026-03-01T08:22:44.741Z"
+  },
+  {
+    "userId": "Odzq7035eOSLMRZZAv9MVKKXfwv1",
+    "userName": "Mishra",
+    "userEmail": "dantil0902@gmail.com",
+    "action": "Browsing Shop",
+    "details": {},
+    "timestamp": "2026-03-01T08:22:44.784Z"
+  },
+  {
+    "userId": "Odzq7035eOSLMRZZAv9MVKKXfwv1",
+    "userName": "Mishra",
+    "userEmail": "dantil0902@gmail.com",
+    "action": "Session Resumed",
+    "details": {
+      "device": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Edg/146.0.0.0"
+    },
+    "timestamp": "2026-03-01T08:29:28.643Z"
+  },
+  {
+    "userId": "Odzq7035eOSLMRZZAv9MVKKXfwv1",
+    "userName": "Mishra",
+    "userEmail": "dantil0902@gmail.com",
+    "action": "Session Resumed",
+    "details": {
+      "device": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Edg/146.0.0.0"
+    },
+    "timestamp": "2026-03-01T08:29:28.678Z"
+  },
+  {
+    "userId": "Odzq7035eOSLMRZZAv9MVKKXfwv1",
+    "userName": "Mishra",
+    "userEmail": "dantil0902@gmail.com",
+    "action": "Session Resumed",
+    "details": {
+      "device": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Edg/146.0.0.0"
+    },
+    "timestamp": "2026-03-01T08:36:59.082Z"
+  },
+  {
+    "userId": "Odzq7035eOSLMRZZAv9MVKKXfwv1",
+    "userName": "Mishra",
+    "userEmail": "dantil0902@gmail.com",
+    "action": "Session Resumed",
+    "details": {
+      "device": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Edg/146.0.0.0"
+    },
+    "timestamp": "2026-03-01T08:36:59.118Z"
+  },
+  {
+    "userId": "Odzq7035eOSLMRZZAv9MVKKXfwv1",
+    "userName": "Mishra",
+    "userEmail": "dantil0902@gmail.com",
+    "action": "Browsing Shop",
+    "details": {},
+    "timestamp": "2026-03-01T08:37:05.135Z"
+  },
+  {
+    "userId": "Odzq7035eOSLMRZZAv9MVKKXfwv1",
+    "userName": "Mishra",
+    "userEmail": "dantil0902@gmail.com",
+    "action": "Browsing Shop",
+    "details": {},
+    "timestamp": "2026-03-01T08:37:05.419Z"
+  },
+  {
+    "userId": "Odzq7035eOSLMRZZAv9MVKKXfwv1",
+    "userName": "Mishra",
+    "userEmail": "dantil0902@gmail.com",
+    "action": "Session Resumed",
+    "details": {
+      "device": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Edg/146.0.0.0"
+    },
+    "timestamp": "2026-03-01T08:44:51.141Z"
+  },
+  {
+    "userId": "Odzq7035eOSLMRZZAv9MVKKXfwv1",
+    "userName": "Mishra",
+    "userEmail": "dantil0902@gmail.com",
+    "action": "Session Resumed",
+    "details": {
+      "device": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Edg/146.0.0.0"
+    },
+    "timestamp": "2026-03-01T08:44:51.167Z"
+  },
+  {
+    "userId": "Odzq7035eOSLMRZZAv9MVKKXfwv1",
+    "userName": "Mishra",
+    "userEmail": "dantil0902@gmail.com",
+    "action": "Session Resumed",
+    "details": {
+      "device": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Edg/146.0.0.0"
+    },
+    "timestamp": "2026-03-01T08:52:42.872Z"
+  },
+  {
+    "userId": "Odzq7035eOSLMRZZAv9MVKKXfwv1",
+    "userName": "Mishra",
+    "userEmail": "dantil0902@gmail.com",
+    "action": "Session Resumed",
+    "details": {
+      "device": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Edg/146.0.0.0"
+    },
+    "timestamp": "2026-03-01T08:52:42.886Z"
+  }
+]
