@@ -350,3 +350,85 @@
     margin-bottom: 1rem;
     opacity: 0.5;
 }
+
+/* Mobile Responsiveness for Admin Panel */
+@media (max-width: 1024px) {
+    .chat-workspace {
+        grid-template-columns: 280px 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .admin-container {
+        padding: 1rem;
+    }
+
+    .admin-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1.5rem;
+        padding: 1.5rem;
+    }
+
+    .admin-tabs {
+        width: 100%;
+        overflow-x: auto;
+        white-space: nowrap;
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+
+    .admin-tabs::-webkit-scrollbar {
+        display: none;
+    }
+
+    .admin-tab {
+        flex-shrink: 0;
+        padding: 8px 16px;
+    }
+
+    .order-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .status-select {
+        width: 100%;
+    }
+
+    .chat-workspace {
+        display: flex;
+        flex-direction: column;
+        height: 75vh;
+    }
+
+    .chat-sidebar {
+        flex: 1;
+        width: 100%;
+        max-height: 100%;
+        border: none;
+        border-radius: 8px;
+    }
+
+    .chat-sidebar.hidden-mobile {
+        display: none !important;
+    }
+
+    .chat-main {
+        flex: 1;
+        width: 100%;
+        min-height: 100%;
+        margin-top: 0;
+        border: none;
+        border-radius: 8px;
+    }
+
+    .chat-main.hidden-mobile {
+        display: none !important;
+    }
+
+    .message-bubble {
+        max-width: 90%;
+    }
+}

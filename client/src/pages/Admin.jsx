@@ -353,7 +353,7 @@ const Admin = () => {
                 </div>
             ) : (
                 <div className="chat-workspace">
-                    <div className="chat-sidebar">
+                    <div className={`chat-sidebar ${selectedChat ? 'hidden-mobile' : ''}`}>
                         <div className="chat-sidebar-header">
                             Customer Inquiries ({conversations.length})
                         </div>
@@ -387,11 +387,20 @@ const Admin = () => {
                     </div>
 
                     {selectedChat ? (
-                        <div className="chat-main">
+                        <div className={`chat-main ${!selectedChat ? 'hidden-mobile' : ''}`}>
                             <div className="chat-main-header">
-                                <div>
-                                    <h3 style={{ margin: '0 0 4px 0', fontSize: '1.2rem', color: '#2c3e50' }}>{selectedChat.userName}</h3>
-                                    <div style={{ fontSize: '0.85rem', color: '#7f8c8d' }}>{selectedChat.userEmail || 'No email provided'}</div>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                    <button
+                                        className="btn-action"
+                                        style={{ background: '#eee', color: '#333', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '8px 12px' }}
+                                        onClick={() => setSelectedChat(null)}
+                                    >
+                                        ← Back
+                                    </button>
+                                    <div>
+                                        <h3 style={{ margin: '0 0 4px 0', fontSize: '1.2rem', color: '#2c3e50' }}>{selectedChat.userName}</h3>
+                                        <div style={{ fontSize: '0.85rem', color: '#7f8c8d' }}>{selectedChat.userEmail || 'No email provided'}</div>
+                                    </div>
                                 </div>
                                 <div style={{ display: 'flex', gap: '10px' }}>
                                     <button
@@ -449,7 +458,7 @@ const Admin = () => {
                             </form>
                         </div>
                     ) : (
-                        <div className="chat-main empty-state">
+                        <div className={`chat-main empty-state ${!selectedChat ? 'hidden-mobile' : ''}`}>
                             <div className="empty-state-icon">💬</div>
                             <h2>Select an Inquiry</h2>
                             <p>Click on a customer chat from the sidebar to view and respond.</p>
