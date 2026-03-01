@@ -25,6 +25,7 @@ body {
   color: var(--text-color);
   line-height: 1.6;
   scroll-behavior: smooth;
+  overflow-x: hidden;
 }
 
 /* Premium Scrollbar */
@@ -350,32 +351,7 @@ section,
     width: 100%;
   }
 
-  .nav-links {
-    display: none;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    width: 100%;
-    background: white;
-    flex-direction: column;
-    padding: 1rem 0;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  }
-
-  .nav-links.active {
-    display: flex;
-  }
-
-  .nav-links a {
-    margin: 0;
-    padding: 1rem 2rem;
-    display: block;
-    width: 100%;
-  }
-
-  .mobile-menu-icon {
-    display: block;
-  }
+  /* Navbar links are now managed by Navbar.css */
 
   .hero-content h1 {
     font-size: 2.5rem;
