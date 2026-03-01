@@ -95,8 +95,10 @@ const Login = () => {
             console.error("OTP Send Error:", error);
             if (error.code === 'auth/unauthorized-domain') {
                 showToast('Phone Login blocked by Firebase on this IP address. Please test on localhost.', 'error');
+            } else if (error.code === 'auth/billing-not-enabled' || error.message.includes('billing')) {
+                showToast('Firebase SMS requires a Blaze Plan (Pay as you go) to send OTPs to India.', 'error');
             } else {
-                showToast('Failed to send code: ' + error.message, 'error');
+                showToast('SMS Error: Firebase Blaze Plan required for OTPs.', 'error');
             }
         } finally {
             setIsLoading(false);
