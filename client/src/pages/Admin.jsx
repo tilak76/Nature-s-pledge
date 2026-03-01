@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
+import './Admin.css';
 
 const ADMIN_EMAIL = 'tilakmishra.76@gmail.com';
 
@@ -135,25 +136,38 @@ const Admin = () => {
     if (!user || user.email !== ADMIN_EMAIL) return null;
 
     return (
-        <div className="container" style={{ padding: '2rem 0' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', opacity: tabLoading ? 0.6 : 1, transition: 'opacity 0.3s' }}>
+        <div className="admin-container">
+            <div className="admin-header" style={{ opacity: tabLoading ? 0.6 : 1, transition: 'opacity 0.3s' }}>
                 <div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                        <h2 style={{ margin: 0 }}>Nature's Pledge Admin Console</h2>
-                        {tabLoading && <span style={{ fontSize: '0.8rem', color: '#5D4037', fontStyle: 'italic' }}>Updating...</span>}
-                    </div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.85rem', marginTop: '5px' }}>
-                        <span style={{ width: '10px', height: '10px', borderRadius: '50%', background: dbStatus.includes('Connected') ? '#4caf50' : '#f44336' }}></span>
-                        <span>{dbStatus}</span>
+                    <h2 className="admin-title">
+                        Nature's Pledge Admin Console
+                        {tabLoading && <span style={{ fontSize: '0.9rem', color: '#7f8c8d' }}>Updating...</span>}
+                    </h2>
+                    <div style={{ marginTop: '8px' }}>
+                        <span className={`status-badge ${dbStatus.includes('Connected (MongoDB)') ? 'status-connected' : 'status-fallback'}`}>
+                            <span style={{ width: 8, height: 8, borderRadius: '50%', background: 'currentColor' }}></span>
+                            {dbStatus}
+                        </span>
                     </div>
                 </div>
-                <div style={{ display: 'flex', gap: '10px' }}>
-                    <button onClick={() => setActiveTab('orders')} style={{ padding: '10px 20px', background: activeTab === 'orders' ? '#5D4037' : 'white', color: activeTab === 'orders' ? 'white' : '#5D4037', border: '1px solid #5D4037', borderRadius: '5px', cursor: 'pointer' }}>Orders</button>
-                    <button onClick={() => setActiveTab('products')} style={{ padding: '10px 20px', background: activeTab === 'products' ? '#5D4037' : 'white', color: activeTab === 'products' ? 'white' : '#5D4037', border: '1px solid #5D4037', borderRadius: '5px', cursor: 'pointer' }}>Inventory</button>
-                    <button onClick={() => setActiveTab('users')} style={{ padding: '10px 20px', background: activeTab === 'users' ? '#5D4037' : 'white', color: activeTab === 'users' ? 'white' : '#5D4037', border: '1px solid #5D4037', borderRadius: '5px', cursor: 'pointer' }}>Users</button>
-                    <button onClick={() => setActiveTab('chats')} style={{ padding: '10px 20px', background: activeTab === 'chats' ? '#5D4037' : 'white', color: activeTab === 'chats' ? 'white' : '#5D4037', border: '1px solid #5D4037', borderRadius: '5px', cursor: 'pointer', position: 'relative' }}>
-                        Inquiries
-                        {conversations.some(c => c.unreadCount > 0) && <span style={{ position: 'absolute', top: '-5px', right: '-5px', background: 'red', color: 'white', fontSize: '0.7rem', padding: '2px 6px', borderRadius: '50%' }}>!</span>}
+
+                <div className="admin-tabs">
+                    <button onClick={() => setActiveTab('orders')} className={`admin-tab ${activeTab === 'orders' ? 'active' : ''}`}>
+                        📦 Orders
+                    </button>
+                    <button onClick={() => setActiveTab('products')} className={`admin-tab ${activeTab === 'products' ? 'active' : ''}`}>
+                        🏷️ Inventory
+                    </button>
+                    <button onClick={() => setActiveTab('users')} className={`admin-tab ${activeTab === 'users' ? 'active' : ''}`}>
+                        👥 Users
+                    </button>
+                    <button onClick={() => setActiveTab('chats')} className={`admin-tab ${activeTab === 'chats' ? 'active' : ''}`}>
+                        💬 Inquiries
+                        {conversations.some(c => c.unreadCount > 0) && (
+                            <span className="badge-notification">
+                                {conversations.reduce((sum, c) => sum + (c.unreadCount || 0), 0)}
+                            </span>
+                        )}
                     </button>
                 </div>
             </div>
@@ -338,60 +352,109 @@ const Admin = () => {
                     )}
                 </div>
             ) : (
-                <div className="chats-admin" style={{ display: 'grid', gridTemplateColumns: '300px 1fr', gap: '20px' }}>
-                    <div style={{ border: '1px solid #eee', borderRadius: '8px', background: 'white' }}>
-                        <div style={{ padding: '15px', background: '#f5f5f5', fontWeight: 'bold' }}>All Inquiries ({conversations.length})</div>
-                        {conversations.map(conv => (
-                            <div key={conv._id} onClick={async () => {
-                                const res = await axios.get(`/api/messages/${conv._id}`);
-                                setSelectedChat({ id: conv._id, userName: conv.userName, userEmail: conv.userEmail, messages: res.data });
-                                await axios.patch(`/api/messages/admin/read/${conv._id}`);
-                                fetchConversations();
-                            }} style={{ padding: '15px', borderBottom: '1px solid #f9f9f9', cursor: 'pointer', background: selectedChat?.id === conv._id ? '#e3f2fd' : 'transparent' }}>
-                                <div style={{ fontWeight: 'bold' }}>{conv.userName} {conv.unreadCount > 0 && <span style={{ color: 'red' }}>({conv.unreadCount})</span>}</div>
-                                <div style={{ fontSize: '0.8rem', color: '#666' }}>{conv.lastMessage}</div>
-                            </div>
-                        ))}
+                <div className="chat-workspace">
+                    <div className="chat-sidebar">
+                        <div className="chat-sidebar-header">
+                            Customer Inquiries ({conversations.length})
+                        </div>
+                        <div className="chat-list">
+                            {conversations.length === 0 ? (
+                                <div className="empty-state" style={{ padding: '2rem' }}>
+                                    <div className="empty-state-icon">📭</div>
+                                    <p>No messages yet.</p>
+                                </div>
+                            ) : (
+                                conversations.map(conv => (
+                                    <div
+                                        key={conv._id}
+                                        className={`chat-item ${selectedChat?.id === conv._id ? 'active' : ''}`}
+                                        onClick={async () => {
+                                            const res = await axios.get(`/api/messages/${conv._id}`);
+                                            setSelectedChat({ id: conv._id, userName: conv.userName, userEmail: conv.userEmail, messages: res.data });
+                                            await axios.patch(`/api/messages/admin/read/${conv._id}`);
+                                            fetchConversations();
+                                        }}
+                                    >
+                                        <div className="chat-item-name">
+                                            {conv.userName || 'Anonymous'}
+                                            {conv.unreadCount > 0 && <span style={{ color: '#e74c3c', fontSize: '0.8rem' }}>{conv.unreadCount} New</span>}
+                                        </div>
+                                        <div className="chat-item-preview">{conv.lastMessage || 'Open to view...'}</div>
+                                    </div>
+                                ))
+                            )}
+                        </div>
                     </div>
-                    {selectedChat ? (
-                        <div style={{ border: '1px solid #eee', borderRadius: '8px', background: 'white', display: 'flex', flexDirection: 'column' }}>
-                            <div style={{ padding: '15px', borderBottom: '1px solid #eee', background: '#f5f5f5', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                <div><strong>Chat with {selectedChat.userName}</strong><div style={{ fontSize: '0.75rem' }}>{selectedChat.userEmail}</div></div>
-                                <div style={{ display: 'flex', gap: '10px' }}>
-                                    <button onClick={async () => {
-                                        if (window.confirm('Ask customer if issue is resolved?')) {
-                                            const res = await axios.post('/api/messages', { userId: selectedChat.id, userName: 'Admin', text: 'Is your problem resolved now? Do you have any other inquiries?', isAdmin: true });
-                                            setSelectedChat(prev => ({ ...prev, messages: [...prev.messages, res.data] }));
-                                            fetchConversations();
-                                        }
-                                    }} style={{ padding: '6px 12px', background: '#f57c00', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>Ask if Resolved</button>
 
-                                    <button onClick={async () => {
-                                        if (window.confirm('Close and clear this inquiry?')) {
-                                            await axios.delete(`/api/messages/admin/resolve/${selectedChat.id}`);
-                                            setSelectedChat(null);
-                                            fetchConversations();
-                                        }
-                                    }} style={{ padding: '6px 12px', background: '#c62828', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>Close Ticket</button>
+                    {selectedChat ? (
+                        <div className="chat-main">
+                            <div className="chat-main-header">
+                                <div>
+                                    <h3 style={{ margin: '0 0 4px 0', fontSize: '1.2rem', color: '#2c3e50' }}>{selectedChat.userName}</h3>
+                                    <div style={{ fontSize: '0.85rem', color: '#7f8c8d' }}>{selectedChat.userEmail || 'No email provided'}</div>
+                                </div>
+                                <div style={{ display: 'flex', gap: '10px' }}>
+                                    <button
+                                        className="btn-action btn-warning"
+                                        onClick={async () => {
+                                            if (window.confirm('Ask customer if issue is resolved?')) {
+                                                const res = await axios.post('/api/messages', { userId: selectedChat.id, userName: 'Admin', text: 'Hi, checking in to see if your problem is resolved now? Do you have any other inquiries?', isAdmin: true });
+                                                setSelectedChat(prev => ({ ...prev, messages: [...prev.messages, res.data] }));
+                                                fetchConversations();
+                                            }
+                                        }}>Ask Status</button>
+
+                                    <button
+                                        className="btn-action btn-danger"
+                                        onClick={async () => {
+                                            if (window.confirm('Close and clear this inquiry?')) {
+                                                await axios.delete(`/api/messages/admin/resolve/${selectedChat.id}`);
+                                                setSelectedChat(null);
+                                                fetchConversations();
+                                            }
+                                        }}>Close Ticket</button>
                                 </div>
                             </div>
-                            <div ref={chatScrollRef} style={{ flex: 1, padding: '20px', maxHeight: '450px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                                {selectedChat.messages.map((m, idx) => (
-                                    <div key={idx} style={{ alignSelf: m.isAdmin ? 'flex-end' : 'flex-start', background: m.isAdmin ? '#5D4037' : '#eee', color: m.isAdmin ? 'white' : 'black', padding: '10px 15px', borderRadius: '15px', maxWidth: '70%' }}>{m.text}</div>
-                                ))}
+
+                            <div className="chat-messages" ref={chatScrollRef}>
+                                {selectedChat.messages.length === 0 ? (
+                                    <div className="empty-state">No messages history.</div>
+                                ) : (
+                                    selectedChat.messages.map((m, idx) => (
+                                        <div key={idx} className={`message-bubble ${m.isAdmin ? 'message-admin' : 'message-user'}`}>
+                                            {m.text}
+                                            <div style={{ fontSize: '0.7rem', opacity: 0.7, marginTop: '4px', textAlign: m.isAdmin ? 'right' : 'left' }}>
+                                                {new Date(m.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                            </div>
+                                        </div>
+                                    ))
+                                )}
                             </div>
-                            <form onSubmit={async (e) => {
+
+                            <form className="chat-input-area" onSubmit={async (e) => {
                                 e.preventDefault();
                                 if (!replyText.trim()) return;
                                 const res = await axios.post('/api/messages', { userId: selectedChat.id, userName: 'Admin', text: replyText, isAdmin: true });
                                 setSelectedChat(prev => ({ ...prev, messages: [...prev.messages, res.data] }));
                                 setReplyText('');
-                            }} style={{ padding: '15px', display: 'flex', gap: '10px' }}>
-                                <input type="text" value={replyText} onChange={e => setReplyText(e.target.value)} style={{ flex: 1, padding: '10px' }} placeholder="Type reply..." />
-                                <button type="submit" style={{ padding: '10px 20px', background: '#5D4037', color: 'white', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>Send</button>
+                            }}>
+                                <input
+                                    type="text"
+                                    className="chat-input"
+                                    value={replyText}
+                                    onChange={e => setReplyText(e.target.value)}
+                                    placeholder="Type your reply here..."
+                                />
+                                <button type="submit" className="chat-send-btn">Send</button>
                             </form>
                         </div>
-                    ) : <div style={{ padding: '40px', textAlign: 'center', color: '#888' }}>Select a chat to respond</div>}
+                    ) : (
+                        <div className="chat-main empty-state">
+                            <div className="empty-state-icon">💬</div>
+                            <h2>Select an Inquiry</h2>
+                            <p>Click on a customer chat from the sidebar to view and respond.</p>
+                        </div>
+                    )}
                 </div>
             )}
         </div>
