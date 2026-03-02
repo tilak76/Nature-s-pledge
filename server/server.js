@@ -18,20 +18,30 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// MongoDB Connection with serverless-friendly timeouts
-mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/walnut-shop', {
-    serverSelectionTimeoutMS: 5000, // Reduced to 5s for Vercel speed
-    connectTimeoutMS: 5000,
-    bufferCommands: true
-})
-    .then(() => {
-        console.log('--- 🟢 PRODUCTION READY: Connected to MongoDB ATLAS ---');
-    })
-    .catch(err => {
-        console.error('--- 🔴 CRITICAL ERROR: MongoDB Connection Failed! ---');
-        console.error('Business data cannot be saved without DB. Error:', err.message);
-        // In production, we want the server to notify us if DB is down
-    });
+// MongoDB Connection (Serverless Optimized)
+const connectDB = async () => {
+    if (mongoose.connection.readyState >= 1) return;
+
+    try {
+        await mongoose.connect(process.env.MONGO_URI, {
+            serverSelectionTimeoutMS: 10000,
+            connectTimeoutMS: 10000,
+            bufferCommands: false
+        });
+        console.log('--- 🟢 DB CONNECTED ---');
+    } catch (err) {
+        console.log('--- 🔴 DB CONNECTION ERROR ---', err.message);
+    }
+};
+
+// Initial background attempt
+connectDB();
+
+// Middleware to ensure DB is connected on every request
+app.use(async (req, res, next) => {
+    await connectDB();
+    next();
+});
 
 app.use('/api/products', require('./routes/products'));
 app.use('/api/payment', require('./routes/payment'));
