@@ -1,9 +1,10 @@
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
+const path = require('path');
 
-// Load environment variables early
-require('dotenv').config();
+// Load environment variables - use __dirname so path is always correct
+require('dotenv').config({ path: path.join(__dirname, '.env') });
 
 const app = express();
 

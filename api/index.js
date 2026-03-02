@@ -3,8 +3,8 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const path = require('path');
 
-// Load environment (Vercel uses its own)
-require('dotenv').config();
+// Vercel uses its own env vars, but this helps local testing
+require('dotenv').config({ path: path.join(__dirname, '../server/.env') });
 
 const app = express();
 app.use(cors());
@@ -48,6 +48,17 @@ app.use('/api/orders', orders);
 app.use('/api/users', users);
 app.use('/api/messages', messages);
 app.use('/api/payment', payment);
+
+// Health Check for Admin Panel
+app.get('/api/health', (req, res) => {
+    const isConnected = mongoose.connection.readyState === 1;
+    res.json({
+        status: 'ok',
+        mongodb: isConnected ? 'connected' : 'disconnected',
+        build: 'Nature_Pledge_Production_V2',
+        timestamp: new Date()
+    });
+});
 
 // Fallback for API
 app.get('/api/*', (req, res) => {
