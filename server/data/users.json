@@ -4,7 +4,7 @@
     "email": "tilakmishra.76@gmail.com",
     "name": "Admin Tilak",
     "role": "admin",
-    "walletBalance": 100000,
+    "walletBalance": 0,
     "lastLogin": 1772340681000,
     "createdAt": 1772340681000,
     "cart": [],
@@ -39,5 +39,9 @@
     "lastLogin": 1772349261225,
     "cart": [],
     "lastCartUpdate": "2026-03-01T08:52:43.580Z"
+  },
+  {
+    "email": "new_friend@gmail.com",
+    "name": "New Friend"
   }
 ]

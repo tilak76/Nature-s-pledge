@@ -128,11 +128,39 @@ const saveJsonOrder = (order) => {
 // GET all orders (for Admin)
 router.get('/', async (req, res) => {
     try {
-        const orders = await Order.find().sort({ createdAt: -1 });
-        if (orders.length === 0) return res.json(getJsonOrders());
-        res.json(orders);
+        const jsonOrders = getJsonOrders();
+
+        // If DB is disconnected, just return JSON
+        if (require('mongoose').connection.readyState !== 1) {
+            return res.json(jsonOrders);
+        }
+
+        const dbOrders = await Order.find().sort({ date: -1 });
+
+        // Merge DB orders with JSON orders (using ID as key)
+        const mergedMap = new Map();
+
+        // Add JSON orders first
+        jsonOrders.forEach(o => {
+            if (o.id) mergedMap.set(String(o.id), o);
+        });
+
+        // Add/Overwrite with DB orders
+        dbOrders.forEach(o => {
+            const ordObj = o.toObject();
+            if (ordObj.id) {
+                mergedMap.set(String(ordObj.id), { ...mergedMap.get(String(ordObj.id)), ...ordObj });
+            }
+        });
+
+        // Convert back to array and sort by date descending
+        const finalOrders = Array.from(mergedMap.values()).sort((a, b) => {
+            return new Date(b.date || 0) - new Date(a.date || 0);
+        });
+
+        res.json(finalOrders);
     } catch (err) {
-        console.error("DB Error, falling back to JSON");
+        console.error("Fetch Orders Error:", err);
         res.json(getJsonOrders());
     }
 });
@@ -263,10 +291,40 @@ router.post('/', async (req, res) => {
     // Always save to JSON as backup
     saveJsonOrder(newOrderData);
 
+    // AUTO-SYNC TO USERS: Add customer to user list if they aren't there
+    const customer = newOrderData.customer || newOrderData.shipping;
+    if (customer && (customer.email || customer.phone)) {
+        try {
+            const axios = require('axios');
+            // We'll call the local sync logic or just reuse the logic from users.js if we could.
+            // Since they are separate, let's just trigger an internal sync or manually save to users.json here.
+            const userSyncData = {
+                email: customer.email,
+                phoneNumber: customer.phone,
+                name: customer.fullName || customer.name,
+                lastLogin: Date.now(),
+                role: 'user',
+                cart: [] // Clear cart tracking as they just ordered
+            };
+
+            // Manual sync to users.json for robustness
+            const usersJsonPath = path.join(__dirname, '../data/users.json');
+            if (fs.existsSync(usersJsonPath)) {
+                let users = JSON.parse(fs.readFileSync(usersJsonPath));
+                const idx = users.findIndex(u => (u.email && u.email === userSyncData.email) || (u.phoneNumber && u.phoneNumber === userSyncData.phoneNumber));
+                if (idx !== -1) {
+                    users[idx] = { ...users[idx], ...userSyncData };
+                } else {
+                    users.push({ ...userSyncData, _id: 'order_gen_' + Date.now(), createdAt: Date.now() });
+                }
+                fs.writeFileSync(usersJsonPath, JSON.stringify(users, null, 2));
+            }
+        } catch (e) { console.error("Guest to User Auto-Sync Failed", e); }
+    }
+
     // Send email notifications
     sendOrderNotification(newOrderData).catch(e => console.error("Admin Notify Error:", e));
     sendCustomerOrderNotification(newOrderData).catch(e => console.error("Customer Notify Error:", e));
-
 
     try {
         const mongoose = require('mongoose');
@@ -280,7 +338,7 @@ router.post('/', async (req, res) => {
         }
     } catch (err) {
         console.warn("MongoDB Save Failed, using JSON only:", err.message);
-        res.status(201).json(newOrderData); // Still return 201 as we saved to JSON
+        res.status(201).json(newOrderData);
     }
 });
 

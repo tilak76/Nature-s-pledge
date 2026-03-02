@@ -35,10 +35,21 @@ const saveJsonUser = (userData) => {
 // Get all users
 router.get('/', async (req, res) => {
     try {
-        if (require('mongoose').connection.readyState !== 1) throw new Error("DB Disconnected");
-        const users = await User.find().sort({ lastLogin: -1 });
-        if (!users || users.length === 0) return res.json(getJsonUsers());
-        res.json(users);
+        const jsonUsers = getJsonUsers();
+        if (require('mongoose').connection.readyState !== 1) {
+            return res.json(jsonUsers);
+        }
+        const dbUsers = await User.find().sort({ lastLogin: -1 });
+
+        // Merge DB users with JSON users to ensure all are shown
+        const mergedMap = new Map();
+        jsonUsers.forEach(u => mergedMap.set(u.email || u.phoneNumber || u._id, u));
+        dbUsers.forEach(u => {
+            const key = u.email || u.phoneNumber || u._id.toString();
+            mergedMap.set(key, { ...mergedMap.get(key), ...u.toObject() });
+        });
+
+        res.json(Array.from(mergedMap.values()).sort((a, b) => (b.lastLogin || 0) - (a.lastLogin || 0)));
     } catch (err) {
         res.json(getJsonUsers());
     }
@@ -66,12 +77,14 @@ router.post('/sync', async (req, res) => {
             user.lastLogin = Date.now();
             if (name) user.name = name;
             if (image) user.image = image;
+            if (role) user.role = role;
             await user.save();
         } else {
             // Create new user record
             user = new User({
                 email, phoneNumber, name: name || 'Valued Nature Pledge User',
-                image, role: role || 'user', lastLogin: Date.now()
+                image, role: role || 'user', lastLogin: Date.now(),
+                createdAt: Date.now()
             });
             await user.save();
         }
@@ -79,7 +92,7 @@ router.post('/sync', async (req, res) => {
         res.json(user);
     } catch (err) {
         console.warn("Sync user DB fail, using body only:", err.message);
-        res.json({ ...req.body, _id: 'temp_' + Date.now(), lastLogin: Date.now() });
+        res.json({ ...req.body, _id: 'temp_' + Date.now(), lastLogin: Date.now(), createdAt: Date.now() });
     }
 });
 

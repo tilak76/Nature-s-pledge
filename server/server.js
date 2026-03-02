@@ -2,7 +2,15 @@ const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const path = require('path');
-require('dotenv').config({ path: path.join(__dirname, '.env') });
+const envPath = path.join(__dirname, '.env');
+console.log('Checking .env at:', envPath);
+require('dotenv').config({ path: envPath });
+
+if (!process.env.MONGO_URI) {
+    console.error('--- 🔴 ERROR: MONGO_URI NOT FOUND IN .ENV FILE ---');
+} else {
+    console.log('--- 🟢 INFO: MONGO_URI loaded. Starts with:', process.env.MONGO_URI.substring(0, 15));
+}
 
 const app = express();
 
@@ -10,15 +18,22 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// MongoDB Connection with shorter timeout to trigger fallback quickly
-mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/walnut-shop', {
-    serverSelectionTimeoutMS: 3000,
-    connectTimeoutMS: 3000,
-    bufferCommands: false // Fail fast if DB is not connected
+// MongoDB Connection
+const fullUri = process.env.MONGO_URI || 'mongodb://localhost:27017/walnut-shop';
+
+mongoose.connect(fullUri, {
+    serverSelectionTimeoutMS: 30000, // 30s for cloud stability
+    connectTimeoutMS: 30000,
+    heartbeatFrequencyMS: 10000,
+    bufferCommands: true
 })
-    .then(() => console.log('MongoDB connected...'))
+    .then(() => {
+        console.log('--- 🟢 PRODUCTION READY: Connected to MongoDB ATLAS ---');
+    })
     .catch(err => {
-        console.warn('MongoDB Unavailable. Using JSON Files Only.');
+        console.error('--- 🔴 CRITICAL ERROR: MongoDB Connection Failed! ---');
+        console.error('Business data cannot be saved without DB. Error:', err.message);
+        // In production, we want the server to notify us if DB is down
     });
 
 app.use('/api/products', require('./routes/products'));
@@ -29,9 +44,13 @@ app.use('/api/messages', require('./routes/messages'));
 
 // Health Check
 app.get('/api/health', (req, res) => {
+    const isConnected = mongoose.connection.readyState === 1;
     res.json({
         status: 'ok',
-        mongodb: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected'
+        build: 'Nature_Pledge_V2_Atlas',
+        mongodb: isConnected ? 'connected' : 'disconnected',
+        database: isConnected ? 'MongoDB Atlas (Cloud)' : 'Local JSON Fallback',
+        timestamp: new Date()
     });
 });
 

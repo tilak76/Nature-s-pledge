@@ -10,10 +10,11 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "axios": "^1.13.6",
     "cors": "^2.8.5",
-    "dotenv": "^17.2.3",
+    "dotenv": "^17.3.1",
     "express": "^5.2.1",
-    "mongoose": "^9.1.2",
+    "mongoose": "^9.2.3",
     "nodemailer": "^8.0.1",
     "razorpay": "^2.9.6",
     "shortid": "^2.2.17"
