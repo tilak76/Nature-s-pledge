@@ -10,3 +10,4 @@ server/data/users.json
 server/data/messages.json
 server/data/products.json/*.bak
 *.log
+.env*.local
