@@ -2,29 +2,43 @@ const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
 
-// Load environment variables
+// Load env (for local only, Vercel uses its own)
 require('dotenv').config();
 
 const app = express();
-
-// Middleware
 app.use(cors());
 app.use(express.json());
 
-// Local dev listener (if needed)
-if (process.env.NODE_ENV !== 'production' && !process.env.VERCEL) {
-    const PORT = process.env.PORT || 5000;
-    app.listen(PORT, () => console.log(`Dev backend live on ${PORT}`));
-}
+// 1. Standalone health route (No DB, NO EXTERNAL REQUIRES)
+app.get('/api/ping', (req, res) => {
+    res.json({
+        msg: "Nature's Pledge API is Responding",
+        build: 'fc073c8_v8',
+        timestamp: new Date().toISOString()
+    });
+});
 
-// MongoDB Connection
+// 2. Variable Check (Masked)
+app.get('/api/vars', (req, res) => {
+    res.json({
+        MONGO_URI: process.env.MONGO_URI ? "READY" : "MISSING",
+        RAZORPAY: process.env.RAZORPAY_KEY_ID ? "READY" : "MISSING",
+        EMAIL: process.env.EMAIL_USER ? "READY" : "MISSING"
+    });
+});
+
+// 3. MongoDB Hook with Timeout
 const connectDB = async () => {
     if (mongoose.connection.readyState >= 1) return;
+    if (!process.env.MONGO_URI) {
+        console.error("DB FAIL: MONGO_URI is not set!");
+        return;
+    }
     try {
         await mongoose.connect(process.env.MONGO_URI, {
             serverSelectionTimeoutMS: 5000,
             connectTimeoutMS: 5000,
-            bufferCommands: false,
+            bufferCommands: false
         });
         console.log('MongoDB Hooked');
     } catch (err) {
@@ -32,28 +46,45 @@ const connectDB = async () => {
     }
 };
 
-// Middleware to connect (BEFORE routes)
+// 4. Load routes defensively
+let products, orders, users, messages, payment;
+try {
+    products = require('../server/routes/products');
+    orders = require('../server/routes/orders');
+    users = require('../server/routes/users');
+    messages = require('../server/routes/messages');
+    payment = require('../server/routes/payment');
+} catch (e) {
+    console.error("ROUTE LOAD ERROR:", e.message);
+}
+
+// 5. App Middleware
 app.use(async (req, res, next) => {
-    if (req.path === '/api/health' || req.path === '/api/hello') return next();
+    if (req.path.startsWith('/api/ping') || req.path.startsWith('/api/vars')) return next();
     await connectDB();
     next();
 });
 
-// Routes
-app.use('/api/products', require('../server/routes/products'));
-app.use('/api/orders', require('../server/routes/orders'));
-app.use('/api/users', require('../server/routes/users'));
-app.use('/api/messages', require('../server/routes/messages'));
-app.use('/api/payment', require('../server/routes/payment'));
+// 6. Define Routes if loaded
+if (products) app.use('/api/products', products);
+if (orders) app.use('/api/orders', orders);
+if (users) app.use('/api/users', users);
+if (messages) app.use('/api/messages', messages);
+if (payment) app.use('/api/payment', payment);
 
-app.get('/api/hello', (req, res) => res.json({ msg: "Nature's Pledge API Live", build: 'fc073c8_v2' }));
-
+// 7. Standard Health
 app.get('/api/health', (req, res) => {
     res.json({
-        status: 'ok',
-        mongodb: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected',
+        status: 'online',
+        mongodb: mongoose.connection.readyState === 1 ? 'connected' : 'connecting/disconnected',
         build: 'NP_Final_Stable_V1'
     });
+});
+
+// 8. Global Error Handler
+app.use((err, req, res, next) => {
+    console.error("Express Error:", err.stack);
+    res.status(500).json({ error: "Serverless Runtime Error", details: err.message });
 });
 
 module.exports = app;
