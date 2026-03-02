@@ -5,32 +5,28 @@ const path = require('path');
 // Load environment variables
 require('dotenv').config();
 
-if (!process.env.MONGO_URI) {
-    console.log('--- ⚠️ WARNING: MONGO_URI missing from environment ---');
-} else {
-    const maskedUri = process.env.MONGO_URI.substring(0, 15) + '...';
-    console.log('--- 🟢 INFO: MONGO_URI is present. Starts with:', maskedUri);
-}
-
 const app = express();
 
-// Middleware
-app.use(cors());
-app.use(express.json());
+// Safe Database State Tracking
+let dbConnection = null;
 
-// MongoDB Connection (Serverless Optimized)
 const connectDB = async () => {
+    // Only proceed if URI exists and we aren't already connected
     if (mongoose.connection.readyState >= 1) return;
+    if (!process.env.MONGO_URI) {
+        console.warn('--- ⚠️ MONGO_URI is missing. Backend operating in LIMITED/JSON mode ---');
+        return;
+    }
 
     try {
         await mongoose.connect(process.env.MONGO_URI, {
-            serverSelectionTimeoutMS: 10000,
-            connectTimeoutMS: 10000,
+            serverSelectionTimeoutMS: 8000, // 8s timeout
+            connectTimeoutMS: 8000,
             bufferCommands: false
         });
-        console.log('--- 🟢 DB CONNECTED ---');
+        console.log('--- 🟢 DB READY ---');
     } catch (err) {
-        console.log('--- 🔴 DB CONNECTION ERROR ---', err.message);
+        console.error('--- 🔴 DB CONNECTION ERROR ---', err.message);
     }
 };
 
@@ -39,7 +35,11 @@ connectDB();
 
 // Middleware to ensure DB is connected on every request
 app.use(async (req, res, next) => {
-    await connectDB();
+    try {
+        await connectDB();
+    } catch (e) {
+        console.error('Connection middleware failed');
+    }
     next();
 });
 
