@@ -7,11 +7,23 @@
     },
     "rewrites": [
         {
+            "source": "/api/ping",
+            "destination": "/api/ping.js"
+        },
+        {
+            "source": "/api/db-check",
+            "destination": "/api/db-check.js"
+        },
+        {
+            "source": "/api/hello",
+            "destination": "/api/hello.js"
+        },
+        {
             "source": "/api/(.*)",
             "destination": "/api/index.js"
         },
         {
-            "source": "/(.*)",
+            "source": "/((?!api/).*)",
             "destination": "/client/dist/$1"
         }
     ]
