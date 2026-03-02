@@ -55,11 +55,17 @@ app.use('/api/messages', require('./routes/messages'));
 // Health Check
 app.get('/api/health', (req, res) => {
     const isConnected = mongoose.connection.readyState === 1;
+    let maskedUri = 'N/A';
+    if (process.env.MONGO_URI) {
+        maskedUri = process.env.MONGO_URI.substring(0, 15) + '...' + process.env.MONGO_URI.slice(-10);
+    }
+
     res.json({
         status: 'ok',
-        build: 'Nature_Pledge_V3_Serverless',
+        build: 'Nature_Pledge_V4_Stable',
         mongodb: isConnected ? 'connected' : 'disconnected',
-        database: isConnected ? 'MongoDB Atlas (Cloud)' : 'Fallback/Disconnected',
+        database: isConnected ? 'MongoDB Atlas (Cloud)' : 'Disconnected/Fallback',
+        dbConfig: maskedUri,
         timestamp: new Date()
     });
 });
