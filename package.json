@@ -18,5 +18,8 @@
     "nodemailer": "^6.10.0",
     "razorpay": "^2.9.6",
     "shortid": "^2.2.16"
+  },
+  "engines": {
+    "node": "18.x"
   }
 }
