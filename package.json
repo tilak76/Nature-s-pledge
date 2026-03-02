@@ -20,6 +20,6 @@
     "shortid": "^2.2.16"
   },
   "engines": {
-    "node": "18.x"
+    "node": "22.x"
   }
 }
