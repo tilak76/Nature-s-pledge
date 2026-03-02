@@ -2,14 +2,14 @@ const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const path = require('path');
-const envPath = path.join(__dirname, '.env');
-console.log('Checking .env at:', envPath);
-require('dotenv').config({ path: envPath });
+// Load environment variables
+require('dotenv').config();
 
 if (!process.env.MONGO_URI) {
-    console.error('--- 🔴 ERROR: MONGO_URI NOT FOUND IN .ENV FILE ---');
+    console.log('--- ⚠️ WARNING: MONGO_URI missing from environment ---');
 } else {
-    console.log('--- 🟢 INFO: MONGO_URI loaded. Starts with:', process.env.MONGO_URI.substring(0, 15));
+    const maskedUri = process.env.MONGO_URI.substring(0, 15) + '...';
+    console.log('--- 🟢 INFO: MONGO_URI is present. Starts with:', maskedUri);
 }
 
 const app = express();
@@ -18,13 +18,10 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// MongoDB Connection
-const fullUri = process.env.MONGO_URI || 'mongodb://localhost:27017/walnut-shop';
-
-mongoose.connect(fullUri, {
-    serverSelectionTimeoutMS: 30000, // 30s for cloud stability
-    connectTimeoutMS: 30000,
-    heartbeatFrequencyMS: 10000,
+// MongoDB Connection with serverless-friendly timeouts
+mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/walnut-shop', {
+    serverSelectionTimeoutMS: 5000, // Reduced to 5s for Vercel speed
+    connectTimeoutMS: 5000,
     bufferCommands: true
 })
     .then(() => {
