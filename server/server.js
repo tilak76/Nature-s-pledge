@@ -2,47 +2,50 @@ const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const path = require('path');
-// Load environment variables
+
+// Load environment variables early
 require('dotenv').config();
 
 const app = express();
 
-// Safe Database State Tracking
-let dbConnection = null;
+// Middleware
+app.use(cors());
+app.use(express.json());
 
+// MongoDB Connection (Serverless Optimized - only connects when needed)
 const connectDB = async () => {
-    // Only proceed if URI exists and we aren't already connected
     if (mongoose.connection.readyState >= 1) return;
+
+    // Safety check for production
     if (!process.env.MONGO_URI) {
-        console.warn('--- ⚠️ MONGO_URI is missing. Backend operating in LIMITED/JSON mode ---');
+        console.error('CRITICAL: MONGO_URI is not defined in environment variables');
         return;
     }
 
     try {
         await mongoose.connect(process.env.MONGO_URI, {
-            serverSelectionTimeoutMS: 8000, // 8s timeout
-            connectTimeoutMS: 8000,
-            bufferCommands: false
+            serverSelectionTimeoutMS: 10000,
+            connectTimeoutMS: 10000,
+            bufferCommands: false,
         });
-        console.log('--- 🟢 DB READY ---');
+        console.log('--- 🟢 MONGODB CONNECTED ---');
     } catch (err) {
-        console.error('--- 🔴 DB CONNECTION ERROR ---', err.message);
+        console.error('--- 🔴 MONGODB ERROR:', err.message);
     }
 };
 
-// Initial background attempt
-connectDB();
-
-// Middleware to ensure DB is connected on every request
+// Middleware to ensure DB is connected
 app.use(async (req, res, next) => {
     try {
         await connectDB();
     } catch (e) {
-        console.error('Connection middleware failed');
+        // Log but don't crash
+        console.error('Middleware connection error');
     }
     next();
 });
 
+// Routes
 app.use('/api/products', require('./routes/products'));
 app.use('/api/payment', require('./routes/payment'));
 app.use('/api/orders', require('./routes/orders'));
@@ -54,16 +57,20 @@ app.get('/api/health', (req, res) => {
     const isConnected = mongoose.connection.readyState === 1;
     res.json({
         status: 'ok',
-        build: 'Nature_Pledge_V2_Atlas',
+        build: 'Nature_Pledge_V3_Serverless',
         mongodb: isConnected ? 'connected' : 'disconnected',
-        database: isConnected ? 'MongoDB Atlas (Cloud)' : 'Local JSON Fallback',
+        database: isConnected ? 'MongoDB Atlas (Cloud)' : 'Fallback/Disconnected',
         timestamp: new Date()
     });
 });
 
-if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
+// Port listener is ONLY for local development
+if (process.env.NODE_ENV !== 'production' && !process.env.VERCEL) {
     const PORT = process.env.PORT || 5000;
-    app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+    app.listen(PORT, () => {
+        console.log(`Local server listening on port ${PORT}`);
+    });
 }
 
+// CRITICAL: Export for Vercel
 module.exports = app;
