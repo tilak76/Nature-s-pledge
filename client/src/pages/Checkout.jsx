@@ -7,7 +7,7 @@ import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 
 const Checkout = () => {
-    const { cart, cartTotal, clearCart } = useCart();
+    const { cart, cartTotal, clearCart, removeFromCart, updateQuantity } = useCart();
     const { user, updateUser, logActivity } = useAuth();
     const { showToast } = useToast();
     const navigate = useNavigate();
@@ -288,6 +288,7 @@ const Checkout = () => {
                     <div style={{ border: '1px solid #ddd', borderRadius: '8px', overflow: 'hidden', marginBottom: '1.5rem', background: 'white' }}>
                         <div style={{ background: step === 2 ? 'white' : '#f7f7f7', padding: '15px 20px', borderBottom: '1px solid #ddd', fontWeight: 'bold' }}>
                             <span style={{ color: step === 2 ? '#e77600' : '#333' }}>2. Select a payment method</span>
+                            {step > 2 && <button onClick={() => setStep(2)} style={{ color: '#007185', background: 'none', border: 'none', cursor: 'pointer', textDecoration: 'underline', float: 'right' }}>Change</button>}
                         </div>
 
                         {step === 2 && (
@@ -318,6 +319,58 @@ const Checkout = () => {
                                         {(user.walletBalance || 0) < actualTotal && <div style={{ color: 'red', marginLeft: '25px', fontSize: '0.8rem' }}>Insufficient balance</div>}
                                     </div>
                                 )}
+
+                                <button onClick={() => setStep(3)} style={{ background: '#FFD814', border: '1px solid #FCD200', padding: '10px 20px', borderRadius: '8px', cursor: 'pointer', marginTop: '10px', boxShadow: '0 2px 5px rgba(213,217,217,0.5)' }}>Use this payment method</button>
+                            </div>
+                        )}
+                        {step > 2 && (
+                            <div style={{ padding: '10px 20px', fontSize: '0.9rem', color: '#555' }}>
+                                Payment Method: <b>{paymentMethod.toUpperCase()}</b>
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Step 3: Review Items */}
+                    <div style={{ border: '1px solid #ddd', borderRadius: '8px', overflow: 'hidden', marginBottom: '1.5rem', background: 'white' }}>
+                        <div style={{ background: step === 3 ? 'white' : '#f7f7f7', padding: '15px 20px', borderBottom: '1px solid #ddd', fontWeight: 'bold' }}>
+                            <span style={{ color: step === 3 ? '#e77600' : '#333' }}>3. Review items and shipping</span>
+                        </div>
+
+                        {step === 3 && (
+                            <div style={{ padding: '20px' }}>
+                                <div className="cart-items-list">
+                                    {safeCart.map((item) => (
+                                        <div key={item.id} style={{ display: 'flex', gap: '15px', padding: '15px 0', borderBottom: '1px solid #eee' }}>
+                                            <img src={item.image} alt={item.name} style={{ width: '80px', height: '80px', objectFit: 'cover', borderRadius: '4px' }} />
+                                            <div style={{ flex: 1 }}>
+                                                <h4 style={{ margin: '0 0 5px 0', color: '#007185' }}>{item.name}</h4>
+                                                <p style={{ margin: '0', fontSize: '0.9rem', fontWeight: 'bold', color: '#B12704' }}>₹{item.price}</p>
+                                                <div style={{ display: 'flex', alignItems: 'center', gap: '15px', marginTop: '10px' }}>
+                                                    <div style={{ display: 'flex', alignItems: 'center', background: '#f0f2f2', borderRadius: '8px', padding: '2px 8px', border: '1px solid #d5d9d9', boxShadow: '0 2px 5px rgba(213,217,217,0.2)' }}>
+                                                        <label style={{ fontSize: '0.8rem', marginRight: '5px' }}>Qty:</label>
+                                                        <select
+                                                            value={item.quantity}
+                                                            onChange={(e) => updateQuantity(item.id, parseInt(e.target.value))}
+                                                            style={{ background: 'none', border: 'none', outline: 'none', cursor: 'pointer', padding: '2px' }}
+                                                        >
+                                                            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(n => <option key={n} value={n}>{n}</option>)}
+                                                        </select>
+                                                    </div>
+                                                    <button
+                                                        onClick={() => removeFromCart(item.id)}
+                                                        style={{ background: 'none', border: 'none', color: '#007185', fontSize: '0.85rem', cursor: 'pointer', textDecoration: 'underline' }}
+                                                    >
+                                                        Delete
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                                <div style={{ marginTop: '20px', padding: '15px', background: '#fcfcfc', borderRadius: '8px', border: '1px solid #eee' }}>
+                                    <p style={{ margin: '0', fontSize: '0.9rem' }}><b>Shipping to:</b> {shipping.fullName}, {shipping.city}</p>
+                                    <p style={{ margin: '5px 0 0 0', fontSize: '0.9rem' }}><b>Payment:</b> {paymentMethod.toUpperCase()}</p>
+                                </div>
                             </div>
                         )}
                     </div>
@@ -328,14 +381,14 @@ const Checkout = () => {
                     <div style={{ border: '1px solid #ddd', borderRadius: '8px', padding: '20px', background: 'white', position: 'sticky', top: '90px' }}>
                         <button
                             onClick={handlePlaceOrder}
-                            disabled={step !== 2 || processing}
+                            disabled={step !== 3 || processing}
                             style={{
                                 width: '100%',
                                 padding: '10px',
-                                background: step === 2 ? '#FFD814' : '#e7e7e7',
-                                border: step === 2 ? '1px solid #FCD200' : '1px solid #ddd',
+                                background: step === 3 ? '#FFD814' : '#e7e7e7',
+                                border: step === 3 ? '1px solid #FCD200' : '1px solid #ddd',
                                 borderRadius: '20px',
-                                cursor: step === 2 ? 'pointer' : 'not-allowed',
+                                cursor: step === 3 ? 'pointer' : 'not-allowed',
                                 marginBottom: '15px',
                                 boxShadow: '0 2px 5px rgba(213,217,217,0.5)',
                                 fontWeight: '500',

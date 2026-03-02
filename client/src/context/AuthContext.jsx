@@ -45,6 +45,18 @@ export const AuthProvider = ({ children }) => {
                     setUser(parsedUser);
                     // Log session resume
                     logActivity('Session Resumed', { device: navigator.userAgent });
+
+                    // Force sync existing session with backend to ensure they show up in Admin
+                    try {
+                        const synced = await syncUserWithBackend(parsedUser);
+                        if (synced && synced.email) {
+                            const updated = { ...parsedUser, ...synced };
+                            setUser(updated);
+                            localStorage.setItem('user', JSON.stringify(updated));
+                        }
+                    } catch (e) {
+                        console.error("Auto-sync on init failed", e);
+                    }
                 }
 
                 // SEED ADMIN USER (Client-side fallback)
@@ -62,7 +74,7 @@ export const AuthProvider = ({ children }) => {
                         password: adminPassword,
                         name: 'Admin Tilak',
                         role: 'admin',
-                        walletBalance: 100000,
+                        walletBalance: 0,
                         walletHistory: []
                     });
                     localStorage.setItem('registered_users', JSON.stringify(storedUsers));

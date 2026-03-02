@@ -55,8 +55,11 @@ const Admin = () => {
             }
 
             // Always check DB status on switch
-            const healthRes = await axios.get('/api/health').catch(() => ({ data: { mongodb: 'disconnected' } }));
-            setDbStatus(healthRes.data.mongodb === 'connected' ? 'Connected (MongoDB)' : 'Connected (JSON Fallback)');
+            const healthRes = await axios.get('/api/health').catch(() => ({ data: { mongodb: 'disconnected', database: 'Network Error' } }));
+            setDbStatus(healthRes.data.database || (healthRes.data.mongodb === 'connected' ? 'Cloud Connected' : 'Disconnected'));
+
+            // Add a small build version indicator to the console for debugging
+            if (healthRes.data.build) console.log(`Backend Version: ${healthRes.data.build}`);
 
         } catch (err) {
             console.error("Fetch error:", err);
@@ -298,8 +301,8 @@ const Admin = () => {
                         <div style={{ textAlign: 'center', padding: '40px', color: '#888', background: 'white', borderRadius: '12px' }}>No users found yet.</div>
                     ) : (
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '20px' }}>
-                            {allUsers.map(u => (
-                                <div key={u._id} style={{ border: '1px solid #eee', borderRadius: '12px', padding: '20px', background: 'white', boxShadow: '0 2px 8px rgba(0,0,0,0.04)', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                            {allUsers.map((u, idx) => (
+                                <div key={u._id || u.email || idx} style={{ border: '1px solid #eee', borderRadius: '12px', padding: '20px', background: 'white', boxShadow: '0 2px 8px rgba(0,0,0,0.04)', display: 'flex', flexDirection: 'column', gap: '12px' }}>
                                     <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                                         <div style={{ width: '45px', height: '45px', borderRadius: '50%', background: '#efebe9', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.2rem', color: '#5D4037' }}>
                                             {u.name?.charAt(0) || 'U'}
