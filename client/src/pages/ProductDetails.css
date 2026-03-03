@@ -1,26 +1,83 @@
-/* ProductDetails.css - Premium Luxury Branded Style */
+/* ProductDetails.css - Premium Luxury Branded Style with Amazon Features */
 
 .product-details-page {
     padding-top: 60px;
     padding-bottom: 80px;
 }
 
-/* Image Presentation */
-.product-image-display {
+/* Layout - 3 columns for Desktop (Image, Info, BuyBox) */
+.product-main-layout {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 40px;
+    margin-bottom: 80px;
+}
+
+@media (min-width: 1024px) {
+    .product-main-layout {
+        grid-template-columns: 2fr 2.5fr 1.5fr;
+        gap: 30px;
+    }
+}
+
+/* Image Presentation (Gallery style) */
+.product-gallery {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.main-image-display {
     border-radius: 8px;
-    box-shadow: var(--shadow-lg);
+    box-shadow: var(--shadow-sm);
     border: 1px solid rgba(0, 0, 0, 0.05);
     overflow: hidden;
     position: relative;
     background: var(--white);
+    aspect-ratio: 1;
+    cursor: crosshair;
 }
 
-.product-image-display img {
+.main-image-display img {
     width: 100%;
-    height: auto;
+    height: 100%;
     display: block;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+}
+
+.main-image-display:hover img {
+    transform: scale(1.1);
+}
+
+.thumbnail-list {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+}
+
+.thumbnail-box {
+    width: 70px;
+    height: 70px;
+    border-radius: 4px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    overflow: hidden;
+    opacity: 0.6;
+    transition: var(--transition);
+}
+
+.thumbnail-box.active,
+.thumbnail-box:hover {
+    border-color: var(--primary);
+    opacity: 1;
+    box-shadow: 0 0 0 1px var(--primary);
+}
+
+.thumbnail-box img {
+    width: 100%;
+    height: 100%;
     object-fit: cover;
-    max-height: 600px;
 }
 
 /* Info Section */
@@ -35,20 +92,20 @@
     font-size: 0.85rem;
     font-weight: 700;
     letter-spacing: 2px;
-    margin-bottom: 15px;
+    margin-bottom: 10px;
 }
 
 .product-detail-title {
-    font-size: clamp(2.5rem, 4vw, 3.5rem) !important;
+    font-size: clamp(2rem, 3vw, 2.5rem) !important;
     color: var(--primary);
-    margin-bottom: 20px !important;
+    margin-bottom: 15px !important;
     line-height: 1.2;
 }
 
 /* Pricing Branded */
 .product-price-section {
-    margin: 30px 0;
-    padding: 25px 0;
+    margin: 20px 0;
+    padding: 20px 0;
     border-top: 1px solid rgba(0, 0, 0, 0.05);
     border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 }
@@ -59,7 +116,7 @@
     color: var(--text-main);
     font-weight: 700;
     line-height: 1;
-    margin-bottom: 10px;
+    margin-bottom: 5px;
 }
 
 .current-price span {
@@ -78,14 +135,15 @@
 }
 
 .discount-tag {
-    color: var(--accent);
+    color: #CC0C39;
+    /* Amazon's typical red but a bit deeper */
     font-weight: 600;
     margin-left: 10px;
 }
 
-/* Variant Selector Premium */
+/* Variant Selector */
 .variant-selector-container {
-    margin-bottom: 40px;
+    margin-bottom: 25px;
 }
 
 .variant-label {
@@ -104,7 +162,7 @@
 }
 
 .variant-btn {
-    padding: 12px 24px;
+    padding: 10px 20px;
     background: var(--white);
     border: 1px solid rgba(0, 0, 0, 0.1);
     color: var(--text-main);
@@ -128,125 +186,211 @@
     color: var(--accent);
 }
 
-/* Actions Section */
-.action-buttons-group {
+/* Bullet Points */
+.amazon-bullet-points {
+    margin-top: 20px;
+    padding-left: 20px;
+    color: var(--text-main);
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+.amazon-bullet-points li {
+    margin-bottom: 8px;
+}
+
+/* Sticky Buy Box (Amazon style) */
+.sticky-buy-box {
+    background: var(--white);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    padding: 24px;
+    box-shadow: var(--shadow-sm);
+    position: sticky;
+    top: 100px;
     display: flex;
     flex-direction: column;
     gap: 15px;
-    margin-bottom: 40px;
-    max-width: 400px;
+    height: fit-content;
 }
 
-.btn-secondary {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 14px 40px;
-    background-color: transparent;
+.buy-box-price {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--text-main);
+}
+
+.delivery-info {
+    font-size: 0.9rem;
+    color: var(--text-main);
+    line-height: 1.4;
+}
+
+.delivery-info .free {
     color: var(--primary);
+    font-weight: 700;
+}
+
+.delivery-date {
+    font-weight: 700;
+}
+
+.in-stock {
+    color: #007600;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+/* Pincode Checker */
+.pincode-checker {
+    display: flex;
+    gap: 8px;
+    margin-top: 5px;
+}
+
+.pincode-input {
+    flex: 1;
+    padding: 8px 12px;
+    border: 1px solid #ccc;
     border-radius: 4px;
     font-family: 'Outfit', sans-serif;
-    font-weight: 600;
-    font-size: 0.95rem;
-    letter-spacing: 2px;
-    text-transform: uppercase;
+    font-size: 0.85rem;
+}
+
+.pincode-btn {
+    padding: 8px 15px;
+    background: var(--secondary);
     border: 1px solid var(--primary);
+    color: var(--primary);
+    border-radius: 4px;
+    font-weight: 600;
     cursor: pointer;
     transition: var(--transition);
 }
 
-.btn-secondary:hover {
-    background-color: var(--primary);
+.pincode-btn:hover {
+    background: var(--primary);
     color: var(--white);
 }
 
-/* About Item */
-.about-item-section {
-    margin-top: 30px;
+.pincode-status {
+    font-size: 0.8rem;
+    color: #007600;
+    font-weight: 500;
 }
 
-.about-item-section h4 {
-    font-size: 1.1rem;
-    margin-bottom: 15px;
-    color: var(--primary);
-    font-family: 'Outfit', sans-serif;
+/* Quantity Selector */
+.quantity-selector {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    width: fit-content;
+    overflow: hidden;
+    background: var(--white);
 }
 
-.about-item-section p {
-    color: var(--text-muted);
-    line-height: 1.8;
+.qty-btn {
+    background: transparent;
+    border: none;
+    padding: 8px 15px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    color: var(--text-main);
+    transition: var(--transition);
+}
+
+.qty-btn:hover {
+    background: #f0f0f0;
+}
+
+.qty-display {
+    padding: 0 15px;
+    font-weight: 600;
     font-size: 1rem;
 }
 
-/* Storytelling Section */
-.story-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 30px;
-    margin-top: 40px;
+/* Actions */
+.action-buttons-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 10px;
 }
 
-.story-card {
-    background: var(--white);
-    padding: 40px;
+.secure-transaction {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.85rem;
+    color: #565959;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.ships-from {
+    font-size: 0.85rem;
+    color: #565959;
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    gap: 10px;
+    margin-top: 5px;
+}
+
+.ships-from span:first-child {
+    color: var(--text-muted);
+}
+
+/* Tabbed Content Profile */
+.product-tabs-container {
+    margin: 40px 0;
+    border: 1px solid rgba(0, 0, 0, 0.05);
     border-radius: 8px;
-    box-shadow: var(--shadow-sm);
-    text-align: center;
-    border: 1px solid rgba(0, 0, 0, 0.03);
+    background: var(--white);
+    overflow: hidden;
+}
+
+.tabs-header {
+    display: flex;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    background: var(--secondary);
+    overflow-x: auto;
+}
+
+.tab-btn {
+    padding: 18px 30px;
+    background: transparent;
+    border: none;
+    font-family: 'Outfit', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    white-space: nowrap;
     transition: var(--transition);
 }
 
-.story-card:hover {
-    box-shadow: var(--shadow-md);
-    transform: translateY(-5px);
-}
-
-.story-card .icon {
-    font-size: 2.5rem;
-    margin-bottom: 20px;
-    display: block;
-}
-
-.story-card h3 {
+.tab-btn.active {
     color: var(--primary);
-    margin-bottom: 15px;
-    font-size: 1.4rem;
+    border-bottom-color: var(--primary);
+    background: var(--white);
 }
 
-.story-card p {
-    color: var(--text-muted);
+.tab-content {
+    padding: 30px;
     font-size: 0.95rem;
     line-height: 1.7;
+    color: var(--text-main);
 }
 
-/* Benefits Section */
-.health-benefits-container {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 15px;
-    margin-top: 30px;
-}
-
-.benefit-pill {
-    padding: 12px 25px;
-    background: var(--secondary);
+.tab-content h3 {
+    margin-bottom: 15px;
     color: var(--primary);
-    border: 1px solid rgba(27, 63, 45, 0.1);
-    border-radius: 50px;
-    font-size: 0.95rem;
-    font-weight: 600;
-    transition: var(--transition);
+    font-family: 'Playfair Display', serif;
 }
 
-.benefit-pill:hover {
-    background: var(--primary);
-    color: var(--white);
-    border-color: var(--primary);
-}
-
-
-/* Reviews Section Premium */
+/* Existing Reviews Section Premium appended */
 .reviews-section {
     border-top: 1px solid rgba(0, 0, 0, 0.05);
 }
@@ -302,7 +446,6 @@
     color: var(--white);
 }
 
-/* Review List */
 .reviews-list {
     display: grid;
     gap: 25px;
@@ -379,7 +522,6 @@
     font-size: 0.95rem;
 }
 
-/* Form Styling */
 .review-form-container {
     background: var(--secondary);
     padding: 30px;
@@ -432,16 +574,13 @@
 }
 
 /* RESPONSIVE */
-@media (max-width: 900px) {
-    .product-details-page .grid-luxury-2 {
+@media (max-width: 1024px) {
+    .product-main-layout {
         grid-template-columns: 1fr;
     }
 
-    .product-detail-title {
-        font-size: 2.5rem !important;
-    }
-
-    .action-buttons-group {
-        max-width: 100%;
+    .sticky-buy-box {
+        position: static;
+        margin-top: 20px;
     }
 }

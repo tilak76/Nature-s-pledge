@@ -14,9 +14,17 @@ const ProductDetails = () => {
     const { showToast } = useToast();
     const { user } = useAuth();
 
+    // Core states
     const [product, setProduct] = useState(null);
     const [related, setRelated] = useState([]);
     const [relatedVariants, setRelatedVariants] = useState([]);
+
+    // E-commerce states
+    const [quantity, setQuantity] = useState(1);
+    const [pincode, setPincode] = useState('');
+    const [pincodeStatus, setPincodeStatus] = useState('');
+    const [activeImage, setActiveImage] = useState('');
+    const [activeTab, setActiveTab] = useState('description');
 
     // Review States
     const [reviews, setReviews] = useState([]);
@@ -40,6 +48,7 @@ const ProductDetails = () => {
 
             if (found) {
                 setProduct(found);
+                setActiveImage(found.image);
                 const baseName = found.name.split(' - ')[0];
                 const variants = fetchedProducts.filter(p => p.name.startsWith(baseName) && String(p.id) !== String(found.id));
                 setRelatedVariants(variants);
@@ -54,7 +63,6 @@ const ProductDetails = () => {
         fetchProductData();
     }, [id, navigate]);
 
-    // Fetch Reviews for this product
     useEffect(() => {
         if (!product) return;
         const fetchReviews = async () => {
@@ -100,20 +108,58 @@ const ProductDetails = () => {
         }
     };
 
+    const handleAddToCart = () => {
+        // Use cart context addToCart with quantity override if supported, else add multiple times
+        for (let i = 0; i < quantity; i++) {
+            addToCart(product);
+        }
+        showToast(`${quantity}x Added to Cart!`);
+    };
+
+    const handleBuyNow = () => {
+        for (let i = 0; i < quantity; i++) {
+            addToCart(product);
+        }
+        navigate('/checkout');
+    };
+
+    const checkPincode = () => {
+        if (pincode.length !== 6) return setPincodeStatus('Invalid Pincode');
+        setPincodeStatus('Checking...');
+        setTimeout(() => setPincodeStatus('Delivery available in 3-5 days!'), 1000);
+    };
 
     if (!product) return <div className="container section-padding" style={{ textAlign: 'center' }}><p>Fetching Premium Selection...</p></div>;
 
     const avgRating = reviews.length > 0 ? (reviews.reduce((acc, r) => acc + r.rating, 0) / reviews.length).toFixed(1) : "5.0";
 
+    // Simulate fake gallery thumbnails from same image
+    const galleryItems = [product.image, product.image, product.image];
+
     return (
         <div className="container product-details-page">
 
-            <div className="grid-luxury grid-luxury-2" style={{ marginBottom: '80px' }}>
-                <div className="product-image-display">
-                    <div className="premium-badge">100% Organic</div>
-                    <img src={product.image} alt={product.name} />
+            <div className="product-main-layout">
+                {/* 1. Gallery Section */}
+                <div className="product-gallery">
+                    <div className="main-image-display">
+                        <div className="premium-badge">100% Organic</div>
+                        <img src={activeImage} alt={product.name} />
+                    </div>
+                    <div className="thumbnail-list">
+                        {galleryItems.map((img, idx) => (
+                            <div
+                                key={idx}
+                                className={`thumbnail-box ${activeImage === img ? 'active' : ''}`}
+                                onMouseEnter={() => setActiveImage(img)}
+                            >
+                                <img src={img} alt={`${product.name} angle ${idx + 1}`} />
+                            </div>
+                        ))}
+                    </div>
                 </div>
 
+                {/* 2. Product Info Section */}
                 <div className="product-info-wrapper">
                     <h2 className="product-origin-label">Authentic from Kashmir</h2>
                     <h1 className="product-detail-title">{product.name}</h1>
@@ -122,7 +168,7 @@ const ProductDetails = () => {
                         <span style={{ color: 'var(--accent)', fontSize: '1.2rem', letterSpacing: '2px' }}>
                             {'★'.repeat(Math.round(avgRating))}{'☆'.repeat(5 - Math.round(avgRating))}
                         </span>
-                        <span style={{ color: 'var(--text-muted)', fontSize: '0.9rem', borderLeft: '1px solid #eee', paddingLeft: '15px' }}>
+                        <span style={{ color: '#007185', fontSize: '0.9rem', borderLeft: '1px solid #eee', paddingLeft: '15px' }}>
                             {reviews.length} Verified Reviews
                         </span>
                     </div>
@@ -133,24 +179,22 @@ const ProductDetails = () => {
                         </div>
                         <div className="mrp-detail">
                             M.R.P.: <span>₹{Math.floor(product.price * 1.3)}</span>
-                            <span className="discount-tag">Special Price (30% off)</span>
+                            <span className="discount-tag">30% Off</span>
                         </div>
-                        <div style={{ fontSize: '0.85rem', color: 'var(--primary-light)', fontWeight: '600', marginTop: '10px', textTransform: 'uppercase', letterSpacing: '1px' }}>
+                        <div style={{ fontSize: '0.85rem', color: 'var(--text-main)', marginTop: '8px' }}>
                             Inclusive of all taxes
                         </div>
                     </div>
 
-                    <div style={{ marginBottom: '30px' }}>
-                        <div style={{ color: 'var(--text-main)', fontSize: '1rem', marginBottom: '8px', fontWeight: '500' }}>
-                            <span style={{ color: 'var(--primary)', fontWeight: '700' }}>Free Priority Shipping</span> arriving by <span style={{ fontWeight: '700' }}>{new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long' })}.</span>
-                        </div>
-                        <div style={{ fontSize: '1.1rem', color: '#4CAF50', fontWeight: '600', marginBottom: '15px' }}>
-                            Harvest Ready. In Stock.
-                        </div>
-                    </div>
+                    <ul className="amazon-bullet-points">
+                        <li><strong>Premium Origin:</strong> Cultivated in the fertile valleys of Kashmir.</li>
+                        <li><strong>100% Organic:</strong> Handpicked without any artificial polish.</li>
+                        <li><strong>Health First:</strong> Packed with essential nutrients and minerals.</li>
+                        <li><strong>Direct to Home:</strong> Sourced straight from local farmers.</li>
+                    </ul>
 
                     {relatedVariants.length > 0 && (
-                        <div className="variant-selector-container">
+                        <div className="variant-selector-container" style={{ marginTop: '20px' }}>
                             <div className="variant-label">Select Size / Weight</div>
                             <div className="variant-buttons">
                                 <button className="variant-btn active">
@@ -168,63 +212,104 @@ const ProductDetails = () => {
                             </div>
                         </div>
                     )}
+                </div>
+
+                {/* 3. Sticky Buy Box */}
+                <div className="sticky-buy-box">
+                    <div className="buy-box-price">₹{product.price}</div>
+
+                    <div className="delivery-info">
+                        <span className="free">FREE Delivery</span> <span className="delivery-date">{new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long' })}.</span>
+                    </div>
+
+                    <div className="in-stock">In Stock.</div>
+
+                    <div style={{ marginTop: '5px' }}>
+                        <div style={{ fontSize: '0.85rem', color: '#565959', marginBottom: '8px' }}>
+                            Check Delivery Availability
+                        </div>
+                        <div className="pincode-checker">
+                            <input
+                                type="text"
+                                placeholder="Enter Pincode"
+                                className="pincode-input"
+                                maxLength="6"
+                                value={pincode}
+                                onChange={(e) => setPincode(e.target.value)}
+                            />
+                            <button className="pincode-btn" onClick={checkPincode}>Check</button>
+                        </div>
+                        {pincodeStatus && <div className="pincode-status" style={{ color: pincodeStatus.includes('Invalid') ? '#CC0C39' : '#007600', marginTop: '5px' }}>{pincodeStatus}</div>}
+                    </div>
+
+                    <div style={{ marginTop: '10px' }}>
+                        <div style={{ fontSize: '0.85rem', color: '#565959', marginBottom: '8px' }}>Quantity:</div>
+                        <div className="quantity-selector">
+                            <button className="qty-btn" onClick={() => setQuantity(q => Math.max(1, q - 1))}>−</button>
+                            <span className="qty-display">{quantity}</span>
+                            <button className="qty-btn" onClick={() => setQuantity(q => q + 1)}>+</button>
+                        </div>
+                    </div>
 
                     <div className="action-buttons-group">
-                        <button
-                            onClick={() => {
-                                addToCart(product);
-                                showToast('Added to Cart!');
-                            }}
-                            className="btn-premium"
-                        >
+                        <button onClick={handleAddToCart} className="btn-premium" style={{ width: '100%', borderRadius: '50px' }}>
                             Add to Cart
                         </button>
-                        <button
-                            onClick={() => { addToCart(product); navigate('/checkout'); }}
-                            className="btn-secondary"
-                        >
-                            Proced to Buy
+                        <button onClick={handleBuyNow} className="btn-secondary" style={{ width: '100%', borderRadius: '50px', background: 'var(--accent)', color: 'white', borderColor: 'var(--accent)' }}>
+                            Buy Now
                         </button>
                     </div>
 
-                    <div className="about-item-section">
-                        <h4>About this treasure</h4>
-                        <p>{product.description}</p>
+                    <div className="secure-transaction">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                        Secure transaction
+                    </div>
+
+                    <div className="ships-from">
+                        <span>Ships from</span>
+                        <span style={{ fontWeight: '500', color: 'var(--text-main)' }}>Nature's Pledge</span>
+                        <span>Sold by</span>
+                        <span style={{ fontWeight: '500', color: 'var(--text-main)' }}>Kashmiri Farmers Collab</span>
                     </div>
                 </div>
             </div>
 
-            {/* Farm to Home */}
-            <div className="section-padding" style={{ borderTop: '1px solid rgba(0,0,0,0.05)' }}>
-                <h2 className="section-title">The Farm to Home Journey</h2>
-
-                <div className="story-grid">
-                    <div className="story-card">
-                        <span className="icon">🏔️</span>
-                        <h3>Origin Story</h3>
-                        <p>{product.origin_story || "Cultivated in the pristine valleys of Kashmir, fed by glacial waters and mountain air."}</p>
-                    </div>
-                    <div className="story-card">
-                        <span className="icon">🌿</span>
-                        <h3>Farmer's Promise</h3>
-                        <p>{product.farm_story || "Hand-harvested by local artisans using generational wisdom, ensuring absolute purity."}</p>
-                    </div>
+            {/* Tabbed Info Section (Amazon style details block) */}
+            <div className="product-tabs-container">
+                <div className="tabs-header">
+                    <button className={`tab-btn ${activeTab === 'description' ? 'active' : ''}`} onClick={() => setActiveTab('description')}>Description</button>
+                    <button className={`tab-btn ${activeTab === 'story' ? 'active' : ''}`} onClick={() => setActiveTab('story')}>Farm Story</button>
+                    <button className={`tab-btn ${activeTab === 'benefits' ? 'active' : ''}`} onClick={() => setActiveTab('benefits')}>Health Benefits</button>
                 </div>
-            </div>
 
-            {/* Benefits */}
-            <div className="section-padding" style={{ paddingBottom: '20px' }}>
-                <h2 className="section-title">Nourishing Benefits</h2>
-                <div className="health-benefits-container">
-                    {product.health_benefits && product.health_benefits.map((benefit, i) => (
-                        <div key={i} className="benefit-pill">✓ {benefit}</div>
-                    ))}
-                    {!product.health_benefits && <div className="benefit-pill">✓ Pure & Organic Nutrition</div>}
+                <div className="tab-content">
+                    {activeTab === 'description' && (
+                        <div className="animate-slide-up">
+                            <h3>About this Item</h3>
+                            <p>{product.description}</p>
+                        </div>
+                    )}
+                    {activeTab === 'story' && (
+                        <div className="animate-slide-up">
+                            <h3>From the Valleys of Kashmir</h3>
+                            <p>{product.origin_story || "Cultivated in the pristine valleys of Kashmir, fed by glacial waters and pure mountain air."}</p>
+                            <h3 style={{ marginTop: '20px' }}>Our Farmer's Promise</h3>
+                            <p>{product.farm_story || "Hand-harvested by local artisans using generational wisdom, ensuring absolute purity."}</p>
+                        </div>
+                    )}
+                    {activeTab === 'benefits' && (
+                        <div className="animate-slide-up">
+                            <h3>Nourishing Benefits</h3>
+                            <ul className="amazon-bullet-points">
+                                {product.health_benefits ? product.health_benefits.map((b, i) => <li key={i}>{b}</li>) : <li>Pure & Organic Nutritional profile.</li>}
+                            </ul>
+                        </div>
+                    )}
                 </div>
             </div>
 
             {/* Original Reviews Section */}
-            <div id="reviews-section" className="section-padding reviews-section">
+            <div id="reviews-section" className="reviews-section">
                 <div className="reviews-header">
                     <div>
                         <h2 className="section-title" style={{ textAlign: 'left', marginBottom: '10px' }}>Customer Reviews</h2>
@@ -311,7 +396,7 @@ const ProductDetails = () => {
 
             {/* Related */}
             {related.length > 0 && (
-                <div className="section-padding" style={{ borderTop: '1px solid rgba(0,0,0,0.05)' }}>
+                <div className="section-padding" style={{ borderTop: '1px solid rgba(0,0,0,0.05)', marginTop: '40px' }}>
                     <h2 className="section-title">You May Also Like</h2>
                     <div className="grid-luxury grid-luxury-3">
                         {related.map(p => (
