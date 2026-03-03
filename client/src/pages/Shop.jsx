@@ -7,7 +7,6 @@ import axios from 'axios';
 import { products as staticProducts } from '../data/products';
 import './Shop.css';
 
-
 const Shop = () => {
     const { logActivity } = useAuth();
     const [groupedProducts, setGroupedProducts] = useState([]);
@@ -15,11 +14,10 @@ const Shop = () => {
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
     const [category, setCategory] = useState('All');
-    const [selectedBaseProduct, setSelectedBaseProduct] = useState(null); // For Modal
+    const [selectedBaseProduct, setSelectedBaseProduct] = useState(null);
 
     const navigate = useNavigate();
     const { addToCart } = useCart();
-    const { showToast } = useToast();
 
     useEffect(() => {
         logActivity('Browsing Shop');
@@ -27,7 +25,6 @@ const Shop = () => {
 
     const categories = ['All', 'Walnut', 'Almond', 'Rajma', 'Atta', 'Chutney'];
 
-    // Grouping Logic
     useEffect(() => {
         const fetchAndGroupProducts = async () => {
             let dataToProcess = [];
@@ -39,7 +36,6 @@ const Shop = () => {
                     dataToProcess = staticProducts;
                 }
             } catch (err) {
-                console.error("Failed to fetch products, using fallback:", err);
                 dataToProcess = staticProducts;
             }
 
@@ -73,19 +69,13 @@ const Shop = () => {
         fetchAndGroupProducts();
     }, []);
 
-
-    // Filtering Logic
     useEffect(() => {
         let filtered = groupedProducts;
-
         if (category !== 'All') {
-            filtered = filtered.filter(p => p.baseName.includes(category) || p.category.includes(category));
+            filtered = filtered.filter(p => (p.baseName.toLowerCase().includes(category.toLowerCase()) || p.category.toLowerCase().includes(category.toLowerCase())));
         }
-
         if (searchTerm) {
-            filtered = filtered.filter(p =>
-                p.baseName.toLowerCase().includes(searchTerm.toLowerCase())
-            );
+            filtered = filtered.filter(p => p.baseName.toLowerCase().includes(searchTerm.toLowerCase()));
         }
         setDisplayProducts(filtered);
     }, [searchTerm, category, groupedProducts]);
@@ -97,16 +87,14 @@ const Shop = () => {
 
     const handleVariantSelect = (variant) => {
         addToCart(variant);
-        alert(`Added ${variant.name} to cart!`);
-        setSelectedBaseProduct(null); // Close modal
+        setSelectedBaseProduct(null);
     };
 
     return (
-        <div className="container shop-page">
-            <h2 style={{ textAlign: 'center', marginBottom: '2rem' }}>Our Premium Collection</h2>
+        <div className="shop-page container">
+            <h1 className="shop-header-title">Our Premium Collection</h1>
 
-            {/* Filters */}
-            <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', marginBottom: '2rem', flexWrap: 'wrap' }}>
+            <div className="categories-filter">
                 {categories.map(cat => (
                     <button
                         key={cat}
@@ -118,61 +106,46 @@ const Shop = () => {
                 ))}
             </div>
 
-            <input
-                type="text"
-                className="search-bar"
-                placeholder="Search for authentic Kashmiri products..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-            />
+            <div className="search-wrapper">
+                <input
+                    type="text"
+                    className="search-bar"
+                    placeholder="Search for authentic kashmiri gems..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                />
+            </div>
 
             {loading ? (
-                <div style={{ textAlign: 'center', padding: '3rem' }}>
-                    <div className="spinner" style={{ fontSize: '2rem', animation: 'spin 1s linear infinite' }}>🥥</div>
-                    <p>Fetching Nature's Best...</p>
+                <div style={{ textAlign: 'center', padding: '100px 0' }}>
+                    <p>Loading the finest collection...</p>
                 </div>
             ) : (
                 <div className="product-grid">
                     {displayProducts.map((group, index) => (
-                        <div
-                            key={index}
-                            className="product-card"
-                            onClick={() => navigate(`/product/${group.variants[0].id}`)}
-                        >
+                        <div key={index} className="product-card" onClick={() => navigate(`/product/${group.variants[0].id}`)}>
                             <div className="product-image-container">
                                 <div className="premium-badge">100% Organic</div>
                                 <img src={group.image} alt={group.baseName} className="product-image" />
                             </div>
                             <div className="product-info">
                                 <span className="product-category">{group.category}</span>
-                                {/* Amazon-style Rating */}
-                                <div style={{ display: 'flex', alignItems: 'center', marginBottom: '4px' }}>
-                                    <span style={{ color: '#F4B400', fontSize: '1rem' }}>★★★★☆</span>
-                                    <span style={{ fontSize: '0.8rem', color: '#007185', marginLeft: '4px' }}>124</span>
-                                </div>
+                                <h3 className="product-title">{group.baseName}</h3>
 
-                                {/* Amazon-style Price Layout */}
-                                <div className="amazon-price-container">
+                                <div className="price-box">
                                     <div className="product-price">
-                                        {group.variants.length > 1
-                                            ? `₹${Math.min(...group.variants.map(v => v.price))} - ₹${Math.max(...group.variants.map(v => v.price))}`
-                                            : `₹${group.variants[0].price}`
-                                        }
+                                        ₹{group.variants.length > 1
+                                            ? Math.min(...group.variants.map(v => v.price))
+                                            : group.variants[0].price}
                                     </div>
-                                    <div style={{ fontSize: '0.8rem', color: '#565959', marginTop: '2px' }}>
-                                        M.R.P.: <span style={{ textDecoration: 'line-through' }}>₹{Math.floor(group.variants[0].price * 1.4)}</span>
-                                        <span style={{ color: '#CC0C39', marginLeft: '6px' }}>(28% off)</span>
+                                    <div className="mrp-text">
+                                        M.R.P.: <span>₹{Math.floor(group.variants[0].price * 1.3)}</span>
+                                        <span className="discount-tag">30% OFF</span>
                                     </div>
-                                    <div style={{ fontSize: '0.8rem', color: '#007185', fontWeight: 'bold', marginTop: '4px' }}>
-                                        Fast Shipping from Kashmir
-                                    </div>
+                                    <div className="shipping-info">Alpine Fresh Shipping</div>
                                 </div>
 
-                                <button
-                                    className="add-btn"
-                                    onClick={(e) => handleAddToCartClick(e, group)}
-                                    style={{ marginTop: 'auto' }}
-                                >
+                                <button className="btn-premium" style={{ width: '100%', marginTop: '20px', padding: '12px' }} onClick={(e) => handleAddToCartClick(e, group)}>
                                     Select Options
                                 </button>
                             </div>
@@ -181,28 +154,20 @@ const Shop = () => {
                 </div>
             )}
 
-            {/* Variant Selection Modal */}
             {selectedBaseProduct && (
                 <div className="modal-overlay" onClick={() => setSelectedBaseProduct(null)}>
                     <div className="modal-content" onClick={e => e.stopPropagation()}>
                         <button className="modal-close" onClick={() => setSelectedBaseProduct(null)}>×</button>
-
-                        <h3 style={{ marginBottom: '0.5rem' }}>Select Quantity</h3>
-                        <p style={{ color: '#666', marginBottom: '1.5rem' }}>
-                            for {selectedBaseProduct.baseName}
-                        </p>
+                        <h2 style={{ color: 'var(--primary)', marginBottom: '10px' }}>Select Quantity</h2>
+                        <p style={{ color: 'var(--text-muted)' }}>{selectedBaseProduct.baseName}</p>
 
                         <div className="variant-list">
                             {selectedBaseProduct.variants
-                                .sort((a, b) => a.price - b.price) // Sort by price usually correlates with common weight order
+                                .sort((a, b) => a.price - b.price)
                                 .map(variant => (
-                                    <div
-                                        key={variant.id}
-                                        className="variant-option"
-                                        onClick={() => handleVariantSelect(variant)}
-                                    >
-                                        <span className="variant-weight">{variant.weightLabel}</span>
-                                        <span className="variant-price">₹{variant.price}</span>
+                                    <div key={variant.id} className="variant-option" onClick={() => handleVariantSelect(variant)}>
+                                        <span className="variant-weight" style={{ fontWeight: '600' }}>{variant.weightLabel}</span>
+                                        <span className="variant-price" style={{ color: 'var(--primary)', fontWeight: '700' }}>₹{variant.price}</span>
                                     </div>
                                 ))}
                         </div>

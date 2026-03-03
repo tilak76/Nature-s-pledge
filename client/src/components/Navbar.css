@@ -1,26 +1,14 @@
-/* Navbar - Luxury nature-inspired transparent glass effect */
+/* Navbar.css - Premium Luxury Brand Styles */
 .navbar {
-    background: rgba(255, 255, 255, 0.85);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border-bottom: 1px solid rgba(226, 232, 240, 0.5);
-    padding: 1rem 0;
+    background: var(--glass);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border-bottom: 1px solid rgba(27, 63, 45, 0.05);
+    padding: 20px 0;
     position: sticky;
     top: 0;
-    font-family: 'Playfair Display', serif;
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.03);
-    z-index: 2000;
-    transition: all 0.3s ease;
-}
-
-/* Global Container Standardization */
-.container {
-    max-width: 1280px;
-    margin: 0 auto;
-    padding: 0 2rem;
-    /* Standard side padding */
-    width: 100%;
-    box-sizing: border-box;
+    z-index: 1000;
+    transition: var(--transition);
 }
 
 .nav-content {
@@ -29,204 +17,172 @@
     align-items: center;
 }
 
-.mobile-menu-icon {
-    display: none;
-}
-
-/* Classic Center Brand Identity */
+/* Logo Branded Styling */
 .navbar-logo {
     display: flex;
     align-items: center;
-    text-decoration: none;
     gap: 12px;
 }
 
+.brand-logo {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid rgba(27, 63, 45, 0.1);
+}
+
+.brand-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--primary);
+    letter-spacing: -0.5px;
+}
+
+/* Navigation Links */
 .nav-links {
     display: flex;
-    gap: 2.5rem;
     align-items: center;
-    /* Vertical Center */
-    height: 100%;
+    gap: 32px;
 }
 
-/* Enforce strict alignment for all nav items */
-.nav-links a,
-.logout-btn,
-.cart-icon-wrapper {
-    display: flex !important;
-    align-items: center !important;
-    height: 40px;
-    /* Fixed height for uniformity */
-    text-decoration: none;
-    color: #2D2D2D;
+.nav-links a {
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.9rem;
     font-weight: 500;
-    font-family: 'Lato', sans-serif;
-    font-size: 0.95rem;
     text-transform: uppercase;
-    letter-spacing: 1px;
-    transition: color 0.2s ease;
-    border: none;
-    padding: 0;
-    margin: 0;
+    letter-spacing: 1.5px;
+    color: var(--text-main);
+    position: relative;
+    padding: 5px 0;
 }
 
-.nav-links a:hover,
-.logout-btn:hover,
-.cart-icon-wrapper:hover {
-    color: #4CAF50;
+.nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0%;
+    height: 1.5px;
+    background-color: var(--accent);
+    transition: var(--transition);
 }
 
-.logout-btn {
-    cursor: pointer;
-    gap: 6px;
-    background: none;
+.nav-links a:hover {
+    color: var(--primary);
 }
 
-.mobile-only {
-    display: none;
+.nav-links a:hover::after {
+    width: 100%;
 }
 
+/* Live Help Button Premium */
+.nav-live-help {
+    background-color: var(--primary) !important;
+    color: white !important;
+    padding: 10px 20px !important;
+    border-radius: 4px !important;
+    font-size: 0.8rem !important;
+    transition: var(--transition) !important;
+}
+
+.nav-live-help:hover {
+    background-color: var(--primary-light) !important;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-sm);
+}
+
+/* Cart Icon */
 .cart-icon-wrapper {
     position: relative;
-    color: #333 !important;
 }
 
 .cart-badge {
     position: absolute;
     top: -8px;
     right: -8px;
-    background: #d32f2f;
-    /* Red for high visibility */
+    background-color: var(--accent);
     color: white;
-    border-radius: 50%;
+    font-size: 0.7rem;
+    font-weight: 700;
     width: 18px;
     height: 18px;
+    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 0.75rem;
-    font-weight: bold;
+    border: 2px solid var(--white);
 }
 
-/* Mobile Responsiveness */
-/* Mobile Responsiveness */
-@media (max-width: 768px) {
-    .container {
-        padding: 0 1rem;
-    }
+/* Mobile Icon */
+.mobile-menu-icon {
+    display: none;
+    cursor: pointer;
+    color: var(--primary);
+}
 
-    .nav-content {
-        flex-direction: column;
-        align-items: center;
-        gap: 0.5rem;
-    }
-
-    /* Center and prominent logo */
-    .navbar-logo {
-        width: 100%;
-        justify-content: center;
-        padding: 0.5rem 0;
-        border-bottom: 1px solid #f5f5f5;
-    }
-
-    /* Hide the hamburger menu completely */
-    .mobile-menu-icon {
-        display: none !important;
-    }
-
-    /* Horizontal Scroll Container */
+/* RESPONSIVE DESIGN */
+@media (max-width: 1024px) {
     .nav-links {
-        display: flex !important;
-        /* Always visible */
-        position: static;
-        /* Natural flow */
-        width: 100%;
-        flex-direction: row;
-        /* Horizontal alignment */
-        overflow-x: auto;
-        /* Scrollable */
-        overflow-y: hidden;
-        gap: 10px;
-        padding: 10px 0;
-        background: transparent;
-        box-shadow: none;
-        border: none;
+        gap: 20px;
+    }
+}
 
-        /* Hide Scrollbar but keep functionality */
-        -ms-overflow-style: none;
-        /* IE and Edge */
-        scrollbar-width: none;
-        /* Firefox */
+@media (max-width: 768px) {
+    .navbar {
+        padding: 15px 0;
     }
 
-    /* Hide scrollbar for Chrome/Safari/Opera */
-    .nav-links::-webkit-scrollbar {
+    .brand-name {
+        font-size: 1.2rem;
+    }
+
+    .mobile-menu-icon {
+        display: block;
+    }
+
+    .nav-links {
+        position: fixed;
+        top: 80px;
+        left: -100%;
+        width: 100%;
+        height: calc(100vh - 80px);
+        background: var(--white);
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 40px;
+        gap: 30px;
+        transition: 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        z-index: 999;
+        overflow-y: auto;
+    }
+
+    .nav-links.active {
+        left: 0;
+    }
+
+    .nav-links a {
+        font-size: 1.1rem;
+        width: 100%;
+        padding: 10px 0;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    .nav-links a::after {
         display: none;
     }
 
-    /* "Pill" Style Links */
-    .nav-links a,
-    .logout-btn,
+    .user-nav-action {
+        width: 100%;
+        justify-content: space-between;
+    }
+
     .cart-icon-wrapper {
-        width: auto;
-        white-space: nowrap;
-        /* Don't wrap text */
-        padding: 8px 16px;
-        margin: 0;
-        background: #f4f6f8;
-        border-radius: 50px;
-        /* Pillow shape */
-        border: 1px solid transparent;
-        color: #4a4a4a;
-        font-size: 0.85rem;
-        font-weight: 600;
+        width: 100%;
+        justify-content: space-between;
         display: flex;
         align-items: center;
-        justify-content: center;
-        transition: all 0.2s ease;
-        flex-shrink: 0;
-        /* Prevent shrinking */
-    }
-
-    /* Active/Hover State for Mobile */
-    .nav-links a:active,
-    .nav-links a:hover {
-        background: #2D2D2D;
-        color: white;
-        border-color: #2D2D2D;
-        transform: translateY(-1px);
-    }
-
-    .logout-btn:active {
-        background: #ffebee;
-        color: #d32f2f;
-    }
-
-    /* Adjust Cart for Mobile Pill */
-    .cart-icon-wrapper {
-        background: #fff3e0;
-        /* Different subtle color for cart */
-        color: #e65100 !important;
-    }
-
-    .cart-badge {
-        position: static;
-        /* Inline for the pill look */
-        margin-left: 8px;
-        background: #e65100;
-        width: 20px;
-        height: 20px;
-    }
-
-    .mobile-only {
-        display: inline-block;
-        margin-right: 5px;
-    }
-
-    /* Ensure icons in pills are styled correctly */
-    .cart-icon-wrapper svg {
-        width: 18px;
-        height: 18px;
-        color: inherit !important;
+        padding: 15px 0;
     }
 }

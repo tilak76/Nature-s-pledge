@@ -1,0 +1,106 @@
+/* Footer.css - Premium Luxury Branded Style */
+.footer {
+    background-color: var(--primary);
+    color: var(--white);
+    padding: 80px 0 40px;
+    margin-top: auto;
+    font-family: 'Outfit', sans-serif;
+}
+
+.footer-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 40px;
+}
+
+.footer-column h4 {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--accent);
+    margin-bottom: 25px;
+    font-weight: 600;
+    font-family: 'Outfit', sans-serif;
+}
+
+.footer-column ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer-column ul li {
+    margin-bottom: 12px;
+}
+
+.footer-column ul li a {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.9rem;
+    transition: var(--transition);
+}
+
+.footer-column ul li a:hover {
+    color: var(--accent);
+    padding-left: 5px;
+}
+
+.footer-address p {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.9rem;
+    line-height: 1.8;
+}
+
+/* Bottom Bar */
+.footer-bottom {
+    margin-top: 60px;
+    padding-top: 30px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.footer-socials {
+    display: flex;
+    gap: 20px;
+}
+
+.footer-socials a {
+    color: var(--white);
+    opacity: 0.6;
+    transition: var(--transition);
+}
+
+.footer-socials a:hover {
+    opacity: 1;
+    transform: translateY(-3px);
+    color: var(--accent);
+}
+
+.footer-copy {
+    font-size: 0.85rem;
+    opacity: 0.6;
+}
+
+.payment-methods {
+    opacity: 0.6;
+    filter: brightness(0) invert(1);
+}
+
+/* RESPONSIVE FOOTER */
+@media (max-width: 768px) {
+    .footer {
+        padding: 60px 0 30px;
+    }
+
+    .footer-bottom {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .footer-grid {
+        text-align: center;
+    }
+}

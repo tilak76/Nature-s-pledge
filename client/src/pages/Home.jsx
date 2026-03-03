@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import './Home.css'; // We will create this
+import './Home.css';
 
 const Home = () => {
     const navigate = useNavigate();
@@ -11,96 +11,59 @@ const Home = () => {
                 <div className="hero-overlay"></div>
                 <div className="hero-content">
                     <div className="hero-logo-container">
-                        <img src="/logo_main.jpg" alt="Nature's Pledge Logo" className="hero-logo" style={{ width: '130px', height: '130px', borderRadius: '50%', marginBottom: '2rem', border: '3px solid rgba(255,255,255,0.8)', boxShadow: '0 8px 25px rgba(0,0,0,0.4)', objectFit: 'cover' }} />
+                        <img src="/logo_main.jpg" alt="Nature's Pledge Logo" className="hero-logo" />
                     </div>
-                    <h1 style={{ fontSize: '4.5rem', marginBottom: '1.5rem', fontFamily: '"Playfair Display", serif' }}>Nature's Pledge</h1>
-                    <p style={{ fontSize: '1.6rem', fontWeight: '400', marginBottom: '1rem', opacity: '0.95' }}>
+                    <h1>Nature's Pledge</h1>
+                    <p>
                         Authentic Kashmir Dry Fruits & Organic Staples.
                     </p>
-                    <p style={{ fontStyle: 'italic', color: '#f0f0f0', fontSize: '1.2rem', marginBottom: '2.5rem', opacity: '0.9' }}>
-                        "Shuddhata aisi, jo ghar ki yaad dila de."
-                    </p>
-                    <Link to="/shop" className="cta-button">Shop Now</Link>
+                    <Link to="/shop" className="btn-premium">Shop Now</Link>
                 </div>
             </section>
 
             {/* Featured Categories */}
-            <section className="container featured-section">
-                <h2 className="section-title">Our Premium Collection</h2>
-                <div className="features-grid">
-                    <div className="feature-card" onClick={() => navigate('/product/1')} style={{ cursor: 'pointer' }}>
-                        <img src="/kashmiri_almond_proper.jpg" alt="Kashmiri Almond" />
-                        <h3>Kashmiri Almond</h3>
-                        <p>Rich in oil, naturally sweet. <br /><span style={{ color: '#555', fontStyle: 'italic' }}>Asli Kashmiri Mamra, sehat ka khazana.</span></p>
-                    </div>
-                    <div className="feature-card" onClick={() => navigate('/product/6')} style={{ cursor: 'pointer' }}>
-                        <img src="/kashmiri_walnut_real.png" alt="Kashmiri Premium Walnut" />
-                        <h3>Kashmiri Premium Walnut</h3>
-                        <p>Snow-white kernels, easy to break. <br /><span style={{ color: '#555', fontStyle: 'italic' }}>Haath se todiye, taazgi mehsoos kijiye.</span></p>
-                    </div>
-                    <div className="feature-card" onClick={() => navigate('/product/3')} style={{ cursor: 'pointer' }}>
-                        <img src="/rajma_royal_real.jpg" alt="Rajma Royal" />
-                        <h3>Rajma Royal</h3>
-                        <p>Perfect texture, distinct flavor. <br /><span style={{ color: '#555', fontStyle: 'italic' }}>Wohi purana swaad, jo muh mein ghul jaye.</span></p>
-                    </div>
-                    <div className="feature-card" onClick={() => navigate('/product/4')} style={{ cursor: 'pointer' }}>
-                        <img src="/rajma_bhaderwahi_real.jpg" alt="Bhaderwahi Rajma Premium" />
-                        <h3>Bhaderwahi Rajma Premium</h3>
-                        <p>World famous localized variety. <br /><span style={{ color: '#555', fontStyle: 'italic' }}>Chota daana, lekin swaad bemisaal.</span></p>
-                    </div>
-                    <div className="feature-card" onClick={() => navigate('/product/7')} style={{ cursor: 'pointer' }}>
-                        <img src="/anardana_real.png" alt="Anardana Chutney Special" />
-                        <h3>Anardana Chutney Special</h3>
-                        <p>Tangy & spicy traditional delicacy. <br /><span style={{ color: '#555', fontStyle: 'italic' }}>Chatpata swaad, jo khane ka maza dugna kar de.</span></p>
-                    </div>
-                </div>
-            </section>
-
-            {/* Trust Badges */}
-            <section className="trust-badges-container" style={{ background: '#fcf8f4', padding: '3rem 0', borderTop: '1px solid #eee' }}>
-                <div className="container" style={{ display: 'flex', justifyContent: 'space-around', flexWrap: 'wrap', gap: '2rem' }}>
-                    <div className="trust-badge" style={{ textAlign: 'center' }}>
-                        <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>🏔️</div>
-                        <div style={{ fontWeight: 'bold', color: '#5D4037' }}>Pure Kashmiri Origin</div>
-                        <div style={{ fontSize: '0.85rem', color: '#888' }}>Direct from Orchards</div>
-                    </div>
-                    <div className="trust-badge" style={{ textAlign: 'center' }}>
-                        <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>🛡️</div>
-                        <div style={{ fontWeight: 'bold', color: '#5D4037' }}>Secure Payments</div>
-                        <div style={{ fontSize: '0.85rem', color: '#888' }}>Razorpay & Google</div>
-                    </div>
-                    <div className="trust-badge" style={{ textAlign: 'center' }}>
-                        <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>🚚</div>
-                        <div style={{ fontWeight: 'bold', color: '#5D4037' }}>Fast Express Delivery</div>
-                        <div style={{ fontSize: '0.85rem', color: '#888' }}>Across India</div>
-                    </div>
-                    <div className="trust-badge" style={{ textAlign: 'center' }}>
-                        <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>✨</div>
-                        <div style={{ fontWeight: 'bold', color: '#5D4037' }}>Premium Quality</div>
-                        <div style={{ fontSize: '0.85rem', color: '#888' }}>Handpicked with Love</div>
+            <section className="featured-section section-padding">
+                <div className="container">
+                    <h2 className="section-title">Our Premium Collection</h2>
+                    <div className="features-grid">
+                        <div className="feature-card" onClick={() => navigate('/product/1')}>
+                            <img src="/kashmiri_almond_proper.jpg" alt="Kashmiri Almond" />
+                            <h3>Kashmiri Almond</h3>
+                            <p>Rich in oil, naturally sweet. <br /><span className="desi-font">Asli Kashmiri Mamra, sehat ka khazana.</span></p>
+                        </div>
+                        <div className="feature-card" onClick={() => navigate('/product/6')}>
+                            <img src="/kashmiri_walnut_real.png" alt="Kashmiri Premium Walnut" />
+                            <h3>Kashmiri Premium Walnut</h3>
+                            <p>Snow-white kernels, easy to break. <br /><span className="desi-font">Haath se todiye, taazgi mehsoos kijiye.</span></p>
+                        </div>
+                        <div className="feature-card" onClick={() => navigate('/product/3')}>
+                            <img src="/rajma_royal_real.jpg" alt="Rajma Royal" />
+                            <h3>Rajma Royal</h3>
+                            <p>Perfect texture, distinct flavor. <br /><span className="desi-font">Wohi purana swaad, jo muh mein ghul jaye.</span></p>
+                        </div>
                     </div>
                 </div>
             </section>
 
             {/* Why Choose Us */}
-            <section className="values-section">
+            <section className="values-section section-padding">
                 <div className="container">
-                    <h2 className="section-title">The Nature's Pledge Promise</h2>
+                    <h2 className="section-title">The Promise</h2>
                     <div className="values-grid">
                         <div className="value-item">
                             <span className="icon">🏡</span>
                             <h3>Family Feeling</h3>
-                            <p>For us, you are not just a customer. <br /><span className="desi-font" style={{ fontSize: '1.2rem' }}>Humare liye aap parivaar hain.</span></p>
+                            <p>For us, you are not just a customer. <br /><span className="desi-font">Humare liye aap parivaar hain.</span></p>
                         </div>
                         <div className="value-item">
                             <span className="icon">🌿</span>
                             <h3>100% Pure & Organic</h3>
-                            <p>No polish, no artificial shine. <br /><span className="desi-font" style={{ fontSize: '1.2rem' }}>Bilkul waise, jaise khet se nikla ho.</span></p>
+                            <p>No polish, no artificial shine. <br /><span className="desi-font">Bilkul waise, jaise khet se nikla ho.</span></p>
                         </div>
                         <div className="value-item">
                             <span className="icon">🤝</span>
                             <h3>Direct from Farmers</h3>
-                            <p>Sourced directly from orchards. <br /><span className="desi-font" style={{ fontSize: '1.2rem' }}>Kisan ki mehnat, seedha aap tak.</span></p>
+                            <p>Sourced directly from orchards. <br /><span className="desi-font">Kisan ki mehnat, seedha aap tak.</span></p>
                         </div>
                     </div>
                 </div>
