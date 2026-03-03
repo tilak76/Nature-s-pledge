@@ -18,6 +18,7 @@ const Shop = () => {
 
     const navigate = useNavigate();
     const { addToCart } = useCart();
+    const { showToast } = useToast();
 
     useEffect(() => {
         logActivity('Browsing Shop');
@@ -87,6 +88,7 @@ const Shop = () => {
 
     const handleVariantSelect = (variant) => {
         addToCart(variant);
+        showToast(`${variant.name} Added to Cart!`);
         setSelectedBaseProduct(null);
     };
 

@@ -114,7 +114,7 @@ const ProductDetails = () => {
         for (let i = 0; i < quantity; i++) {
             addToCart(product);
         }
-        showToast(`${quantity}x Added to Cart!`);
+        showToast(`${quantity}x ${product.name} Added to Cart!`);
     };
 
     const handleBuyNow = () => {
