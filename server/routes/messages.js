@@ -26,8 +26,22 @@ const sendAdminNotification = async (msg) => {
     const mailOptions = {
         from: `"Nature's Pledge Support" <${process.env.EMAIL_USER}>`,
         to: ADMIN_EMAIL,
-        subject: `🔔 New Inquiry from ${msg.userName}`,
-        html: `<div><h2>New Message!</h2><p><strong>Customer:</strong> ${msg.userName}</p><p>"${msg.text}"</p></div>`
+        subject: `💬 New Message from ${msg.userName} — Nature's Pledge`,
+        html: `
+        <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;background:#f9f9f9;padding:20px;border-radius:10px;">
+            <h2 style="color:#5D4037;border-bottom:2px solid #8D6E63;padding-bottom:10px;">🌿 New Customer Message</h2>
+            <table style="width:100%;background:white;border-radius:8px;padding:15px;border:1px solid #eee;">
+                <tr><td style="padding:8px;color:#888;width:120px;"><strong>👤 Customer:</strong></td><td style="padding:8px;">${msg.userName}</td></tr>
+                <tr><td style="padding:8px;color:#888;"><strong>📧 Email:</strong></td><td style="padding:8px;">${msg.userEmail || 'Not provided'}</td></tr>
+                <tr><td style="padding:8px;color:#888;"><strong>🕒 Time:</strong></td><td style="padding:8px;">${new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })}</td></tr>
+            </table>
+            <div style="background:white;border-left:4px solid #8D6E63;margin:15px 0;padding:15px;border-radius:0 8px 8px 0;">
+                <p style="margin:0;font-size:1.1rem;color:#333;">"${msg.text}"</p>
+            </div>
+            <a href="https://www.naturespledge.in/admin" style="display:inline-block;background:#5D4037;color:white;padding:12px 25px;border-radius:25px;text-decoration:none;font-weight:bold;margin-top:10px;">
+                💬 Reply in Admin Panel
+            </a>
+        </div>`
     };
     try { await transporter.sendMail(mailOptions); } catch (err) { console.error("Admin Email fail:", err.message); }
 };
