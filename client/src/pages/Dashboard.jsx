@@ -336,81 +336,132 @@ const Dashboard = () => {
                     text: chatInput.trim(),
                     isAdmin: false
                 });
-                // Handle bot reply (returns {userMsg, botMsg}) or normal msg
                 if (res.data.userMsg && res.data.botMsg) {
                     setChatMessages(prev => [...prev, res.data.userMsg, res.data.botMsg]);
                 } else {
                     setChatMessages(prev => [...prev, res.data]);
                 }
                 setChatInput('');
-                showToast('Message sent!', 'success');
                 setTimeout(() => chatEndRef.current?.scrollIntoView({ behavior: 'smooth' }), 100);
             } catch (err) {
-                showToast('Failed to send message. Please try again.', 'error');
+                showToast('Failed to send. Please try again.', 'error');
             } finally {
                 setChatLoading(false);
             }
         };
 
-        // Load messages on first render
         React.useEffect(() => { loadMessages(); }, []);
 
-        return (
-            <div style={{ maxWidth: '700px', margin: '0 auto' }}>
-                <Breadcrumb title="Support Chat" />
-                <h2 style={{ fontWeight: '400', marginBottom: '5px' }}>💬 Contact Support</h2>
-                <p style={{ color: '#666', marginBottom: '20px', fontSize: '0.9rem' }}>Ask anything — our AI assistant will help instantly. For complex issues, our agent will connect with you shortly.</p>
+        const formatTime = (ts) => new Date(ts).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
-                {/* Chat Messages */}
-                <div style={{ border: '1px solid #ddd', borderRadius: '8px', background: 'white', minHeight: '350px', maxHeight: '400px', overflowY: 'auto', padding: '15px', marginBottom: '15px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                    {chatMessages.length === 0 ? (
-                        <div style={{ textAlign: 'center', color: '#999', margin: 'auto' }}>
-                            <div style={{ fontSize: '3rem', marginBottom: '10px' }}>🌿</div>
-                            <p>No messages yet. Send us a message!</p>
+        return (
+            <div style={{ maxWidth: '500px', margin: '0 auto', height: 'calc(100vh - 100px)', display: 'flex', flexDirection: 'column', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 4px 20px rgba(0,0,0,0.15)' }}>
+
+                {/* Header - WhatsApp style */}
+                <div style={{ background: '#5D4037', padding: '12px 16px', display: 'flex', alignItems: 'center', gap: '12px', flexShrink: 0 }}>
+                    <button onClick={() => setView('home')} style={{ background: 'none', border: 'none', color: 'white', fontSize: '1.2rem', cursor: 'pointer', padding: '4px' }}>←</button>
+                    <div style={{ width: '42px', height: '42px', borderRadius: '50%', background: '#8D6E63', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.2rem' }}>🌿</div>
+                    <div style={{ flex: 1 }}>
+                        <div style={{ color: 'white', fontWeight: '600', fontSize: '1rem' }}>Nature's Pledge Support</div>
+                        <div style={{ color: '#D7CCC8', fontSize: '0.75rem', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                            <span style={{ width: '7px', height: '7px', borderRadius: '50%', background: '#81C784', display: 'inline-block' }}></span>
+                            AI Assistant Online
                         </div>
-                    ) : (
-                        chatMessages.map((msg, idx) => (
-                            <div key={idx} style={{ display: 'flex', justifyContent: msg.isAdmin ? 'flex-start' : 'flex-end' }}>
-                                <div style={{
-                                    maxWidth: '75%',
-                                    padding: '10px 15px',
-                                    borderRadius: msg.isAdmin ? '0 12px 12px 12px' : '12px 0 12px 12px',
-                                    background: msg.isAdmin ? '#f0ebe7' : '#5D4037',
-                                    color: msg.isAdmin ? '#333' : 'white',
-                                    fontSize: '0.9rem',
-                                    lineHeight: '1.4'
-                                }}>
-                                    {msg.isAdmin && <div style={{ fontSize: '0.75rem', fontWeight: 'bold', marginBottom: '4px', color: '#8D6E63' }}>🌿 {msg.userName || "Nature's Pledge"}</div>}
-                                    <div style={{ whiteSpace: 'pre-line' }}>{msg.text}</div>
-                                    <div style={{ fontSize: '0.7rem', opacity: 0.6, marginTop: '4px', textAlign: 'right' }}>
-                                        {new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    </div>
+                </div>
+
+                {/* Messages area */}
+                <div style={{ flex: 1, overflowY: 'auto', padding: '16px 12px', background: '#ECE5DD', display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                    {/* Welcome Message */}
+                    <div style={{ textAlign: 'center', margin: '8px 0' }}>
+                        <span style={{ background: 'rgba(0,0,0,0.1)', borderRadius: '8px', padding: '4px 12px', fontSize: '0.72rem', color: '#555' }}>
+                            🔒 Messages are saved to your account
+                        </span>
+                    </div>
+
+                    {chatMessages.length === 0 && (
+                        <div style={{ display: 'flex', gap: '8px', alignItems: 'flex-end', marginBottom: '4px' }}>
+                            <div style={{ width: '30px', height: '30px', borderRadius: '50%', background: '#5D4037', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.9rem', flexShrink: 0 }}>🌿</div>
+                            <div style={{ background: 'white', padding: '10px 14px', borderRadius: '0 12px 12px 12px', maxWidth: '80%', boxShadow: '0 1px 2px rgba(0,0,0,0.1)' }}>
+                                <div style={{ fontSize: '0.72rem', color: '#8D6E63', fontWeight: '600', marginBottom: '4px' }}>Nature's Pledge AI</div>
+                                <div style={{ fontSize: '0.9rem', color: '#333', lineHeight: '1.5' }}>
+                                    👋 Hello {user.name?.split(' ')[0] || 'there'}! I'm your Nature's Pledge assistant.<br /><br />
+                                    Ask me anything about:<br />
+                                    🌿 Products & prices<br />
+                                    🚚 Delivery & tracking<br />
+                                    ↩️ Returns & refunds<br />
+                                    💳 Payment help
+                                </div>
+                                <div style={{ fontSize: '0.68rem', color: '#999', textAlign: 'right', marginTop: '4px' }}>Now</div>
+                            </div>
+                        </div>
+                    )}
+
+                    {chatMessages.map((msg, idx) => (
+                        <div key={idx} style={{ display: 'flex', justifyContent: msg.isAdmin ? 'flex-start' : 'flex-end', gap: '8px', alignItems: 'flex-end' }}>
+                            {msg.isAdmin && (
+                                <div style={{ width: '30px', height: '30px', borderRadius: '50%', background: '#5D4037', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.8rem', flexShrink: 0 }}>🌿</div>
+                            )}
+                            <div style={{
+                                maxWidth: '75%',
+                                padding: '9px 13px',
+                                borderRadius: msg.isAdmin ? '0 12px 12px 12px' : '12px 0 12px 12px',
+                                background: msg.isAdmin ? 'white' : '#DCF8C6',
+                                boxShadow: '0 1px 2px rgba(0,0,0,0.1)',
+                                position: 'relative'
+                            }}>
+                                {msg.isAdmin && (
+                                    <div style={{ fontSize: '0.7rem', color: '#8D6E63', fontWeight: '700', marginBottom: '3px' }}>
+                                        {msg.userName === "Nature's Pledge AI" ? '🤖 AI Assistant' : '🌿 Support Team'}
                                     </div>
+                                )}
+                                <div style={{ fontSize: '0.88rem', color: '#333', lineHeight: '1.5', whiteSpace: 'pre-line' }}>{msg.text}</div>
+                                <div style={{ fontSize: '0.65rem', color: '#999', textAlign: 'right', marginTop: '3px', display: 'flex', justifyContent: 'flex-end', gap: '4px', alignItems: 'center' }}>
+                                    {formatTime(msg.timestamp)}
+                                    {!msg.isAdmin && <span style={{ color: '#4FC3F7' }}>✓✓</span>}
                                 </div>
                             </div>
-                        ))
+                            {!msg.isAdmin && (
+                                <div style={{ width: '30px', height: '30px', borderRadius: '50%', background: '#8D6E63', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.75rem', color: 'white', fontWeight: 'bold', flexShrink: 0 }}>
+                                    {(user.name || 'U')[0].toUpperCase()}
+                                </div>
+                            )}
+                        </div>
+                    ))}
+                    {chatLoading && (
+                        <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                            <div style={{ width: '30px', height: '30px', borderRadius: '50%', background: '#5D4037', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.8rem' }}>🌿</div>
+                            <div style={{ background: 'white', padding: '10px 14px', borderRadius: '0 12px 12px 12px', boxShadow: '0 1px 2px rgba(0,0,0,0.1)' }}>
+                                <div style={{ display: 'flex', gap: '4px', alignItems: 'center' }}>
+                                    <span style={{ width: '7px', height: '7px', borderRadius: '50%', background: '#aaa', animation: 'pulse 1s infinite' }}></span>
+                                    <span style={{ width: '7px', height: '7px', borderRadius: '50%', background: '#aaa', animation: 'pulse 1s 0.2s infinite' }}></span>
+                                    <span style={{ width: '7px', height: '7px', borderRadius: '50%', background: '#aaa', animation: 'pulse 1s 0.4s infinite' }}></span>
+                                </div>
+                            </div>
+                        </div>
                     )}
                     <div ref={chatEndRef} />
                 </div>
 
-                {/* Input */}
-                <form onSubmit={sendMessage} style={{ display: 'flex', gap: '10px' }}>
+                {/* Input - WhatsApp style */}
+                <form onSubmit={sendMessage} style={{ background: '#F0F0F0', padding: '8px 12px', display: 'flex', gap: '8px', alignItems: 'center', flexShrink: 0 }}>
                     <input
                         type="text"
                         value={chatInput}
                         onChange={e => setChatInput(e.target.value)}
-                        placeholder="Type your message here..."
-                        style={{ flex: 1, padding: '12px 15px', border: '1px solid #ddd', borderRadius: '25px', fontSize: '0.95rem', outline: 'none' }}
+                        placeholder="Type a message..."
+                        style={{ flex: 1, padding: '10px 16px', border: 'none', borderRadius: '25px', fontSize: '0.95rem', outline: 'none', background: 'white', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}
                         disabled={chatLoading}
                     />
                     <button
                         type="submit"
                         disabled={chatLoading || !chatInput.trim()}
-                        style={{ background: '#5D4037', color: 'white', border: 'none', borderRadius: '25px', padding: '12px 25px', cursor: 'pointer', fontWeight: 'bold', opacity: chatLoading ? 0.7 : 1 }}
+                        style={{ width: '44px', height: '44px', borderRadius: '50%', background: chatInput.trim() ? '#5D4037' : '#ccc', color: 'white', border: 'none', cursor: chatInput.trim() ? 'pointer' : 'default', fontSize: '1.1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, transition: 'background 0.2s' }}
                     >
-                        {chatLoading ? '...' : 'Send'}
+                        {chatLoading ? '⏳' : '➤'}
                     </button>
                 </form>
-                <p style={{ fontSize: '0.8rem', color: '#999', marginTop: '10px', textAlign: 'center' }}>📧 We'll also reply to your registered email: <strong>{user.email}</strong></p>
+                <style>{`@keyframes pulse { 0%,100%{opacity:0.3} 50%{opacity:1} }`}</style>
             </div>
         );
     };
