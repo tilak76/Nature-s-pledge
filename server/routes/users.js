@@ -134,4 +134,14 @@ router.post('/sync-cart', async (req, res) => {
     }
 });
 
+// DELETE all users (Admin Reset)
+router.delete('/reset', async (req, res) => {
+    try {
+        await User.deleteMany({});
+        res.json({ success: true, message: 'All users cleared!' });
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+});
+
 module.exports = router;
