@@ -30,6 +30,7 @@ const ProductDetails = () => {
     const [reviews, setReviews] = useState([]);
     const [showReviewForm, setShowReviewForm] = useState(false);
     const [rating, setRating] = useState(5);
+    const [hoverRating, setHoverRating] = useState(0);
     const [comment, setComment] = useState('');
     const [submitting, setSubmitting] = useState(false);
 
@@ -332,19 +333,16 @@ const ProductDetails = () => {
                     <div className="review-form-container">
                         <form onSubmit={handleReviewSubmit}>
                             <h4 style={{ marginBottom: '10px', color: 'var(--primary)' }}>Rate this item</h4>
-                            <div className="star-rating-input">
-                                {[5, 4, 3, 2, 1].map(num => (
-                                    <React.Fragment key={num}>
-                                        <input
-                                            type="radio"
-                                            id={`star${num}`}
-                                            name="rating"
-                                            value={num}
-                                            checked={rating === num}
-                                            onChange={() => setRating(num)}
-                                        />
-                                        <label htmlFor={`star${num}`}>★</label>
-                                    </React.Fragment>
+                            <div className="star-rating-interactive" style={{ display: 'flex', gap: '5px', marginBottom: '20px', fontSize: '2.5rem', cursor: 'pointer' }} onMouseLeave={() => setHoverRating(0)}>
+                                {[1, 2, 3, 4, 5].map(num => (
+                                    <span
+                                        key={num}
+                                        onClick={() => setRating(num)}
+                                        onMouseEnter={() => setHoverRating(num)}
+                                        style={{ color: num <= (hoverRating || rating) ? 'var(--accent)' : '#ccc', transition: 'color 0.2s', padding: '0' }}
+                                    >
+                                        ★
+                                    </span>
                                 ))}
                             </div>
 
