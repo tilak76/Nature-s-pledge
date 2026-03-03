@@ -115,34 +115,57 @@ const getBotReply = (text) => {
     return null;
 };
 
-// 🧠 Gemini AI Reply for complex/unknown questions
+// 🔍 Detect if message is a technical/urgent issue needing admin
+const isTechnicalIssue = (text) => {
+    const t = text.toLowerCase();
+    return t.match(/payment fail|money deduct|charged twice|not working|error|bug|crash|can't login|cannot login|stuck|wrong item|missing item|damaged|broken|fraud|scam|urgent|emergency|help me|please help|not received|lost order|wrong address|account hacked/);
+};
+
+// 🧠 Gemini AI - handles ALL questions intelligently
 const getAIReply = async (userText, userName) => {
     if (!genAI) return null;
     try {
-        const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
-        const systemPrompt = `You are a helpful customer support assistant for "Nature's Pledge" - a premium Kashmiri organic food brand.
+        const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
+        const systemPrompt = `You are "Pledge Assistant" - the friendly AI support bot for "Nature's Pledge", a premium Kashmiri organic food e-commerce brand based in India.
 
-ABOUT THE COMPANY:
-- Nature's Pledge sells 100% authentic Kashmiri organic products: Walnuts (Akhrot), Almonds (Badam), Rajma (Kidney Beans), Organic Atta, Anardana (Pomegranate Seeds), Natural Honey, Saffron (Kesar), and more
-- All products are directly sourced from Kashmiri farmers - pure, no preservatives
+PRODUCTS WE SELL (with approximate prices):
+- Kashmiri Walnuts (Akhrot) - Regular & Premium grades - ₹500-900/kg
+- Kashmiri Almonds (Badam) - Soft shell & Gurbandi - ₹600-1200/kg  
+- Bhaderwahi Rajma (Kidney Beans) - ₹180-250/kg
+- Organic Whole Wheat Atta - ₹80-120/kg
+- Anardana (Dried Pomegranate Seeds) - ₹300-500/kg
+- Natural Kashmiri Honey - ₹400-700/jar
+- Kashmiri Saffron (Kesar) - ₹200-500/gm
+- Kashmiri Spices & Masalas
+- All products are 100% natural, no preservatives, sourced directly from farmers
+
+COMPANY POLICIES:
+- Delivery: 5-7 business days standard across India | 2-3 days express (select pincodes)
+- FREE shipping on orders above ₹1500
+- Return Policy: 7 days from delivery for damaged/wrong items → full refund
+- Payment: UPI, Debit/Credit Cards, Netbanking, Razorpay
+- Cash on Delivery: Not available currently
+- Bulk orders (above 5kg): Special pricing available - contact admin
+
+CONTACT:
+- Email: tilakmishra.76@gmail.com
 - Website: naturespledge.in
-- Admin email: tilakmishra.76@gmail.com
+- Support hours: Mon-Sat 10 AM - 6 PM IST
 
-POLICIES:
-- Delivery: 5-7 business days standard, 2-3 days express for select pincodes
-- Return policy: 7 days from delivery date for damaged/wrong products
-- Free shipping on orders above ₹1500
-- Payment: UPI, Cards, Netbanking, Razorpay
+HOW TO RESPOND:
+- Always reply in ENGLISH only, even if user writes in Hindi/Hinglish
+- Be warm, friendly, and helpful - like a knowledgeable friend
+- Keep replies concise (2-4 sentences max unless a detailed answer is needed)
+- If user asks about specific order status → ask them to share Order ID
+- For product recommendations → suggest based on their needs
+- Use relevant emojis but not too many
+- If user seems frustrated → be extra empathetic and apologetic
+- End each reply inviting further questions
 
-INSTRUCTIONS:
-- Reply in English only
-- Be friendly, helpful and concise (max 3-4 sentences)
-- If you don't know something specific (like a specific order ID), ask the user to share details
-- Always end with offering further help
-- Use emojis occasionally but not excessively
+Customer Name: ${userName}
+Customer Message: ${userText}
 
-Customer name: ${userName}
-Customer message: ${userText}`;
+Respond naturally and helpfully:`;
 
         const result = await model.generateContent(systemPrompt);
         const reply = result.response.text();
@@ -152,6 +175,7 @@ Customer message: ${userText}`;
         return null;
     }
 };
+
 
 // GET messages for user
 router.get('/:userId', async (req, res) => {
@@ -178,10 +202,15 @@ router.post('/', async (req, res) => {
                 return res.json(msg);
             }
 
-            // User message → 1st: keyword bot, 2nd: Gemini AI, 3rd: admin email
+            // User message → Smart routing
+            // Step 1: Check if it's a technical/urgent issue → alert admin immediately
+            if (isTechnicalIssue(text)) {
+                sendAdminNotification({ ...msgData, subject: `🚨 URGENT: Technical Issue from ${userName}` }).catch(console.error);
+            }
+
+            // Step 2: Check keyword bot first (fast, no API call)
             const botReply = getBotReply(text);
             if (botReply) {
-                // Keyword bot handled it
                 const botMsg = new Message({
                     userId, userName: "Nature's Pledge Support", userEmail: 'bot@naturespledge.in',
                     text: botReply, isAdmin: true, timestamp: new Date(), isRead: true
@@ -190,7 +219,7 @@ router.post('/', async (req, res) => {
                 return res.json({ userMsg: msg, botMsg });
             }
 
-            // Try Gemini AI
+            // Step 3: Gemini AI handles everything else
             const aiReply = await getAIReply(text, userName);
             if (aiReply) {
                 const aiMsg = new Message({
