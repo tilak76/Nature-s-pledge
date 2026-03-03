@@ -413,7 +413,7 @@
 
 .reviews-summary .stars {
     color: var(--accent);
-    font-size: 1.2rem;
+    font-size: 2rem;
     letter-spacing: 2px;
     margin: 5px 0;
 }
@@ -507,7 +507,7 @@
 
 .review-stars {
     color: var(--accent);
-    font-size: 0.9rem;
+    font-size: 1.4rem;
     letter-spacing: 2px;
 }
 

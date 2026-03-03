@@ -166,7 +166,7 @@ const ProductDetails = () => {
                     <h1 className="product-detail-title">{product.name}</h1>
 
                     <div style={{ display: 'flex', alignItems: 'center', gap: '15px', cursor: 'pointer' }} onClick={() => document.getElementById('reviews-section').scrollIntoView({ behavior: 'smooth' })}>
-                        <span style={{ color: reviews.length > 0 ? 'var(--accent)' : 'var(--text-muted)', fontSize: '1.2rem', letterSpacing: '2px' }}>
+                        <span style={{ color: reviews.length > 0 ? 'var(--accent)' : 'var(--text-muted)', fontSize: '1.8rem', letterSpacing: '2px' }}>
                             {reviews.length > 0 ? `${'★'.repeat(Math.round(avgRating))}${'☆'.repeat(5 - Math.round(avgRating))}` : '☆☆☆☆☆'}
                         </span>
                         <span style={{ color: '#007185', fontSize: '0.9rem', borderLeft: '1px solid #eee', paddingLeft: '15px' }}>
