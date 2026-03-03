@@ -9,10 +9,14 @@ import './Dashboard.css';
 const Dashboard = () => {
     const { user, logout, updateUser } = useAuth();
     const navigate = useNavigate();
-    const [view, setView] = useState('home'); // 'home', 'orders', 'profile', 'wallet'
+    const [view, setView] = useState('home'); // 'home', 'orders', 'profile', 'wallet', 'chat'
     const { showToast } = useToast();
     const [isAddMoneyModalOpen, setIsAddMoneyModalOpen] = useState(false);
     const [amountToAdd, setAmountToAdd] = useState('');
+    const [chatMessages, setChatMessages] = useState([]);
+    const [chatInput, setChatInput] = useState('');
+    const [chatLoading, setChatLoading] = useState(false);
+    const chatEndRef = React.useRef(null);
 
     if (!user) {
         navigate('/login');
@@ -155,8 +159,8 @@ const Dashboard = () => {
                 <DashboardCard
                     icon="🎧"
                     title="Contact Us"
-                    description="Contact our customer service via phone or chat"
-                    onClick={() => window.location.href = 'mailto:support@naturepledge.com'}
+                    description="Chat with our support team"
+                    onClick={() => setView('chat')}
                 />
                 <DashboardCard
                     icon="🚪"
@@ -309,11 +313,109 @@ const Dashboard = () => {
         </div>
     );
 
+    const renderChat = () => {
+        const userId = user?.id || user?.email || 'guest';
+
+        const loadMessages = async () => {
+            try {
+                const res = await axios.get(`/api/messages/${userId}`);
+                setChatMessages(res.data || []);
+                setTimeout(() => chatEndRef.current?.scrollIntoView({ behavior: 'smooth' }), 100);
+            } catch (e) { console.error(e); }
+        };
+
+        const sendMessage = async (e) => {
+            e.preventDefault();
+            if (!chatInput.trim()) return;
+            setChatLoading(true);
+            try {
+                const res = await axios.post('/api/messages', {
+                    userId,
+                    userName: user.name || 'Customer',
+                    userEmail: user.email || '',
+                    text: chatInput.trim(),
+                    isAdmin: false
+                });
+                setChatMessages(prev => [...prev, res.data]);
+                setChatInput('');
+                showToast('Message sent! We will reply soon.', 'success');
+                setTimeout(() => chatEndRef.current?.scrollIntoView({ behavior: 'smooth' }), 100);
+            } catch (err) {
+                showToast('Failed to send message. Please try again.', 'error');
+            } finally {
+                setChatLoading(false);
+            }
+        };
+
+        // Load messages on first render
+        React.useEffect(() => { loadMessages(); }, []);
+
+        return (
+            <div style={{ maxWidth: '700px', margin: '0 auto' }}>
+                <Breadcrumb title="Support Chat" />
+                <h2 style={{ fontWeight: '400', marginBottom: '5px' }}>💬 Contact Support</h2>
+                <p style={{ color: '#666', marginBottom: '20px', fontSize: '0.9rem' }}>Send us a message and we'll reply to your email within a few hours.</p>
+
+                {/* Chat Messages */}
+                <div style={{ border: '1px solid #ddd', borderRadius: '8px', background: 'white', minHeight: '350px', maxHeight: '400px', overflowY: 'auto', padding: '15px', marginBottom: '15px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                    {chatMessages.length === 0 ? (
+                        <div style={{ textAlign: 'center', color: '#999', margin: 'auto' }}>
+                            <div style={{ fontSize: '3rem', marginBottom: '10px' }}>🌿</div>
+                            <p>No messages yet. Send us a message!</p>
+                        </div>
+                    ) : (
+                        chatMessages.map((msg, idx) => (
+                            <div key={idx} style={{ display: 'flex', justifyContent: msg.isAdmin ? 'flex-start' : 'flex-end' }}>
+                                <div style={{
+                                    maxWidth: '75%',
+                                    padding: '10px 15px',
+                                    borderRadius: msg.isAdmin ? '0 12px 12px 12px' : '12px 0 12px 12px',
+                                    background: msg.isAdmin ? '#f0ebe7' : '#5D4037',
+                                    color: msg.isAdmin ? '#333' : 'white',
+                                    fontSize: '0.9rem',
+                                    lineHeight: '1.4'
+                                }}>
+                                    {msg.isAdmin && <div style={{ fontSize: '0.75rem', fontWeight: 'bold', marginBottom: '4px', color: '#8D6E63' }}>🌿 Nature's Pledge Support</div>}
+                                    {msg.text}
+                                    <div style={{ fontSize: '0.7rem', opacity: 0.6, marginTop: '4px', textAlign: 'right' }}>
+                                        {new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                    </div>
+                                </div>
+                            </div>
+                        ))
+                    )}
+                    <div ref={chatEndRef} />
+                </div>
+
+                {/* Input */}
+                <form onSubmit={sendMessage} style={{ display: 'flex', gap: '10px' }}>
+                    <input
+                        type="text"
+                        value={chatInput}
+                        onChange={e => setChatInput(e.target.value)}
+                        placeholder="Type your message here..."
+                        style={{ flex: 1, padding: '12px 15px', border: '1px solid #ddd', borderRadius: '25px', fontSize: '0.95rem', outline: 'none' }}
+                        disabled={chatLoading}
+                    />
+                    <button
+                        type="submit"
+                        disabled={chatLoading || !chatInput.trim()}
+                        style={{ background: '#5D4037', color: 'white', border: 'none', borderRadius: '25px', padding: '12px 25px', cursor: 'pointer', fontWeight: 'bold', opacity: chatLoading ? 0.7 : 1 }}
+                    >
+                        {chatLoading ? '...' : 'Send'}
+                    </button>
+                </form>
+                <p style={{ fontSize: '0.8rem', color: '#999', marginTop: '10px', textAlign: 'center' }}>📧 We'll also reply to your registered email: <strong>{user.email}</strong></p>
+            </div>
+        );
+    };
+
     const getViewContent = () => {
         switch (view) {
             case 'orders': return renderOrders();
             case 'profile': return renderProfile();
             case 'wallet': return renderWallet();
+            case 'chat': return renderChat();
             default: return renderHome();
         }
     };
