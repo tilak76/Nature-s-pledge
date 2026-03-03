@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Product = require('../models/Product');
+const Review = require('../models/Review');
 
 // Get all products
 router.get('/', async (req, res) => {
@@ -49,6 +50,41 @@ router.delete('/:id', async (req, res) => {
             await Product.deleteOne({ _id: req.params.id });
         }
         res.json({ message: 'Product deleted' });
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+});
+
+// --- NEW REVIEWS ROUTES --- //
+
+// Get reviews for a specific product
+router.get('/:productId/reviews', async (req, res) => {
+    try {
+        const reviews = await Review.find({ productId: req.params.productId }).sort({ date: -1 });
+        res.json(reviews);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+});
+
+// Post a review for a product
+router.post('/:productId/reviews', async (req, res) => {
+    try {
+        const { user, rating, comment } = req.body;
+
+        if (!user || !rating || !comment) {
+            return res.status(400).json({ message: "Please provide user, rating and comment" });
+        }
+
+        const newReview = new Review({
+            productId: req.params.productId,
+            user,
+            rating,
+            comment
+        });
+
+        const savedReview = await newReview.save();
+        res.status(201).json(savedReview);
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
