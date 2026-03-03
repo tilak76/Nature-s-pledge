@@ -131,7 +131,7 @@ const ProductDetails = () => {
 
     if (!product) return <div className="container section-padding" style={{ textAlign: 'center' }}><p>Fetching Premium Selection...</p></div>;
 
-    const avgRating = reviews.length > 0 ? (reviews.reduce((acc, r) => acc + r.rating, 0) / reviews.length).toFixed(1) : "5.0";
+    const avgRating = reviews.length > 0 ? (reviews.reduce((acc, r) => acc + r.rating, 0) / reviews.length).toFixed(1) : "0.0";
 
     // Simulate fake gallery thumbnails from same image
     const galleryItems = [product.image, product.image, product.image];
@@ -165,11 +165,11 @@ const ProductDetails = () => {
                     <h1 className="product-detail-title">{product.name}</h1>
 
                     <div style={{ display: 'flex', alignItems: 'center', gap: '15px', cursor: 'pointer' }} onClick={() => document.getElementById('reviews-section').scrollIntoView({ behavior: 'smooth' })}>
-                        <span style={{ color: 'var(--accent)', fontSize: '1.2rem', letterSpacing: '2px' }}>
-                            {'★'.repeat(Math.round(avgRating))}{'☆'.repeat(5 - Math.round(avgRating))}
+                        <span style={{ color: reviews.length > 0 ? 'var(--accent)' : 'var(--text-muted)', fontSize: '1.2rem', letterSpacing: '2px' }}>
+                            {reviews.length > 0 ? `${'★'.repeat(Math.round(avgRating))}${'☆'.repeat(5 - Math.round(avgRating))}` : '☆☆☆☆☆'}
                         </span>
                         <span style={{ color: '#007185', fontSize: '0.9rem', borderLeft: '1px solid #eee', paddingLeft: '15px' }}>
-                            {reviews.length} Verified Reviews
+                            {reviews.length > 0 ? `${reviews.length} Verified Reviews` : 'Be the first to review'}
                         </span>
                     </div>
 
@@ -314,11 +314,13 @@ const ProductDetails = () => {
                     <div>
                         <h2 className="section-title" style={{ textAlign: 'left', marginBottom: '10px' }}>Customer Reviews</h2>
                         <div className="reviews-summary">
-                            <span className="average-rating">{avgRating}</span>
-                            <div className="stars">
-                                {'★'.repeat(Math.round(avgRating))}{'☆'.repeat(5 - Math.round(avgRating))}
+                            <span className="average-rating" style={{ fontSize: reviews.length > 0 ? '3rem' : '1.5rem' }}>
+                                {reviews.length > 0 ? avgRating : "No reviews yet"}
+                            </span>
+                            <div className="stars" style={{ color: reviews.length > 0 ? 'var(--accent)' : 'var(--text-muted)' }}>
+                                {reviews.length > 0 ? `${'★'.repeat(Math.round(avgRating))}${'☆'.repeat(5 - Math.round(avgRating))}` : '☆☆☆☆☆'}
                             </div>
-                            <p>Based on {reviews.length} authentic reviews</p>
+                            <p>{reviews.length > 0 ? `Based on ${reviews.length} authentic reviews` : 'Share your thoughts with other customers'}</p>
                         </div>
                     </div>
                     <button className="write-review-btn" onClick={() => setShowReviewForm(!showReviewForm)}>
