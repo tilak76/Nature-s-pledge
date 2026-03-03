@@ -336,9 +336,14 @@ const Dashboard = () => {
                     text: chatInput.trim(),
                     isAdmin: false
                 });
-                setChatMessages(prev => [...prev, res.data]);
+                // Handle bot reply (returns {userMsg, botMsg}) or normal msg
+                if (res.data.userMsg && res.data.botMsg) {
+                    setChatMessages(prev => [...prev, res.data.userMsg, res.data.botMsg]);
+                } else {
+                    setChatMessages(prev => [...prev, res.data]);
+                }
                 setChatInput('');
-                showToast('Message sent! We will reply soon.', 'success');
+                showToast('Message sent!', 'success');
                 setTimeout(() => chatEndRef.current?.scrollIntoView({ behavior: 'smooth' }), 100);
             } catch (err) {
                 showToast('Failed to send message. Please try again.', 'error');
