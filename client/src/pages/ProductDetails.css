@@ -1,0 +1,261 @@
+/* ProductDetails.css - Premium Luxury Branded Style */
+
+.product-details-page {
+    padding-top: 60px;
+    padding-bottom: 80px;
+}
+
+/* Image Presentation */
+.product-image-display {
+    border-radius: 8px;
+    box-shadow: var(--shadow-lg);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    position: relative;
+    background: var(--white);
+}
+
+.product-image-display img {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
+    max-height: 600px;
+}
+
+/* Info Section */
+.product-info-wrapper {
+    display: flex;
+    flex-direction: column;
+}
+
+.product-origin-label {
+    color: var(--accent);
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    margin-bottom: 15px;
+}
+
+.product-detail-title {
+    font-size: clamp(2.5rem, 4vw, 3.5rem) !important;
+    color: var(--primary);
+    margin-bottom: 20px !important;
+    line-height: 1.2;
+}
+
+/* Pricing Branded */
+.product-price-section {
+    margin: 30px 0;
+    padding: 25px 0;
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.current-price {
+    font-family: 'Outfit', sans-serif;
+    font-size: 2.5rem;
+    color: var(--text-main);
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 10px;
+}
+
+.current-price span {
+    font-size: 1.5rem;
+    vertical-align: top;
+    opacity: 0.8;
+}
+
+.mrp-detail {
+    font-size: 1rem;
+    color: var(--text-muted);
+}
+
+.mrp-detail span {
+    text-decoration: line-through;
+}
+
+.discount-tag {
+    color: var(--accent);
+    font-weight: 600;
+    margin-left: 10px;
+}
+
+/* Variant Selector Premium */
+.variant-selector-container {
+    margin-bottom: 40px;
+}
+
+.variant-label {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 500;
+}
+
+.variant-buttons {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.variant-btn {
+    padding: 12px 24px;
+    background: var(--white);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    color: var(--text-main);
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: var(--transition);
+    border-radius: 4px;
+}
+
+.variant-btn.active {
+    background: var(--secondary);
+    border-color: var(--primary);
+    color: var(--primary);
+    font-weight: 600;
+    box-shadow: 0 0 0 1px var(--primary);
+}
+
+.variant-btn:hover:not(.active) {
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+/* Actions Section */
+.action-buttons-group {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 40px;
+    max-width: 400px;
+}
+
+.btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 14px 40px;
+    background-color: transparent;
+    color: var(--primary);
+    border-radius: 4px;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 600;
+    font-size: 0.95rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    border: 1px solid var(--primary);
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.btn-secondary:hover {
+    background-color: var(--primary);
+    color: var(--white);
+}
+
+/* About Item */
+.about-item-section {
+    margin-top: 30px;
+}
+
+.about-item-section h4 {
+    font-size: 1.1rem;
+    margin-bottom: 15px;
+    color: var(--primary);
+    font-family: 'Outfit', sans-serif;
+}
+
+.about-item-section p {
+    color: var(--text-muted);
+    line-height: 1.8;
+    font-size: 1rem;
+}
+
+/* Storytelling Section */
+.story-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    margin-top: 40px;
+}
+
+.story-card {
+    background: var(--white);
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: var(--shadow-sm);
+    text-align: center;
+    border: 1px solid rgba(0, 0, 0, 0.03);
+    transition: var(--transition);
+}
+
+.story-card:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-5px);
+}
+
+.story-card .icon {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+    display: block;
+}
+
+.story-card h3 {
+    color: var(--primary);
+    margin-bottom: 15px;
+    font-size: 1.4rem;
+}
+
+.story-card p {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    line-height: 1.7;
+}
+
+/* Benefits Section */
+.health-benefits-container {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.benefit-pill {
+    padding: 12px 25px;
+    background: var(--secondary);
+    color: var(--primary);
+    border: 1px solid rgba(27, 63, 45, 0.1);
+    border-radius: 50px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    transition: var(--transition);
+}
+
+.benefit-pill:hover {
+    background: var(--primary);
+    color: var(--white);
+    border-color: var(--primary);
+}
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+    .product-details-page .grid-luxury-2 {
+        grid-template-columns: 1fr;
+    }
+
+    .product-detail-title {
+        font-size: 2.5rem !important;
+    }
+
+    .action-buttons-group {
+        max-width: 100%;
+    }
+}

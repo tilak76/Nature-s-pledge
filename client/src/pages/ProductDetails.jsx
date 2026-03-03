@@ -4,7 +4,7 @@ import axios from 'axios';
 import { products as staticProducts } from '../data/products';
 import { useCart } from '../context/CartContext';
 import { useToast } from '../context/ToastContext';
-
+import './ProductDetails.css';
 
 const ProductDetails = () => {
     const { id } = useParams();
@@ -19,7 +19,6 @@ const ProductDetails = () => {
         const fetchProductData = async () => {
             let products = [];
             try {
-                // Set a timeout for the axios call to avoid hanging forever
                 const res = await axios.get('/api/products', { timeout: 3000 });
                 if (res.data && res.data.length > 0) {
                     products = res.data;
@@ -27,7 +26,6 @@ const ProductDetails = () => {
                     products = staticProducts;
                 }
             } catch (err) {
-                console.error("Error fetching product, using fallback:", err);
                 products = staticProducts;
             }
 
@@ -50,95 +48,60 @@ const ProductDetails = () => {
     }, [id, navigate]);
 
 
-
-    if (!product) return <div className="container" style={{ padding: '4rem' }}>Loading...</div>;
+    if (!product) return <div className="container section-padding" style={{ textAlign: 'center' }}><p>Fetching Premium Selection...</p></div>;
 
     return (
-        <div className="container product-details-page" style={{ padding: '4rem 0' }}>
-            {/* Top Section */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '3rem', marginBottom: '4rem' }}>
-                {/* Image */}
-                <div>
-                    <img
-                        src={product.image}
-                        alt={product.name}
-                        style={{ width: '100%', borderRadius: '16px', boxShadow: '0 8px 30px rgba(0,0,0,0.12)', border: '4px solid white' }}
-                    />
+        <div className="container product-details-page">
+
+            <div className="grid-luxury grid-luxury-2" style={{ marginBottom: '80px' }}>
+                <div className="product-image-display">
+                    <div className="premium-badge">100% Organic</div>
+                    <img src={product.image} alt={product.name} />
                 </div>
 
-                {/* Main Info */}
-                <div>
-                    <span style={{ color: '#2E7D32', fontWeight: 'bold', textTransform: 'uppercase', fontSize: '0.9rem', letterSpacing: '1px' }}>
-                        100% Authentic From Kashmir
-                    </span>
-                    <h1 style={{ fontSize: '2.8rem', marginTop: '0.5rem', marginBottom: '1rem', color: '#3E2723', fontFamily: '"Playfair Display", serif' }}>
-                        {product.name}
-                    </h1>
+                <div className="product-info-wrapper">
+                    <h2 className="product-origin-label">Authentic from Kashmir</h2>
+                    <h1 className="product-detail-title">{product.name}</h1>
 
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '1rem' }}>
-                        <span style={{ color: '#F4B400', fontSize: '1.2rem' }}>★★★★★</span>
-                        <span style={{ color: '#007185', fontSize: '0.9rem', cursor: 'pointer' }}>1,204 ratings</span>
-                        <span style={{ color: '#ccc' }}>|</span>
-                        <span style={{ color: '#007185', fontSize: '0.9rem', cursor: 'pointer' }}>42 answered questions</span>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+                        <span style={{ color: 'var(--accent)', fontSize: '1.2rem', letterSpacing: '2px' }}>★★★★★</span>
+                        <span style={{ color: 'var(--text-muted)', fontSize: '0.9rem', borderLeft: '1px solid #eee', paddingLeft: '15px' }}>Verified Quality</span>
                     </div>
 
-                    <div style={{ borderTop: '1px solid #e7e7e7', borderBottom: '1px solid #e7e7e7', padding: '1rem 0', marginBottom: '1.5rem' }}>
-                        <div style={{ fontSize: '2rem', color: '#B12704', fontWeight: '500', lineHeight: '1' }}>
-                            <span style={{ fontSize: '1rem', verticalAlign: 'top', color: '#565959' }}>₹</span>
-                            {product.price}
+                    <div className="product-price-section">
+                        <div className="current-price">
+                            <span>₹</span>{product.price}
                         </div>
-                        <div style={{ color: '#565959', fontSize: '0.9rem', marginTop: '0.5rem' }}>
-                            M.R.P.: <span style={{ textDecoration: 'line-through' }}>₹{Math.floor(product.price * 1.3)}</span>
-                            <span style={{ color: '#B12704', marginLeft: '5px' }}>(23% off)</span>
+                        <div className="mrp-detail">
+                            M.R.P.: <span>₹{Math.floor(product.price * 1.3)}</span>
+                            <span className="discount-tag">Special Price (30% off)</span>
                         </div>
-                        <div style={{ fontSize: '0.9rem', color: '#007185', fontWeight: 'bold', marginTop: '0.5rem' }}>
+                        <div style={{ fontSize: '0.85rem', color: 'var(--primary-light)', fontWeight: '600', marginTop: '10px', textTransform: 'uppercase', letterSpacing: '1px' }}>
                             Inclusive of all taxes
                         </div>
                     </div>
 
-                    {/* Delivery Info */}
-                    <div style={{ marginBottom: '1.5rem' }}>
-                        <div style={{ color: '#565959', fontSize: '0.95rem', marginBottom: '5px' }}>
-                            <span style={{ color: '#007185', fontWeight: 'bold' }}>FREE Delivery</span> <span style={{ fontWeight: 'bold' }}>{new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long' })}.</span>
+                    <div style={{ marginBottom: '30px' }}>
+                        <div style={{ color: 'var(--text-main)', fontSize: '1rem', marginBottom: '8px', fontWeight: '500' }}>
+                            <span style={{ color: 'var(--primary)', fontWeight: '700' }}>Free Priority Shipping</span> arriving by <span style={{ fontWeight: '700' }}>{new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long' })}.</span>
                         </div>
-                        <div style={{ fontSize: '1.2rem', color: '#007600', fontWeight: '500', marginBottom: '1rem' }}>
-                            In Stock.
-                        </div>
-                        <div style={{ fontSize: '0.9rem', color: '#565959' }}>
-                            Sold by <span style={{ color: '#007185' }}>Nature's Pledge Farmers Collective</span> and <span style={{ color: '#007185' }}>Fulfilled by Nature's Pledge</span>.
+                        <div style={{ fontSize: '1.1rem', color: '#4CAF50', fontWeight: '600', marginBottom: '15px' }}>
+                            Harvest Ready. In Stock.
                         </div>
                     </div>
 
-                    {/* Variant Selector */}
                     {relatedVariants.length > 0 && (
-                        <div style={{ marginBottom: '2rem' }}>
-                            <div style={{ fontSize: '0.9rem', fontWeight: 'bold', color: '#555', marginBottom: '0.5rem' }}>Size:</div>
-                            <div style={{ display: 'flex', gap: '10px' }}>
-                                {/* Current Item */}
-                                <button style={{
-                                    padding: '8px 15px',
-                                    background: '#fef8f3',
-                                    border: '2px solid #e77600',
-                                    borderRadius: '3px',
-                                    cursor: 'default',
-                                    fontWeight: 'bold',
-                                    color: '#333'
-                                }}>
+                        <div className="variant-selector-container">
+                            <div className="variant-label">Select Size / Weight</div>
+                            <div className="variant-buttons">
+                                <button className="variant-btn active">
                                     {product.name.split(' - ')[1] || 'Standard'}
                                 </button>
-                                {/* Other Variants */}
                                 {relatedVariants.map(v => (
                                     <button
                                         key={v.id}
                                         onClick={() => navigate(`/product/${v.id}`)}
-                                        style={{
-                                            padding: '8px 15px',
-                                            background: 'white',
-                                            border: '1px solid #ccc',
-                                            borderRadius: '3px',
-                                            cursor: 'pointer',
-                                            color: '#333'
-                                        }}
+                                        className="variant-btn"
                                     >
                                         {v.name.split(' - ')[1] || 'Standard'}
                                     </button>
@@ -147,101 +110,73 @@ const ProductDetails = () => {
                         </div>
                     )}
 
-                    {/* Action Buttons */}
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', maxWidth: '300px' }}>
+                    <div className="action-buttons-group">
                         <button
                             onClick={() => {
                                 addToCart(product);
                                 showToast('Added to Cart!');
                             }}
-                            style={{
-                                padding: '12px', background: '#FFD814', color: '#0F1111',
-                                border: 'none', borderRadius: '20px', fontWeight: '500', cursor: 'pointer', fontSize: '1rem',
-                                boxShadow: '0 2px 5px rgba(213,217,217,0.5)'
-                            }}
+                            className="btn-premium"
                         >
                             Add to Cart
                         </button>
                         <button
                             onClick={() => { addToCart(product); navigate('/checkout'); }}
-                            style={{
-                                padding: '12px', background: '#FFA41C', color: '#0F1111',
-                                border: 'none', borderRadius: '20px', fontWeight: '500', cursor: 'pointer', fontSize: '1rem',
-                                boxShadow: '0 2px 5px rgba(213,217,217,0.5)'
-                            }}
+                            className="btn-secondary"
                         >
-                            Buy Now
+                            Proced to Buy
                         </button>
                     </div>
 
-                    <div style={{ marginTop: '1.5rem', display: 'flex', alignItems: 'center', gap: '10px', fontSize: '0.9rem', color: '#007185' }}>
-                        <span>🔒 Secure transaction</span>
-                    </div>
-
-                    <p style={{ marginTop: '2rem', lineHeight: '1.6', fontSize: '1rem', color: '#333' }}>
-                        <span style={{ fontWeight: 'bold' }}>About this item:</span><br />
-                        "{product.description}"
-                    </p>
-                </div>
-            </div>
-
-            {/* Storytelling Section */}
-            <div style={{ background: '#fdfbf7', padding: '3rem', borderRadius: '16px', marginBottom: '4rem' }}>
-                <h2 style={{ textAlign: 'center', marginBottom: '2rem', color: '#3E2723', fontFamily: '"Playfair Display", serif' }}>
-                    Khet Se Aap Tak (Farm to Home)
-                </h2>
-
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem' }}>
-                    <div style={{ background: 'white', padding: '2rem', borderRadius: '12px', boxShadow: '0 4px 10px rgba(0,0,0,0.05)' }}>
-                        <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>🏔️</div>
-                        <h3 style={{ marginBottom: '1rem', color: '#2E7D32' }}>Origin Story</h3>
-                        <p style={{ lineHeight: '1.6', color: '#555' }}>
-                            {product.origin_story || "Sourced directly from the authentic regions of Jammu & Kashmir."}
-                        </p>
-                    </div>
-                    <div style={{ background: 'white', padding: '2rem', borderRadius: '12px', boxShadow: '0 4px 10px rgba(0,0,0,0.05)' }}>
-                        <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>👨‍🌾</div>
-                        <h3 style={{ marginBottom: '1rem', color: '#2E7D32' }}>Our Farmer's Promise</h3>
-                        <p style={{ lineHeight: '1.6', color: '#555' }}>
-                            {product.farm_story || "Hand-picked and traditionally processed to ensure you get the purest taste of nature."}
-                        </p>
+                    <div className="about-item-section">
+                        <h4>About this treasure</h4>
+                        <p>{product.description}</p>
                     </div>
                 </div>
             </div>
 
-            {/* Benefits Section */}
-            <div style={{ marginBottom: '4rem' }}>
-                <h2 style={{ marginBottom: '2rem', color: '#3E2723', fontFamily: '"Playfair Display", serif', textAlign: 'center' }}>
-                    Why This is Good For You?
-                </h2>
-                <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', gap: '1rem' }}>
+            {/* Farm to Home */}
+            <div className="section-padding" style={{ borderTop: '1px solid rgba(0,0,0,0.05)' }}>
+                <h2 className="section-title">The Farm to Home Journey</h2>
+
+                <div className="story-grid">
+                    <div className="story-card">
+                        <span className="icon">🏔️</span>
+                        <h3>Origin Story</h3>
+                        <p>{product.origin_story || "Cultivated in the pristine valleys of Kashmir, fed by glacial waters and mountain air."}</p>
+                    </div>
+                    <div className="story-card">
+                        <span className="icon">🌿</span>
+                        <h3>Farmer's Promise</h3>
+                        <p>{product.farm_story || "Hand-harvested by local artisans using generational wisdom, ensuring absolute purity."}</p>
+                    </div>
+                </div>
+            </div>
+
+            {/* Benefits */}
+            <div className="section-padding" style={{ paddingBottom: '20px' }}>
+                <h2 className="section-title">Nourishing Benefits</h2>
+                <div className="health-benefits-container">
                     {product.health_benefits && product.health_benefits.map((benefit, i) => (
-                        <div key={i} style={{
-                            padding: '1rem 2rem',
-                            background: '#e8f5e9',
-                            color: '#2E7D32',
-                            borderRadius: '50px',
-                            fontWeight: 'bold',
-                            border: '1px solid #c8e6c9'
-                        }}>
-                            ✓ {benefit}
-                        </div>
+                        <div key={i} className="benefit-pill">✓ {benefit}</div>
                     ))}
-                    {!product.health_benefits && <div>100% Organic & Natural</div>}
+                    {!product.health_benefits && <div className="benefit-pill">✓ Pure & Organic Nutrition</div>}
                 </div>
             </div>
 
-            {/* Related Products */}
+            {/* Related */}
             {related.length > 0 && (
-                <div style={{ marginTop: '4rem', borderTop: '1px solid #eee', paddingTop: '3rem' }}>
-                    <h2 style={{ textAlign: 'center', marginBottom: '2rem', fontFamily: '"Playfair Display", serif' }}>You May Also Like</h2>
-                    <div className="product-grid">
+                <div className="section-padding">
+                    <h2 className="section-title">You May Also Like</h2>
+                    <div className="grid-luxury grid-luxury-3">
                         {related.map(p => (
-                            <div key={p.id} className="product-card" onClick={() => navigate(`/product/${p.id}`)} style={{ cursor: 'pointer' }}>
-                                <img src={p.image} alt={p.name} className="product-image" />
-                                <div className="product-info">
-                                    <h3 className="product-title">{p.name}</h3>
-                                    <span className="product-price">₹{p.price}</span>
+                            <div key={p.id} className="product-card" onClick={() => navigate(`/product/${p.id}`)}>
+                                <div className="product-image-container">
+                                    <img src={p.image} alt={p.name} className="product-image" />
+                                </div>
+                                <div className="product-info" style={{ textAlign: 'center', padding: '20px' }}>
+                                    <h3 className="product-title" style={{ fontSize: '1.2rem' }}>{p.name}</h3>
+                                    <span className="product-price" style={{ fontSize: '1.1rem' }}>₹{p.price}</span>
                                 </div>
                             </div>
                         ))}
