@@ -84,22 +84,22 @@ const getBotReply = (text) => {
         return "🚚 Our standard delivery time is 5-7 business days across India. Express delivery (2-3 days) is available at checkout for select pincodes. You'll receive a tracking link via email once your order is dispatched!";
     }
     if (msg.match(/track|order status|where is my|mera order|tracking/)) {
-        return "📦 To track your order, go to **Dashboard → Your Orders → Track Package**. You can also use the tracking link sent to your email after dispatch. If you haven't received a tracking link within 2 days of ordering, please let us know!";
+        return "📦 To track your order, go to Dashboard → Your Orders → Track Package. You can also use the tracking link sent to your email after dispatch. If you haven't received a tracking link within 2 days of ordering, please let us know!";
     }
     if (msg.match(/return|refund|exchange|wapas|vapas|cancel/)) {
-        return "↩️ We have a **7-day return policy** from the date of delivery. If the product is damaged or incorrect, we offer a full refund. To initiate a return, please reply with your Order ID and reason. Our team will process it within 2-3 business days.";
+        return "↩️ We have a 7-day return policy from the date of delivery. If the product is damaged or incorrect, we offer a full refund. To initiate a return, please reply with your Order ID and reason. Our team will process it within 2-3 business days.";
     }
     if (msg.match(/payment|pay|razorpay|upi|failed|deduct|paise|money|wallet/)) {
-        return "💳 For payment issues: If money was deducted but order not placed, it will be **automatically refunded within 5-7 business days** to your original payment method. For wallet issues, please share your registered email and we'll investigate. You can also pay via UPI, Cards, or Netbanking.";
+        return "💳 For payment issues: If money was deducted but order not placed, it will be automatically refunded within 5-7 business days to your original payment method. For wallet issues, please share your registered email and we'll investigate. You can also pay via UPI, Cards, or Netbanking.";
     }
     if (msg.match(/walnut|akhrot|almond|badam|rajma|atta|chutney|honey|saffron|kesar|product|price|rate/)) {
-        return "🌿 All our products are **100% authentic Kashmiri organics** sourced directly from farmers. Visit our Shop page to view the latest prices and stock. We offer bulk discounts for orders above ₹2000! Is there a specific product you'd like to know more about?";
+        return "🌿 All our products are 100% authentic Kashmiri organics sourced directly from farmers. Visit our Shop page to view the latest prices and stock. We offer bulk discounts for orders above ₹2000! Is there a specific product you'd like to know more about?";
     }
     if (msg.match(/quality|fresh|organic|natural|genuine|real|pure/)) {
-        return "✅ Nature's Pledge guarantees **100% pure and natural** products. All our dry fruits and organic foods are directly sourced from Kashmiri farmers with no preservatives or artificial additives. Every batch is quality tested before dispatch!";
+        return "✅ Nature's Pledge guarantees 100% pure and natural products. All our dry fruits and organic foods are directly sourced from Kashmiri farmers with no preservatives or artificial additives. Every batch is quality tested before dispatch!";
     }
     if (msg.match(/discount|offer|coupon|code|sale|promo/)) {
-        return "🎁 We occasionally have seasonal offers! Currently, enjoy **free shipping on orders above ₹1500**. Follow us on social media for exclusive discount codes. Would you like to be added to our offer notification list?";
+        return "🎁 We occasionally have seasonal offers! Currently, enjoy free shipping on orders above ₹1500. Follow us on social media for exclusive discount codes. Would you like to be added to our offer notification list?";
     }
     if (msg.match(/contact|phone|call|email|address|office|helpline/)) {
         return "📞 You can reach us at:\n📧 Email: tilakmishra.76@gmail.com\n🌐 Website: naturespledge.in\n\nOur support team is available Mon-Sat, 10 AM - 6 PM IST. For urgent issues, please email us directly!";
@@ -165,6 +165,7 @@ HOW TO RESPOND:
 Customer Name: ${userName}
 Customer Message: ${userText}
 
+IMPORTANT: Do NOT use markdown formatting like **bold** or *italic*. Write plain text only.
 Respond naturally and helpfully:`;
 
         const result = await model.generateContent(systemPrompt);
