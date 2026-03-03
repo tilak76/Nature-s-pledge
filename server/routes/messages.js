@@ -80,40 +80,80 @@ const sendCustomerNotification = async (replyMsg) => {
 const getBotReply = (text) => {
     const msg = text.toLowerCase();
 
+    // 🚨 URGENT: Order not received - highest priority
+    if (msg.match(/not receiv|not reciev|not recieve|didn't receive|havent received|haven't received|order nahi|order nhi|mila nahi|mila nhi|where is my order|order kahan|order kha he/)) {
+        return "😟 We're really sorry to hear that! Your concern has been flagged as URGENT and our team has been notified immediately.\n\nTo help you faster, please reply with:\n1. Your Order ID (e.g. NP-12345)\n2. The date you placed the order\n\nOur team will resolve this within 2 hours. We sincerely apologize for the inconvenience! 🙏";
+    }
+
+    // 📦 Track order
+    if (msg.match(/track|order status|check.*order|order.*check|where is my|mera order|tracking/)) {
+        return "📦 To track your order:\n1. Go to Dashboard → Your Orders → Track Package\n2. Or use the tracking link sent to your email after dispatch\n\nIf you haven't received a tracking link within 2 days of ordering, please share your Order ID and we'll check it right away!";
+    }
+
+    // 🚚 Delivery time
     if (msg.match(/deliver|shipping|ship|dispatch|days|arrive|kab aaye|kab milega|kitne din/)) {
         return "🚚 Our standard delivery time is 5-7 business days across India. Express delivery (2-3 days) is available at checkout for select pincodes. You'll receive a tracking link via email once your order is dispatched!";
     }
-    if (msg.match(/track|order status|where is my|mera order|tracking/)) {
-        return "📦 To track your order, go to Dashboard → Your Orders → Track Package. You can also use the tracking link sent to your email after dispatch. If you haven't received a tracking link within 2 days of ordering, please let us know!";
-    }
+
+    // ↩️ Returns & Refunds
     if (msg.match(/return|refund|exchange|wapas|vapas|cancel/)) {
-        return "↩️ We have a 7-day return policy from the date of delivery. If the product is damaged or incorrect, we offer a full refund. To initiate a return, please reply with your Order ID and reason. Our team will process it within 2-3 business days.";
+        return "↩️ We have a 7-day return policy from the date of delivery. If the product is damaged or incorrect, we offer a full refund.\n\nTo initiate a return, please share:\n• Your Order ID\n• Reason for return\n• Photo of the product (if damaged)\n\nOur team will process it within 2-3 business days.";
     }
-    if (msg.match(/payment|pay|razorpay|upi|failed|deduct|paise|money|wallet/)) {
-        return "💳 For payment issues: If money was deducted but order not placed, it will be automatically refunded within 5-7 business days to your original payment method. For wallet issues, please share your registered email and we'll investigate. You can also pay via UPI, Cards, or Netbanking.";
+
+    // 💳 Payment issues
+    if (msg.match(/payment|pay|razorpay|upi|failed|deduct|charged|paise|money|wallet/)) {
+        return "💳 For payment issues: If money was deducted but order was not placed, it will be automatically refunded within 5-7 business days to your original payment method.\n\nPlease share your transaction ID or registered email so we can investigate faster. We'll resolve it ASAP! 🙏";
     }
-    if (msg.match(/walnut|akhrot|almond|badam|rajma|atta|chutney|honey|saffron|kesar|product|price|rate/)) {
-        return "🌿 All our products are 100% authentic Kashmiri organics sourced directly from farmers. Visit our Shop page to view the latest prices and stock. We offer bulk discounts for orders above ₹2000! Is there a specific product you'd like to know more about?";
+
+    // 📦 Bulk orders
+    if (msg.match(/bulk|wholesale|large order|10kg|20kg|quantity|business order/)) {
+        return "📦 Great! We do offer special pricing for bulk orders above 5kg. Please email us at tilakmishra.76@gmail.com with:\n• Products needed\n• Quantity required\n• Delivery location\n\nWe'll get back to you with a custom quote within 24 hours!";
     }
-    if (msg.match(/quality|fresh|organic|natural|genuine|real|pure/)) {
+
+    // 💵 COD / Cash on delivery
+    if (msg.match(/cod|cash on delivery|cash on deliver|pay on delivery/)) {
+        return "ℹ️ Currently, Cash on Delivery is not available on our platform. We accept UPI, Debit/Credit Cards, Netbanking, and Wallets via Razorpay. We're working on adding COD soon! Is there anything else I can help you with?";
+    }
+
+    // 🌿 Products & prices
+    if (msg.match(/walnut|akhrot|almond|badam|rajma|atta|chutney|honey|saffron|kesar|product|price|rate|cost|kitna|how much/)) {
+        return "🌿 Our products include premium Kashmiri Walnuts (₹500-900/kg), Almonds (₹600-1200/kg), Rajma (₹180-250/kg), Organic Atta (₹80-120/kg), Natural Honey, Saffron, and more!\n\nAll products are 100% authentic and directly sourced from Kashmiri farmers. Visit our Shop page to see full details and place your order!";
+    }
+
+    // ✅ Quality
+    if (msg.match(/quality|fresh|organic|natural|genuine|real|pure|authentic/)) {
         return "✅ Nature's Pledge guarantees 100% pure and natural products. All our dry fruits and organic foods are directly sourced from Kashmiri farmers with no preservatives or artificial additives. Every batch is quality tested before dispatch!";
     }
-    if (msg.match(/discount|offer|coupon|code|sale|promo/)) {
-        return "🎁 We occasionally have seasonal offers! Currently, enjoy free shipping on orders above ₹1500. Follow us on social media for exclusive discount codes. Would you like to be added to our offer notification list?";
+
+    // 🎁 Offers & discounts
+    if (msg.match(/discount|offer|coupon|code|sale|promo|free/)) {
+        return "🎁 Currently, enjoy free shipping on orders above ₹1500! We also run seasonal offers - follow us on social media for exclusive discount codes. Would you like to know about any specific product offer?";
     }
-    if (msg.match(/contact|phone|call|email|address|office|helpline/)) {
-        return "📞 You can reach us at:\n📧 Email: tilakmishra.76@gmail.com\n🌐 Website: naturespledge.in\n\nOur support team is available Mon-Sat, 10 AM - 6 PM IST. For urgent issues, please email us directly!";
+
+    // 📞 Contact
+    if (msg.match(/contact|phone|call|email|address|office|helpline|support/)) {
+        return "📞 You can reach us at:\n📧 Email: tilakmishra.76@gmail.com\n🌐 Website: naturespledge.in\n\nOur support team is available Mon-Sat, 10 AM - 6 PM IST. For urgent issues, email us directly and we'll respond within 2 hours!";
     }
-    if (msg.match(/hello|hi|hey|hii|namaste|namaskar|good morning|good afternoon/)) {
-        return "👋 Hello! Welcome to Nature's Pledge Support! 🌿\n\nI'm here to help you with:\n• Order tracking & status\n• Delivery information\n• Returns & refunds\n• Product queries\n• Payment issues\n\nHow can I assist you today?";
+
+    // 👋 Greetings
+    if (msg.match(/hello|hi|hey|hii|hiii|namaste|namaskar|good morning|good afternoon|good evening/)) {
+        return "👋 Hello! Welcome to Nature's Pledge Support!\n\nI'm here to help you with:\n• Order tracking & status\n• Delivery information\n• Returns & refunds\n• Product queries\n• Payment issues\n\nHow can I assist you today?";
     }
-    if (msg.match(/thank|thanks|shukriya|dhanyawad|great|awesome|good/)) {
-        return "😊 You're welcome! We're happy to help. If you have any other questions, feel free to ask. Have a great day and enjoy your Nature's Pledge products! 🌿";
+
+    // 😊 Thanks
+    if (msg.match(/thank|thanks|shukriya|dhanyawad|great|awesome|perfect|nice/)) {
+        return "😊 You're welcome! Happy to help. If you have any other questions, feel free to ask anytime. Have a wonderful day and enjoy your Nature's Pledge products! 🌿";
     }
 
     // No match - let Gemini AI handle it
     return null;
 };
+
+// 📢 Fallback reply when admin is busy & AI unavailable
+const getBusyReply = (userName) => {
+    return `Hi ${userName || 'there'}! 👋 Thank you for reaching out to Nature's Pledge Support.\n\nOur team has received your message and will get back to you within 2 hours during business hours (Mon-Sat, 10 AM - 6 PM IST).\n\nFor urgent issues, you can directly email us at tilakmishra.76@gmail.com\n\nWe appreciate your patience! 🌿`;
+};
+
 
 // 🔍 Detect if message is a technical/urgent issue needing admin
 const isTechnicalIssue = (text) => {
@@ -231,9 +271,15 @@ router.post('/', async (req, res) => {
                 return res.json({ userMsg: msg, botMsg: aiMsg });
             }
 
-            // Neither bot nor AI could handle → alert admin
+            // Step 4: Final fallback - admin busy reply (user ALWAYS gets a response)
             sendAdminNotification(msgData).catch(console.error);
-            return res.json(msg);
+            const busyReplyText = getBusyReply(userName);
+            const busyMsg = new Message({
+                userId, userName: "Nature's Pledge Support", userEmail: 'support@naturespledge.in',
+                text: busyReplyText, isAdmin: true, timestamp: new Date(), isRead: true
+            });
+            await busyMsg.save();
+            return res.json({ userMsg: msg, botMsg: busyMsg });
         }
         res.json(msgData);
     } catch (err) {
