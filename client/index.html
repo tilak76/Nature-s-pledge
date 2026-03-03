@@ -27,6 +27,27 @@
 <body>
   <div id="root"></div>
   <script type="module" src="/src/main.jsx"></script>
+
+  <!-- Tawk.to Free Live Chat Widget -->
+  <script type="text/javascript">
+    var Tawk_API = Tawk_API || {}, Tawk_LoadStart = new Date();
+    (function () {
+      var s1 = document.createElement("script"), s0 = document.getElementsByTagName("script")[0];
+      s1.async = true;
+      s1.src = 'https://embed.tawk.to/69a67ccfea89781c3dcc41c7/1jip5f3jp';
+      s1.charset = 'UTF-8';
+      s1.setAttribute('crossorigin', '*');
+      s0.parentNode.insertBefore(s1, s0);
+    })();
+    Tawk_API.onLoad = function () {
+      try {
+        var user = JSON.parse(localStorage.getItem('user'));
+        if (user && user.name) {
+          Tawk_API.setAttributes({ name: user.name, email: user.email || '' }, function (error) { });
+        }
+      } catch (e) { }
+    };
+  </script>
 </body>
 
 </html>
