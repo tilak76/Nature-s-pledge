@@ -253,10 +253,10 @@ const ProductDetails = () => {
                     </div>
 
                     <div className="action-buttons-group">
-                        <button onClick={handleAddToCart} className="btn-premium" style={{ width: '100%', borderRadius: '50px' }}>
+                        <button onClick={handleAddToCart} className="btn-premium" style={{ width: '100%', borderRadius: '50px', padding: '16px', fontSize: '1.1rem' }}>
                             Add to Cart
                         </button>
-                        <button onClick={handleBuyNow} className="btn-secondary" style={{ width: '100%', borderRadius: '50px', background: 'var(--accent)', color: 'white', borderColor: 'var(--accent)' }}>
+                        <button onClick={handleBuyNow} className="btn-secondary" style={{ width: '100%', borderRadius: '50px', background: 'var(--accent)', color: 'white', borderColor: 'var(--accent)', padding: '16px', fontSize: '1.1rem' }}>
                             Buy Now
                         </button>
                     </div>
