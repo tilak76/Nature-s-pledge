@@ -56,33 +56,53 @@
 }
 
 .hero p {
-    color: #fff !important;
-    /* Force white text in hero */
+    color: #f8f8f8 !important;
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.4);
+    letter-spacing: 0.5px;
+}
+
+.hero-logo-container {
+    animation: fadeInDown 1.2s ease-out;
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 /* Rest of the CSS remains similar but refined for authentication */
 .cta-button {
     display: inline-block;
-    padding: 16px 45px;
-    background-color: #2E7D32;
-    /* Deep Nature Green */
+    padding: 18px 50px;
+    background-color: #3E2723;
+    /* Earthy Rich Brown */
     color: white;
     text-decoration: none;
-    border-radius: 50px;
+    border-radius: 4px;
+    /* More sophisticated look */
     font-weight: 700;
     font-family: 'Lato', sans-serif;
     text-transform: uppercase;
-    letter-spacing: 2px;
-    transition: all 0.3s ease;
-    border: 2px solid #2E7D32;
-    margin-top: 1.5rem;
+    letter-spacing: 3px;
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    border: 2px solid #3E2723;
+    margin-top: 2rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
 .cta-button:hover {
-    background-color: transparent;
-    border-color: #fff;
+    background-color: #5D4037;
+    border-color: #5D4037;
     color: white;
-    transform: scale(1.05);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
 }
 
 /* Featured Section */

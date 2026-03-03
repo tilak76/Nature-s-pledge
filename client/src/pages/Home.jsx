@@ -10,12 +10,14 @@ const Home = () => {
             <section className="hero">
                 <div className="hero-overlay"></div>
                 <div className="hero-content">
-                    <img src="/logo_main.jpg" alt="Nature's Pledge Logo" className="hero-logo" style={{ width: '120px', height: '120px', borderRadius: '50%', marginBottom: '1.5rem', border: '3px solid white', boxShadow: '0 4px 15px rgba(0,0,0,0.3)' }} />
-                    <h1>Nature's Pledge</h1>
-                    <p style={{ fontSize: '1.4rem', fontWeight: '400', marginBottom: '1rem' }}>
+                    <div className="hero-logo-container">
+                        <img src="/logo_main.jpg" alt="Nature's Pledge Logo" className="hero-logo" style={{ width: '130px', height: '130px', borderRadius: '50%', marginBottom: '2rem', border: '3px solid rgba(255,255,255,0.8)', boxShadow: '0 8px 25px rgba(0,0,0,0.4)', objectFit: 'cover' }} />
+                    </div>
+                    <h1 style={{ fontSize: '4.5rem', marginBottom: '1.5rem', fontFamily: '"Playfair Display", serif' }}>Nature's Pledge</h1>
+                    <p style={{ fontSize: '1.6rem', fontWeight: '400', marginBottom: '1rem', opacity: '0.95' }}>
                         Authentic Kashmir Dry Fruits & Organic Staples.
                     </p>
-                    <p style={{ fontStyle: 'italic', color: '#f0f0f0', fontSize: '1.1rem' }}>
+                    <p style={{ fontStyle: 'italic', color: '#f0f0f0', fontSize: '1.2rem', marginBottom: '2.5rem', opacity: '0.9' }}>
                         "Shuddhata aisi, jo ghar ki yaad dila de."
                     </p>
                     <Link to="/shop" className="cta-button">Shop Now</Link>
