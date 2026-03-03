@@ -16,6 +16,7 @@ const orders = require('../server/routes/orders');
 const users = require('../server/routes/users');
 const messages = require('../server/routes/messages');
 const payment = require('../server/routes/payment');
+const ai = require('../server/routes/ai');
 
 // Basic Standalone
 app.get('/api/v1/ping', (req, res) => res.json({ status: "Nature's Pledge API is Alive v22" }));
@@ -48,6 +49,7 @@ app.use('/api/orders', orders);
 app.use('/api/users', users);
 app.use('/api/messages', messages);
 app.use('/api/payment', payment);
+app.use('/api/ai', ai);
 
 // Health Check for Admin Panel
 app.get('/api/health', (req, res) => {

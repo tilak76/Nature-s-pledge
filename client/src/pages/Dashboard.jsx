@@ -359,7 +359,7 @@ const Dashboard = () => {
             <div style={{ maxWidth: '700px', margin: '0 auto' }}>
                 <Breadcrumb title="Support Chat" />
                 <h2 style={{ fontWeight: '400', marginBottom: '5px' }}>💬 Contact Support</h2>
-                <p style={{ color: '#666', marginBottom: '20px', fontSize: '0.9rem' }}>Send us a message and we'll reply to your email within a few hours.</p>
+                <p style={{ color: '#666', marginBottom: '20px', fontSize: '0.9rem' }}>Ask anything — our AI assistant will help instantly. For complex issues, our agent will connect with you shortly.</p>
 
                 {/* Chat Messages */}
                 <div style={{ border: '1px solid #ddd', borderRadius: '8px', background: 'white', minHeight: '350px', maxHeight: '400px', overflowY: 'auto', padding: '15px', marginBottom: '15px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
@@ -380,8 +380,8 @@ const Dashboard = () => {
                                     fontSize: '0.9rem',
                                     lineHeight: '1.4'
                                 }}>
-                                    {msg.isAdmin && <div style={{ fontSize: '0.75rem', fontWeight: 'bold', marginBottom: '4px', color: '#8D6E63' }}>🌿 Nature's Pledge Support</div>}
-                                    {msg.text}
+                                    {msg.isAdmin && <div style={{ fontSize: '0.75rem', fontWeight: 'bold', marginBottom: '4px', color: '#8D6E63' }}>🌿 {msg.userName || "Nature's Pledge"}</div>}
+                                    <div style={{ whiteSpace: 'pre-line' }}>{msg.text}</div>
                                     <div style={{ fontSize: '0.7rem', opacity: 0.6, marginTop: '4px', textAlign: 'right' }}>
                                         {new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                     </div>

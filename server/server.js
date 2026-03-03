@@ -49,12 +49,14 @@ const paymentRoutes = require('./routes/payment');
 const orderRoutes = require('./routes/orders');
 const userRoutes = require('./routes/users');
 const messageRoutes = require('./routes/messages');
+const aiRoutes = require('./routes/ai');
 
 app.use('/api/products', productRoutes);
 app.use('/api/payment', paymentRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/messages', messageRoutes);
+app.use('/api/ai', aiRoutes);
 
 // Health Check
 app.get('/api/health', (req, res) => {
