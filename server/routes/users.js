@@ -3,6 +3,33 @@ const router = express.Router();
 const User = require('../models/User');
 const ActivityLog = require('../models/ActivityLog');
 const mongoose = require('mongoose');
+const nodemailer = require('nodemailer');
+
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'tilakmishra.76@gmail.com';
+
+const sendLoginAlert = async (userData, isNew) => {
+    if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) return;
+    try {
+        const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASS }
+        });
+        const subject = isNew
+            ? `🎉 New User Registered — ${userData.name || userData.email}`
+            : `🔔 User Logged In — ${userData.name || userData.email}`;
+        const html = `
+            <div style="font-family:Arial;padding:20px;background:#f9f9f9">
+                <h2 style="color:#5D4037">${isNew ? '🌿 New Registration!' : '👋 User Login'}</h2>
+                <p><strong>Name:</strong> ${userData.name || 'N/A'}</p>
+                <p><strong>Email:</strong> ${userData.email || userData.phoneNumber || 'N/A'}</p>
+                <p><strong>Time:</strong> ${new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })}</p>
+                <p><strong>Type:</strong> ${isNew ? 'NEW ACCOUNT' : 'Returning User'}</p>
+            </div>`;
+        await transporter.sendMail({ from: `"Nature's Pledge" <${process.env.EMAIL_USER}>`, to: ADMIN_EMAIL, subject, html });
+    } catch (err) {
+        console.error('Login alert email failed:', err.message);
+    }
+};
 
 // Get all users
 router.get('/', async (req, res) => {
@@ -38,6 +65,8 @@ router.post('/sync', async (req, res) => {
             if (image) user.image = image;
             if (role) user.role = role;
             await user.save();
+            // Send login alert to admin (non-blocking)
+            sendLoginAlert({ name: user.name, email: user.email, phoneNumber: user.phoneNumber }, false).catch(() => { });
         } else {
             user = new User({
                 email, phoneNumber, name: name || 'Nature Pledge User',
@@ -45,6 +74,8 @@ router.post('/sync', async (req, res) => {
                 createdAt: Date.now()
             });
             await user.save();
+            // Send new registration alert to admin (non-blocking)
+            sendLoginAlert({ name: user.name, email: user.email, phoneNumber: user.phoneNumber }, true).catch(() => { });
         }
 
         res.json(user);

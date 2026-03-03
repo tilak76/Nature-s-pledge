@@ -106,4 +106,14 @@ router.patch('/:id', async (req, res) => {
     }
 });
 
+// DELETE all orders (Admin Reset)
+router.delete('/reset', async (req, res) => {
+    try {
+        await Order.deleteMany({});
+        res.json({ success: true, message: 'All orders cleared!' });
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+});
+
 module.exports = router;
