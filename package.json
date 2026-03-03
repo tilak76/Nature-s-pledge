@@ -18,7 +18,8 @@
     "mongoose": "7.6.3",
     "nodemailer": "^6.10.0",
     "razorpay": "^2.9.6",
-    "shortid": "^2.2.16"
+    "shortid": "^2.2.16",
+    "@google/generative-ai": "^0.21.0"
   },
   "engines": {
     "node": "22.x"

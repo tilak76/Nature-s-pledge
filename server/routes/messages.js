@@ -1,8 +1,17 @@
 const express = require('express');
-const router = express.Router();
+const router = require('express').Router();
 const Message = require('../models/Message');
 const nodemailer = require('nodemailer');
 const mongoose = require('mongoose');
+
+// Gemini AI
+let genAI = null;
+try {
+    if (process.env.GEMINI_API_KEY) {
+        const { GoogleGenerativeAI } = require('@google/generative-ai');
+        genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+    }
+} catch (e) { console.warn('Gemini not available:', e.message); }
 
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'tilakmishra.76@gmail.com';
 
@@ -102,8 +111,46 @@ const getBotReply = (text) => {
         return "😊 You're welcome! We're happy to help. If you have any other questions, feel free to ask. Have a great day and enjoy your Nature's Pledge products! 🌿";
     }
 
-    // No match - alert admin
+    // No match - let Gemini AI handle it
     return null;
+};
+
+// 🧠 Gemini AI Reply for complex/unknown questions
+const getAIReply = async (userText, userName) => {
+    if (!genAI) return null;
+    try {
+        const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+        const systemPrompt = `You are a helpful customer support assistant for "Nature's Pledge" - a premium Kashmiri organic food brand.
+
+ABOUT THE COMPANY:
+- Nature's Pledge sells 100% authentic Kashmiri organic products: Walnuts (Akhrot), Almonds (Badam), Rajma (Kidney Beans), Organic Atta, Anardana (Pomegranate Seeds), Natural Honey, Saffron (Kesar), and more
+- All products are directly sourced from Kashmiri farmers - pure, no preservatives
+- Website: naturespledge.in
+- Admin email: tilakmishra.76@gmail.com
+
+POLICIES:
+- Delivery: 5-7 business days standard, 2-3 days express for select pincodes
+- Return policy: 7 days from delivery date for damaged/wrong products
+- Free shipping on orders above ₹1500
+- Payment: UPI, Cards, Netbanking, Razorpay
+
+INSTRUCTIONS:
+- Reply in English only
+- Be friendly, helpful and concise (max 3-4 sentences)
+- If you don't know something specific (like a specific order ID), ask the user to share details
+- Always end with offering further help
+- Use emojis occasionally but not excessively
+
+Customer name: ${userName}
+Customer message: ${userText}`;
+
+        const result = await model.generateContent(systemPrompt);
+        const reply = result.response.text();
+        return reply || null;
+    } catch (err) {
+        console.error('Gemini AI error:', err.message);
+        return null;
+    }
 };
 
 // GET messages for user
@@ -131,21 +178,32 @@ router.post('/', async (req, res) => {
                 return res.json(msg);
             }
 
-            // User message → check if bot can handle it
+            // User message → 1st: keyword bot, 2nd: Gemini AI, 3rd: admin email
             const botReply = getBotReply(text);
             if (botReply) {
-                // Bot auto-reply: save bot message and return both
+                // Keyword bot handled it
                 const botMsg = new Message({
-                    userId, userName: 'Nature\'s Pledge Bot', userEmail: 'bot@naturespledge.in',
+                    userId, userName: "Nature's Pledge Support", userEmail: 'bot@naturespledge.in',
                     text: botReply, isAdmin: true, timestamp: new Date(), isRead: true
                 });
                 await botMsg.save();
-                return res.json({ userMsg: msg, botMsg }); // Send both back
-            } else {
-                // No bot match → alert admin for manual reply
-                sendAdminNotification(msgData).catch(console.error);
-                return res.json(msg);
+                return res.json({ userMsg: msg, botMsg });
             }
+
+            // Try Gemini AI
+            const aiReply = await getAIReply(text, userName);
+            if (aiReply) {
+                const aiMsg = new Message({
+                    userId, userName: "Nature's Pledge AI", userEmail: 'ai@naturespledge.in',
+                    text: aiReply, isAdmin: true, timestamp: new Date(), isRead: true
+                });
+                await aiMsg.save();
+                return res.json({ userMsg: msg, botMsg: aiMsg });
+            }
+
+            // Neither bot nor AI could handle → alert admin
+            sendAdminNotification(msgData).catch(console.error);
+            return res.json(msg);
         }
         res.json(msgData);
     } catch (err) {
