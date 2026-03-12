@@ -13,12 +13,24 @@ const Shop = () => {
     const [displayProducts, setDisplayProducts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
+    const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
     const [category, setCategory] = useState('All');
     const [selectedBaseProduct, setSelectedBaseProduct] = useState(null);
 
     const navigate = useNavigate();
     const { addToCart } = useCart();
     const { showToast } = useToast();
+
+    // Debouncing Logic for Search
+    useEffect(() => {
+        const timerId = setTimeout(() => {
+            setDebouncedSearchTerm(searchTerm);
+        }, 500); // 500ms delay
+
+        return () => {
+            clearTimeout(timerId);
+        };
+    }, [searchTerm]);
 
     useEffect(() => {
         logActivity('Browsing Shop');
@@ -75,11 +87,11 @@ const Shop = () => {
         if (category !== 'All') {
             filtered = filtered.filter(p => (p.baseName.toLowerCase().includes(category.toLowerCase()) || p.category.toLowerCase().includes(category.toLowerCase())));
         }
-        if (searchTerm) {
-            filtered = filtered.filter(p => p.baseName.toLowerCase().includes(searchTerm.toLowerCase()));
+        if (debouncedSearchTerm) {
+            filtered = filtered.filter(p => p.baseName.toLowerCase().includes(debouncedSearchTerm.toLowerCase()));
         }
         setDisplayProducts(filtered);
-    }, [searchTerm, category, groupedProducts]);
+    }, [debouncedSearchTerm, category, groupedProducts]);
 
     const handleAddToCartClick = (e, productGroup) => {
         e.stopPropagation();
