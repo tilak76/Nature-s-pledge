@@ -97,7 +97,7 @@ const Home = () => {
                             </div>
                         </div>
                         <div className="exp-image">
-                            <img src="/kashmiri_lifestyle.png" alt="Premium Kashmiri Lifestyle" />
+                            <img src="/rajma_bhaderwahi_real.jpg" alt="Authentic Kashmiri Rajma" />
                         </div>
                     </div>
                 </div>
