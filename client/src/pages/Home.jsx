@@ -16,7 +16,7 @@ const Home = () => {
                     <div className="hero-text-animate">
                         <h1>Nature's Pledge</h1>
                         <p>
-                            Authentic Kashmir Dry Fruits & Organic Staples.
+                            Authentic Kashmiri Dry Fruits & Organic Staples.
                         </p>
                         <Link to="/shop" className="btn-premium">Explore Collection</Link>
                     </div>
@@ -26,28 +26,28 @@ const Home = () => {
             {/* Featured Categories */}
             <section className="featured-section section-padding">
                 <div className="container">
-                    <h2 className="section-title">Selection from Kashmir</h2>
+                    <h2 className="section-title">Kashmiri Dry Fruits & Gems</h2>
                     <div className="features-grid">
                         <div className="feature-card animate-on-scroll" onClick={() => navigate('/product/1')}>
                             <div className="card-img-wrapper">
                                 <img src="/kashmiri_almond_proper.jpg" alt="Kashmiri Almond" />
                             </div>
                             <h3>Kashmiri Almond</h3>
-                            <p>Rich in oil, naturally sweet. <br /><span className="desi-font">Kashmir ki mitti ka shuddh uphaar, har daane mein swasthya.</span></p>
+                            <p>Rich in oil, naturally sweet. <br /><span className="desi-font">Asli Kashmiri badam, oil se bharpur aur taste mein lajawab.</span></p>
                         </div>
                         <div className="feature-card animate-on-scroll" onClick={() => navigate('/product/6')}>
                             <div className="card-img-wrapper">
                                 <img src="/kashmiri_walnut_real.png" alt="Kashmiri Premium Walnut" />
                             </div>
                             <h3>Kashmiri Premium Walnut</h3>
-                            <p>Snow-white kernels, easy to break. <br /><span className="desi-font">Nazakat se bhare, taazgi ki sachi pehchan.</span></p>
+                            <p>Snow-white kernels, easy to break. <br /><span className="desi-font">Ekdum taaza akhrot, jo haath se tediye aur asar dekhiye.</span></p>
                         </div>
                         <div className="feature-card animate-on-scroll" onClick={() => navigate('/product/3')}>
                             <div className="card-img-wrapper">
                                 <img src="/rajma_royal_real.jpg" alt="Rajma Royal" />
                             </div>
                             <h3>Rajma Royal</h3>
-                            <p>Perfect texture, distinct flavor. <br /><span className="desi-font">Bachpan ki yaadon wala wahi asli shuddh swaad.</span></p>
+                            <p>Perfect texture, distinct flavor. <br /><span className="desi-font">Kashmiri Rajma ka wahi purana swaad, jo sabko pasand aaye.</span></p>
                         </div>
                     </div>
                 </div>
@@ -56,28 +56,28 @@ const Home = () => {
             {/* Why Choose Us */}
             <section className="values-section section-padding">
                 <div className="container">
-                    <h2 className="section-title">Our Promise to You</h2>
+                    <h2 className="section-title">Hamara Pakka Vaada</h2>
                     <div className="values-grid">
                         <div className="value-item animate-on-scroll">
                             <div className="icon-wrapper">
                                 <span className="icon">🏡</span>
                             </div>
-                            <h3>Emotional Bond</h3>
-                            <p>For us, you are not just a customer. <br /><span className="desi-font">Sirf grahak nahi, aap humare parivaar ka atoot hissa hain.</span></p>
+                            <h3>Family Like Bond</h3>
+                            <p>For us, you are not just a customer. <br /><span className="desi-font">Aap humare liye sirf customer nahi, ek parivaar ki tarah hain.</span></p>
                         </div>
                         <div className="value-item animate-on-scroll">
                             <div className="icon-wrapper">
                                 <span className="icon">🌿</span>
                             </div>
-                            <h3>Pure & Organic</h3>
-                            <p>No polish, no artificial shine. <br /><span className="desi-font">Prakriti ki god se, bina kisi milawat ke seedha aap tak.</span></p>
+                            <h3>100% Pure Organic</h3>
+                            <p>No polish, no artificial shine. <br /><span className="desi-font">Sudh kashmiri dry fruits, seedha khet se aapke ghar tak.</span></p>
                         </div>
                         <div className="value-item animate-on-scroll">
                             <div className="icon-wrapper">
                                 <span className="icon">🤝</span>
                             </div>
-                            <h3>Direct Sourcing</h3>
-                            <p>Sourced directly from orchards. <br /><span className="desi-font">Sache kisan ka sachi mehnat, shuddhata ka vaada.</span></p>
+                            <h3>Farmer's Hardwork</h3>
+                            <p>Sourced directly from orchards. <br /><span className="desi-font">Kisan ki mehnat aur hamara shuddhata ka pakka vaada.</span></p>
                         </div>
                     </div>
                 </div>
