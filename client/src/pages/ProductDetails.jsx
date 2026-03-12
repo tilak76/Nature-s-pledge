@@ -134,8 +134,10 @@ const ProductDetails = () => {
 
     const avgRating = reviews.length > 0 ? (reviews.reduce((acc, r) => acc + r.rating, 0) / reviews.length).toFixed(1) : "0.0";
 
-    // Simulate fake gallery thumbnails from same image
-    const galleryItems = [product.image, product.image, product.image];
+    // Use actual images array if provided, fallback to repeated single image
+    const galleryItems = product.images && product.images.length > 0
+        ? product.images
+        : [product.image, product.image, product.image];
 
     return (
         <div className="container product-details-page">
