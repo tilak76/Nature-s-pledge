@@ -30,7 +30,7 @@ const Home = () => {
                     <div className="features-grid">
                         <div className="feature-card animate-on-scroll" onClick={() => navigate('/product/1')}>
                             <div className="card-img-wrapper">
-                                <img src="/kashmiri_almond_proper.jpg" alt="Kashmiri Almond" />
+                                <img src="/kashmiri_almond_1.png" alt="Kashmiri Almond" />
                             </div>
                             <h3>Kashmiri Almond</h3>
                             <p>Rich in oil, naturally sweet. <br /><span className="desi-font">Asli Kashmiri badam, oil se bharpur aur taste mein lajawab.</span></p>
