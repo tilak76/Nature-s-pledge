@@ -399,6 +399,24 @@ const Checkout = () => {
                         </button>
 
                         <h3 style={{ borderBottom: '1px solid #ddd', paddingBottom: '10px', fontSize: '1.1rem', marginTop: 0 }}>Order Summary</h3>
+
+                        {/* List of Cart Items directly visible in Summary */}
+                        <div style={{ margin: '15px 0', display: 'flex', flexDirection: 'column', gap: '10px', maxHeight: '250px', overflowY: 'auto' }}>
+                            {safeCart.map((item) => (
+                                <div key={item.id} style={{ display: 'flex', gap: '10px', alignItems: 'center', fontSize: '0.85rem' }}>
+                                    <img src={item.image} alt={item.name} style={{ width: '40px', height: '40px', objectFit: 'cover', borderRadius: '4px', border: '1px solid #eee' }} />
+                                    <div style={{ flex: 1, overflow: 'hidden' }}>
+                                        <div style={{ whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden', fontWeight: '500', color: '#333' }}>{item.name}</div>
+                                        <div style={{ color: '#555' }}>Qty: {item.quantity} × <span style={{ color: '#B12704' }}>₹{item.price}</span></div>
+                                    </div>
+                                    <div style={{ fontWeight: 'bold' }}>
+                                        ₹{item.price * item.quantity}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                        <div style={{ borderTop: '1px solid #ddd', margin: '10px 0' }}></div>
+
                         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '5px', fontSize: '0.9rem' }}>
                             <span>Items:</span>
                             <span>₹{cartTotal}</span>

@@ -88,25 +88,14 @@ const Dashboard = () => {
     const DashboardCard = ({ icon, title, description, onClick }) => (
         <div
             onClick={onClick}
-            className="dashboard-card"
-            style={{
-                border: '1px solid #ddd',
-                borderRadius: '8px',
-                padding: '20px',
-                cursor: 'pointer',
-                display: 'flex',
-                gap: '20px',
-                alignItems: 'center',
-                backgroundColor: 'white',
-                transition: 'background-color 0.2s, box-shadow 0.2s'
-            }}
+            className="dashboard-opt-card"
         >
-            <div style={{ width: '60px', height: '60px', borderRadius: '50%', background: '#f5f5f5', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.8rem' }}>
+            <div className="card-icon-container">
                 {icon}
             </div>
-            <div>
-                <h3 style={{ margin: '0 0 5px 0', fontWeight: '500', fontSize: '1.1rem', color: '#333' }}>{title}</h3>
-                <p style={{ margin: 0, fontSize: '0.9rem', color: '#666' }}>{description}</p>
+            <div className="card-text-container">
+                <h3>{title}</h3>
+                <p>{description}</p>
             </div>
         </div>
     );
@@ -128,8 +117,8 @@ const Dashboard = () => {
 
     // Views
     const renderHome = () => (
-        <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
-            <h2 style={{ fontWeight: '400', fontSize: '1.8rem', marginBottom: '20px' }}>Your Account</h2>
+        <div className="dashboard-content-box" style={{ maxWidth: '1000px', margin: '0 auto' }}>
+            <h2 style={{ fontWeight: '400', fontSize: '1.8rem', marginBottom: '30px', color: 'var(--primary)', fontFamily: 'Playfair Display, serif' }}>Your Account</h2>
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px' }}>
                 <DashboardCard
@@ -285,20 +274,10 @@ const Dashboard = () => {
             <Breadcrumb title="Nature's Wallet" />
             <h2 style={{ fontWeight: '400', marginBottom: '20px' }}>Nature's Wallet Balance</h2>
 
-            <div style={{
-                background: 'linear-gradient(to right, #232f3e, #37475a)',
-                color: 'white',
-                padding: '30px',
-                borderRadius: '8px',
-                marginBottom: '30px',
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                boxShadow: '0 5px 15px rgba(0,0,0,0.1)'
-            }}>
+            <div className="wallet-premium-card">
                 <div>
                     <div style={{ fontSize: '0.9rem', opacity: 0.8, marginBottom: '5px' }}>Current Balance</div>
-                    <div style={{ fontSize: '3rem', fontWeight: 'bold' }}>₹{user.walletBalance?.toLocaleString() || '0'}</div>
+                    <div className="balance-amount">₹{user.walletBalance?.toLocaleString() || '0'}</div>
                 </div>
                 <button
                     onClick={handleOpenAddMoney}

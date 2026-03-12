@@ -10,18 +10,23 @@
     "postinstall": "npm install --prefix client"
   },
   "dependencies": {
-    "concurrently": "^8.2.2",
+    "@capacitor/android": "^8.1.0",
+    "@capacitor/core": "^8.1.0",
+    "@google/generative-ai": "^0.21.0",
     "axios": "^1.7.9",
+    "concurrently": "^8.2.2",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "mongoose": "7.6.3",
     "nodemailer": "^6.10.0",
     "razorpay": "^2.9.6",
-    "shortid": "^2.2.16",
-    "@google/generative-ai": "^0.21.0"
+    "shortid": "^2.2.16"
   },
   "engines": {
     "node": "22.x"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^8.1.0"
   }
 }

@@ -85,6 +85,97 @@
     animation: shimmer 3s infinite;
 }
 
+/* Dashboard Options Cards (Amazon Style Grid) */
+.dashboard-opt-card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    cursor: pointer;
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    background-color: white;
+    transition: var(--transition);
+}
+
+.dashboard-opt-card:hover {
+    background-color: #f7f7f7;
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--accent);
+}
+
+.card-icon-container {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: #fcf8f6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    flex-shrink: 0;
+    transition: var(--transition);
+}
+
+.dashboard-opt-card:hover .card-icon-container {
+    background: var(--accent);
+    color: white;
+}
+
+.card-text-container h3 {
+    margin: 0 0 5px 0;
+    font-weight: 500;
+    font-size: 1.1rem;
+    color: var(--primary);
+}
+
+.card-text-container p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+/* Wallet and Balance Refinement */
+.wallet-premium-card {
+    background: linear-gradient(135deg, var(--primary) 0%, #37475a 100%);
+    color: white;
+    padding: 40px;
+    border-radius: 16px;
+    margin-bottom: 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: var(--shadow-lg);
+    position: relative;
+    overflow: hidden;
+}
+
+.wallet-premium-card::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.05) 0%, transparent 70%);
+}
+
+.balance-amount {
+    font-size: 3.5rem;
+    font-weight: 700;
+    color: var(--accent);
+}
+
+/* Tabbed Content Glassmorphism */
+.dashboard-content-box {
+    background: white;
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: var(--shadow-md);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
 /* Mobile Responsiveness */
 @media (max-width: 768px) {
     .dashboard-grid {
@@ -92,29 +183,13 @@
         gap: 20px;
     }
 
-    .sidebar-nav {
-        display: flex;
-        overflow-x: auto;
-        padding: 5px;
-        background: transparent;
-        box-shadow: none;
-        gap: 10px;
-        margin-bottom: 10px;
+    .dashboard-opt-card {
+        padding: 15px;
     }
 
-    .tab-button {
-        width: auto;
-        white-space: nowrap;
-        background: white !important;
-        border: 1px solid #eee;
-        margin-bottom: 0;
-        padding: 10px 20px;
-        flex: 0 0 auto;
-    }
-
-    .tab-button.active {
-        background: #5D4037 !important;
-        color: white !important;
-        border-color: #5D4037;
+    .card-icon-container {
+        width: 50px;
+        height: 50px;
+        font-size: 1.5rem;
     }
 }
